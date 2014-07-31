@@ -10,22 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.yuan.yuanisnosay.MainActivity" >
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登录" />
-
-    <Button
-        android:id="@+id/button_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登出" />
-
-    <Button
-        android:id="@+id/button_getInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取信息" />
+    
 
 </LinearLayout>

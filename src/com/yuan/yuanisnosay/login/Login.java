@@ -30,12 +30,12 @@ public class Login {
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
 
-//	private String mOpenId;
-//	private String mQQToken;
-//	private long mExpiresIn; // token剩余有效时间
-//	private long mExpiresDate; // token失效时间
+	// private String mOpenId;
+	// private String mQQToken;
+	// private long mExpiresIn; // token剩余有效时间
+	// private long mExpiresDate; // token失效时间
 
-	//private boolean isLogin = false;
+	// private boolean isLogin = false;
 
 	public static Login getInstance(Context context) {
 		if (mInstance == null) {
@@ -62,6 +62,7 @@ public class Login {
 		String mQQToken = mPreferences.getString(KEY_QQTOKEN, null);
 		Long mExpiresDate = mPreferences.getLong(KEY_QQEXPIRESDATE, -1);
 		Long mExpiresIn = (mExpiresDate - System.currentTimeMillis()) / 1000;
+		
 		// 判断记录是否有效
 		if (mOpenId != null && mQQToken != null && mExpiresDate != -1) {
 			mTencent.setAccessToken(mQQToken, Long.toString(mExpiresDate));
@@ -104,7 +105,8 @@ public class Login {
 	private void recordInfo() {
 		mEditor = mPreferences.edit();
 
-		long mExpiresDate = System.currentTimeMillis() + mTencent.getExpiresIn() * 1000;
+		long mExpiresDate = System.currentTimeMillis()
+				+ mTencent.getExpiresIn() * 1000;
 		mEditor.putString(KEY_OPENID, mTencent.getOpenId());
 		mEditor.putString(KEY_QQTOKEN, mTencent.getAccessToken());
 		mEditor.putLong(KEY_QQEXPIRESDATE, mExpiresDate);
