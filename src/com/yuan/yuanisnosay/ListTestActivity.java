@@ -1,30 +1,32 @@
 package com.yuan.yuanisnosay;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yuan.yuanisnosay.server.ServerAccess;
-import com.yuan.yuanisnosay.server.ServerAccessable;
-import com.yuan.yuanisnosay.ui.Util;
-
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccessable;
+import com.yuan.yuanisnosay.ui.Util;
+
 public class ListTestActivity extends ActionBarActivity {
 	private static final int M_REGISTER_END = 0;
+	private static final int M_UPLOADPIC_END = 1;
 	YuanApplication mApp;
 
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
-			R.id.button_getInfo, R.id.button_register };
+			R.id.button_getInfo, R.id.button_register,R.id.button_upPic };
 
 	private Handler mHandler;
 
@@ -53,6 +55,10 @@ public class ListTestActivity extends ActionBarActivity {
 					Util.showResultDialog(ListTestActivity.this,
 							msg.obj.toString(), "");
 					break;
+				case M_UPLOADPIC_END:
+					Util.showResultDialog(ListTestActivity.this,
+							msg.obj.toString(), "");
+					break;
 				}
 			}
 		};
@@ -78,6 +84,9 @@ public class ListTestActivity extends ActionBarActivity {
 			case R.id.button_register:
 				registerTest();
 				break;
+			case R.id.button_upPic:
+				uploadPicTest();
+				break;
 			}
 		}
 	}
@@ -87,11 +96,33 @@ public class ListTestActivity extends ActionBarActivity {
 			@Override
 			public void run() {
 				try {
-					ServerAccessable a = new ServerAccess();
+					ServerAccess a = new ServerAccess();
 					String b = a.registerNewUser("1", "");
 					Log.e("mzb", "" + b);
 					Message msg = mHandler.obtainMessage();
 					msg.what = M_REGISTER_END;
+					msg.obj = b;
+					mHandler.sendMessage(msg);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	private void uploadPicTest(){
+		final String TEST_FILE_NAME = "Universal Image Loader @#&=+-_.,!()~'%20.png";
+		final File testImageOnSdCard = new File("/mnt/sdcard", TEST_FILE_NAME);
+			
+		new Thread(){
+			@Override
+			public void run() {
+				ServerAccess a = new ServerAccess();
+				try {
+					String b=a.uploadPic(testImageOnSdCard.getCanonicalPath());
+					
+					Message msg = mHandler.obtainMessage();
+					msg.what = M_UPLOADPIC_END;
 					msg.obj = b;
 					mHandler.sendMessage(msg);
 				} catch (IOException e) {
