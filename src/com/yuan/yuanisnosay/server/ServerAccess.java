@@ -1,14 +1,23 @@
 package com.yuan.yuanisnosay.server;
-
-import java.net.*;
-import java.io.*;
-import java.lang.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.UUID;
 
 //interface ServerAccessable 
 //{
 //    public static String updateUserInfo(String openID, String nickName, String sex, String imgFilePath) throws IOException;
 //    public static String uploadPic(String imgPath);
+//    public static String newPost(String text, String addr, String jingdu, String weidu) throws IOException;
+//    public static String newPost(String text, String addr, String jingdu, String weidu, String imgPath) throws IOException;
     /*
     */
 //    public String registerNewUser(String accessToken, String openID) throws IOException;
@@ -16,7 +25,7 @@ import java.util.UUID;
 
 public class ServerAccess //implements ServerAccessable 
 {
-    private static final String HOST = "http://10.66.144.182:8080/";//"http://yswy.r4c00n.com/";
+    private static final String HOST = "http://localhost:8080/";//"http://yswy.r4c00n.com/";
     private static final String REG_NEW_USER = "login";
     private static final String CHARSET = "utf-8";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
@@ -25,7 +34,17 @@ public class ServerAccess //implements ServerAccessable
 
     public static String uploadPic(String imgPath) throws IOException
     {
-        return uploadFile("/", "access_token=123123", imgPath);
+        return uploadFile("/", "access_token=123123&openid=fuck", imgPath);
+    }
+
+    public static String newPost(String text, String addr, String jingdu, String weidu) throws IOException
+    {
+        return doPost("/post", "text="+text+"&addr="+addr+"&jingdu="+jingdu+"&weidu="+weidu);
+    }
+
+    public static String newPost(String text, String addr, String jingdu, String weidu, String imgPath) throws IOException
+    {
+        return uploadFile("/post", "text="+text+"&addr="+addr+"&jingdu="+jingdu+"&weidu="+weidu, imgPath);
     }
 
     private static String packMutipartData(String boundary, String key, String value)
@@ -37,13 +56,13 @@ public class ServerAccess //implements ServerAccessable
         sb.append(boundary);
         sb.append(LINE_END);
         sb.append("Content-Disposition: form-data; name=\""+key+"\""+LINE_END);
-        sb.append("Content-Type: text/plain; charset=utf-8"+LINE_END);
+        //sb.append("Content-Type: text/plain; charset=utf-8"+LINE_END);
         sb.append(LINE_END);
         sb.append(value);
         sb.append(LINE_END);
-        sb.append(PREFIX);
-        sb.append(boundary);
-        sb.append(PREFIX+LINE_END);
+        //sb.append(PREFIX);
+        //sb.append(boundary);
+        //sb.append(PREFIX+LINE_END);
         
         return sb.toString();
     }
@@ -74,10 +93,8 @@ public class ServerAccess //implements ServerAccessable
              */
             DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
             StringBuffer sb = new StringBuffer();
-            
-            //sb.append(params);
-            //sb.append("\r\n\r\n");
-            /*sb.append(PREFIX);
+            /*
+            sb.append(PREFIX);
             sb.append(BOUNDARY);
             sb.append(LINE_END);
             sb.append("Content-Disposition: form-data; name=\"access_token\""+LINE_END);
@@ -93,8 +110,8 @@ public class ServerAccess //implements ServerAccessable
             for (int i = 0; i < paramsArray.length; i++) 
             {
                 int idxOfEqu = paramsArray[i].indexOf("=");
-	        //sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
-	        System.out.println(paramsArray[i].substring(0, idxOfEqu)+paramsArray[i].substring(idxOfEqu+1));
+	            sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
+	            System.out.println(paramsArray[i].substring(0, idxOfEqu)+paramsArray[i].substring(idxOfEqu+1));
             }
             
             sb.append(PREFIX);
@@ -110,7 +127,7 @@ public class ServerAccess //implements ServerAccessable
                 + CHARSET + LINE_END);
             sb.append(LINE_END);
 
-            //System.out.println(sb);
+            System.out.println(sb);
             dos.write(sb.toString().getBytes());
             
             InputStream is = new FileInputStream(file);
@@ -132,7 +149,7 @@ public class ServerAccess //implements ServerAccessable
              * 获取响应码 200=成功 当响应成功，获取响应的流
              */
             responseCode = conn.getResponseCode();
-            System.out.println(responseCode);
+            //System.out.println(responseCode);
             //System.out.println(TAG+":\n\tresponse code:" + res);
             if (200 == responseCode) 
             {
@@ -200,5 +217,6 @@ public class ServerAccess //implements ServerAccessable
 
         return response;
     }
+
 
 }
