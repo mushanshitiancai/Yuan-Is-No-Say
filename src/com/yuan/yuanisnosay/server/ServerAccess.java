@@ -12,6 +12,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.UUID;
 
+//2014年8月2日14:00:02
+
 //interface ServerAccessable 
 //{
 //    public static String updateUserInfo(String openID, String nickName, String sex, String imgFilePath) throws IOException;
