@@ -92,7 +92,7 @@ public class ConfessFragment extends Fragment {
 
 	// 刷新列表
 	public void refesh() {
-		mRefreshListView.doPullRefreshing(true, 500);
+		mRefreshListView.doPullRefreshing(true, 50);
 	}
 
 	// 设置listview的更新时间文本为当前时间
