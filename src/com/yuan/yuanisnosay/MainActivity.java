@@ -3,6 +3,7 @@ package com.yuan.yuanisnosay;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,9 @@ public class MainActivity extends FragmentActivity {
 	private int curTab = TAB_NEARBY;
 
 	private ConfessFragment mFragmentNearby, mFragmentHot;
+	
+	//viewpaget test
+	ViewPager vp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
