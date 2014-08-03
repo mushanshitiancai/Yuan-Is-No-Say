@@ -1,37 +1,135 @@
 package com.yuan.yuanisnosay.ui.adpater;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ConfessAdapter extends BaseAdapter{
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.yuan.yuanisnosay.R;
+import com.yuan.yuanisnosay.Util;
 
-	public ConfessAdapter() {
-		// TODO Auto-generated constructor stub
-	}
+public class ConfessAdapter extends BaseAdapter {
+	Context mContext;
+	LayoutInflater mInflater;
+	LinkedList<ConfessItem> mConfessList;
 	
+	ImageLoader mImageLoader;
+	DisplayImageOptions mOptions;
+	ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+
+	static class ViewHolder {
+		TextView content;
+		TextView publishDate;
+		TextView position;
+		TextView author;
+		Button btnFlower;
+		Button btncomment;
+		ImageView ivIcon;
+		View layoutContent;
+		View layoutPicture;
+		View layoutInfo;
+	}
+
+	public ConfessAdapter(Context context, LinkedList<ConfessItem> confessList) {
+		mContext = context;
+		mInflater = LayoutInflater.from(mContext);
+		mConfessList = confessList;
+		
+		mImageLoader=ImageLoader.getInstance();
+		mImageLoader.init(ImageLoaderConfiguration.createDefault(context));
+		mOptions = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.ic_stub)
+		.showImageForEmptyUri(R.drawable.ic_empty)
+		.showImageOnFail(R.drawable.ic_error)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.displayer(new RoundedBitmapDisplayer(20))
+		.build();
+	}
+
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mConfessList.size();
 	}
 
 	@Override
-	public Object getItem(int arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object getItem(int position) {
+		return mConfessList.get(position);
 	}
 
 	@Override
-	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long getItemId(int position) {
+		return position;
 	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		// TODO Auto-generated method stub
-		return null;
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder viewHolder;
+		if(convertView==null){
+			convertView=mInflater.inflate(R.layout.item_confess, null);
+			viewHolder=new ViewHolder();
+			viewHolder.content=(TextView)convertView.findViewById(R.id.textView_confessItem_content);
+			viewHolder.publishDate=(TextView)convertView.findViewById(R.id.textView_confessItem_publishTime);
+			viewHolder.position=(TextView)convertView.findViewById(R.id.textView_confessItem_position);
+			viewHolder.author=(TextView)convertView.findViewById(R.id.textView_confessItem_author);
+			
+			viewHolder.btnFlower=(Button)convertView.findViewById(R.id.button_confessItem_flowers);
+			viewHolder.btncomment=(Button)convertView.findViewById(R.id.button_confessItem_comment);
+			
+			viewHolder.ivIcon=(ImageView)convertView.findViewById(R.id.imageView_confessItem_icon);
+			
+			viewHolder.layoutContent=convertView.findViewById(R.id.relativeLayout_content);
+			viewHolder.layoutPicture=convertView.findViewById(R.id.relativeLayout_picture);
+			viewHolder.layoutInfo=convertView.findViewById(R.id.relativeLayout_info);
+			convertView.setTag(viewHolder);
+		}else{
+			viewHolder=(ViewHolder) convertView.getTag();
+		}
+		
+		ConfessItem curConfess=mConfessList.get(position);
+		viewHolder.content.setText(curConfess.getContent());
+		viewHolder.publishDate.setText(Util.formatDateTime(curConfess.getPublishDate()));
+		viewHolder.position.setText(curConfess.getPosition().getRegionName());
+		viewHolder.author.setText(curConfess.getAuthor());
+		
+		mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon,mOptions,animateFirstListener);
+		
+		
+		return convertView;
+	}
+	
+	private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+		static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+			}
+		}
 	}
 
 }

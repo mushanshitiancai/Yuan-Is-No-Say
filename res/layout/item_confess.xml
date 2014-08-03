@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green" >
+
+        <TextView
+            android:id="@+id/textView_confessItem_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我发现我同事的java代码中所有class的方法都是static,他说这样调用就很方便(因为不用new一个对象了,直接class.方法调用),请问他这样 [问题点数:2分,结帖人wtjd..." />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/relativeLayout_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayout_content"
+        android:background="@color/red" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_info"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/relativeLayout_picture"
+        android:background="@color/blue" >
+
+        <TextView
+            android:id="@+id/textView_confessItem_publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="2014-8-2 16:13:06" />
+
+        <TextView
+            android:id="@+id/textView_confessItem_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/textView_confessItem_publishTime"
+            android:text="腾讯大厦" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" >
+
+            <Button
+                android:id="@+id/button_confessItem_flowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confessItem_flowers" />
+
+            <Button
+                android:id="@+id/button_confessItem_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confessItem_comment" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView_confessItem_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/relativeLayout_picture"
+        android:layout_marginTop="-25dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView_confessItem_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayout_picture"
+        android:layout_toLeftOf="@+id/imageView_confessItem_icon"
+        android:text="TextView" />
+
+</RelativeLayout>

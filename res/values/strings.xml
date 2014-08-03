@@ -5,5 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_list_test">ListTestActivity</string>
+    <string name="mainTab_nearby">附近</string>
+    <string name="mainTab_hot">热门</string>
+    <string name="confessItem_flowers">送花</string>
+    <string name="confessItem_comment">评论</string>
 
 </resources>

@@ -7,6 +7,21 @@ public class TencentLocationModule {
 	private String city;
 	private String district;
 	private String regionName;
+	 
+	public TencentLocationModule(String nation, String province, String city,
+			String district, String regionName, double latitude,
+			double longitude, float accuracy) {
+		super();
+		this.nation = nation;
+		this.province = province;
+		this.city = city;
+		this.district = district;
+		this.regionName = regionName;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.accuracy = accuracy;
+	}
+
 	private double latitude;
 	private double longitude;
 	private float accuracy;
