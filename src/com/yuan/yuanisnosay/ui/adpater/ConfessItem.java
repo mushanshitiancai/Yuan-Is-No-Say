@@ -1,9 +1,11 @@
 package com.yuan.yuanisnosay.ui.adpater;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import android.util.Log;
 
@@ -14,7 +16,7 @@ import com.yuan.yuanisnosay.wanttoconfess.TencentLocationModule;
  * @author 志彬
  *
  */
-public class ConfessItem {
+public class ConfessItem implements Serializable{
 	public static final String TAG="yuan_ConfessItem";
 	public static final int TYPE_NORMAL=0;
 	public static final int TYPE_JUSTPOST=1;
@@ -33,8 +35,10 @@ public class ConfessItem {
 	//----test-------------
 	static int size=0;
 	static LinkedList<ConfessItem> testList=new LinkedList<ConfessItem>();
-	static String testIcon="file:///sdcard/Universal Image Loader @#&=+-_.,!()~'%20.png";
+//	static String testIcon="file:///sdcard/Universal Image Loader @#&=+-_.,!()~'%20.png";
+	static String testIcon="http://10.66.95.61:8080/p/";
 	static TencentLocationModule location=new TencentLocationModule();
+	static Random random=new Random(System.currentTimeMillis());
 	static public List<ConfessItem> getConfess(int start,int n){
 		List<ConfessItem> result=new ArrayList<ConfessItem>();
 		for(int i=0;i<n;i++){
@@ -46,14 +50,14 @@ public class ConfessItem {
 	}
 	static public void addConfess(int n){
 		for(int i=0;i<n;i++){
-			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon, testIcon, 1,1,location);
+			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), testIcon, 1,1,location);
 			testList.addFirst(item);
 		}
 	}
 	static{
 		location.setRegionName("腾讯大厦");
 		for(int i=0;i<10;i++){
-			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon, testIcon, 1,1,location);
+			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), testIcon, 1,1,location);
 			testList.addFirst(item);
 		}
 		new Thread(){

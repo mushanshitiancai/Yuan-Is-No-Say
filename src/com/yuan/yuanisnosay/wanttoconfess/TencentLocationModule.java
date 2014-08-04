@@ -1,6 +1,8 @@
 package com.yuan.yuanisnosay.wanttoconfess;
 
-public class TencentLocationModule {
+import java.io.Serializable;
+
+public class TencentLocationModule implements Serializable{
 	
 	private String nation;
 	private String province;

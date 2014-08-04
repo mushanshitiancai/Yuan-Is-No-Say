@@ -37,7 +37,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout_info"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:layout_below="@id/relativeLayout_picture"
         android:background="@color/blue" >
 
@@ -83,7 +83,7 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/relativeLayout_picture"
-        android:layout_marginTop="-25dp"
+        android:layout_marginTop="-5dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView

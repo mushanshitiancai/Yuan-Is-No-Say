@@ -1,5 +1,6 @@
 package com.yuan.yuanisnosay;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -218,6 +219,11 @@ public class MainActivity extends FragmentActivity {
 			startActivity(intent);
 			return true;
 		}
+		if(id == R.id.action_delete){
+			File confessFile = new File(Const.YUAN_FOLDER_NAME);
+			confessFile.delete();
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 

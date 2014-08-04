@@ -9,6 +9,7 @@ import android.os.Message;
 
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
+import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.ui.Util;
 
 /**
@@ -17,7 +18,7 @@ import com.yuan.yuanisnosay.ui.Util;
  *
  */
 public class LoginUiListener implements IUiListener{
-	private Context mContext;
+	private Activity mContext;
 	private boolean mIsCaneled;
 	private static final int ON_COMPLETE = 0;
 	private static final int ON_ERROR = 1;
@@ -31,6 +32,8 @@ public class LoginUiListener implements IUiListener{
                 JSONObject response = (JSONObject)msg.obj;
                 Util.showResultDialog(mContext, response.toString(), "onComplete");
                 Util.dismissDialog();
+                YuanApplication app=(YuanApplication) mContext.getApplication();
+                app.getLogin().recordInfo();
                 break;
             case ON_ERROR:
                 UiError e = (UiError)msg.obj;
@@ -45,7 +48,7 @@ public class LoginUiListener implements IUiListener{
         }	    
 	};
 	
-	public LoginUiListener(Context mContext) {
+	public LoginUiListener(Activity mContext) {
 		super();
 		this.mContext = mContext;
 	}

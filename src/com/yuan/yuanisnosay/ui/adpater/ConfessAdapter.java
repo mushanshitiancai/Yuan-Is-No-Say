@@ -109,6 +109,9 @@ public class ConfessAdapter extends BaseAdapter {
 		viewHolder.position.setText(curConfess.getPosition().getRegionName());
 		viewHolder.author.setText(curConfess.getAuthor());
 		
+		viewHolder.layoutPicture.setVisibility(View.GONE);
+//		viewHolder.layoutInfo.setVisibility(View.GONE);
+		
 		mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon,mOptions,animateFirstListener);
 		
 		
