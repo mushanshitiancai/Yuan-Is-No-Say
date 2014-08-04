@@ -27,26 +27,33 @@ import java.util.UUID;
 
 public class ServerAccess //implements ServerAccessable 
 {
-    private static final String HOST = "http://localhost:8080/";//"http://yswy.r4c00n.com/";
+    private static final String HOST = "http://yswy.r4c00n.com/";//"http://yswy.r4c00n.com/";
     private static final String REG_NEW_USER = "login";
     private static final String CHARSET = "utf-8";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
     private static final String PREFIX = "--", LINE_END = "\r\n";
     private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
 
-    public static String uploadPic(String imgPath) throws IOException
+/*    public static String uploadPic(String imgPath) throws IOException
     {
         return uploadFile("/", "access_token=123123&openid=fuck", imgPath);
     }
-
-    public static String newPost(String text, String addr, String jingdu, String weidu) throws IOException
+*/
+    public static String newPost(String openid,String text, String addr, String jingdu, String weidu) throws IOException
     {
-        return doPost("/post", "text="+text+"&addr="+addr+"&jingdu="+jingdu+"&weidu="+weidu);
+        return doPost("post_express_message", "user_openid="+openid+"&express_msg="+text+"&express_location="+addr+"&express_longitude="+jingdu+"&express_latitude="+weidu);
     }
 
-    public static String newPost(String text, String addr, String jingdu, String weidu, String imgPath) throws IOException
+    public static String getUserInfo(String openid) throws IOException {
+        return doPost("download_user_info", "user_openid="+openid);
+    }
+
+    public static String updateUserInfo(String openid, String nickName, String sex, String picPath) throws IOException {
+        return uploadFile("recv_user_info", "user_openid="+openid+"&user_nickname=\""+nickName+"\"&user_sex="+sex, picPath, "user_head");
+    }
+    public static String newPost(String openid, String text, String addr, String jingdu, String weidu, String imgPath) throws IOException
     {
-        return uploadFile("/post", "text="+text+"&addr="+addr+"&jingdu="+jingdu+"&weidu="+weidu, imgPath);
+        return uploadFile("post_express_message", "user_openid="+openid+"&express_msg="+text+"&express_location="+addr+"&express_longitude="+jingdu+"&express_latitude="+weidu, imgPath, "express_picture");
     }
 
     private static String packMutipartData(String boundary, String key, String value)
@@ -69,7 +76,7 @@ public class ServerAccess //implements ServerAccessable
         return sb.toString();
     }
     
-    private static String uploadFile(String uri, String params, String filePath) throws IOException
+    private static String uploadFile(String uri, String params, String filePath, String fileParam) throws IOException
     {
         int responseCode = 0;
         String result = null;
@@ -123,7 +130,7 @@ public class ServerAccess //implements ServerAccessable
              * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
              * filename是文件的名字，包含后缀名
              */
-            sb.append("Content-Disposition: form-data; name=\"UpFile\"; filename=\""
+            sb.append("Content-Disposition: form-data; name=\""+fileParam+"\"; filename=\""
                 + file.getName() + "\"" + LINE_END);
             sb.append("Content-Type: application/octet-stream; charset="
                 + CHARSET + LINE_END);
@@ -180,7 +187,7 @@ public class ServerAccess //implements ServerAccessable
     {
         String response = null;
 
-        response = doPost(REG_NEW_USER, "access_token=" + accessToken + "&openid=" + openID);
+        response = doPost(REG_NEW_USER, "user_token=" + accessToken + "&user_openid=" + openID);
 
         return response;
     }

@@ -3,6 +3,7 @@ package com.yuan.yuanisnosay.login;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.Tencent;
@@ -30,11 +31,15 @@ public class Login {
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
 
-	// private String mOpenId;
-	// private String mQQToken;
-	// private long mExpiresIn; // token剩余有效时间
-	// private long mExpiresDate; // token失效时间
+//	private String mOpenId;
+//	private String mQQToken;
+	private String mNickname;
+	private String mIconPath;
+	
+	private long mExpiresIn; // token剩余有效时间
+	private long mExpiresDate; // token失效时间
 
+	
 	// private boolean isLogin = false;
 
 	public static Login getInstance(Context context) {
@@ -62,13 +67,13 @@ public class Login {
 		String mQQToken = mPreferences.getString(KEY_QQTOKEN, null);
 		Long mExpiresDate = mPreferences.getLong(KEY_QQEXPIRESDATE, -1);
 		Long mExpiresIn = (mExpiresDate - System.currentTimeMillis()) / 1000;
-		
+
 		// 判断记录是否有效
 		if (mOpenId != null && mQQToken != null && mExpiresDate != -1) {
 			mTencent.setAccessToken(mQQToken, Long.toString(mExpiresDate));
 			mTencent.setOpenId(mOpenId);
 		}
-		mTencent.login(activity, SCOPE, new LoginUiListener(activity));
+		mTencent.login(activity, SCOPE, new LoginUiListener(activity,mTencent));
 		recordInfo();
 	}
 
@@ -90,7 +95,7 @@ public class Login {
 	public boolean isLogin() {
 		return mTencent.isSessionValid();
 	}
-
+	
 	public String getOpenId() {
 		return mTencent.getOpenId();
 	}
@@ -113,5 +118,25 @@ public class Login {
 
 		mEditor.commit();
 	}
-
+	
+//	public void setOpenId(String openId) {
+//		this.mOpenId = openId;
+//	}
+//	
+//	public void setQQToken(String qqToken) {
+//		this.mQQToken = qqToken;
+//	}
+	public String getNickname() {
+		return mNickname;
+	}
+	public void setNickname(String nickname) {
+		this.mNickname = nickname;
+	}
+	public String getIconPath() {
+		return mIconPath;
+	}
+	public void setIconPath(String iconPath) {
+		this.mIconPath = iconPath;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package com.yuan.yuanisnosay.wanttoconfess;
+package com.yuan.yuanisnosay.confessandprofile;
 
 public class TencentLocationModule {
 	
