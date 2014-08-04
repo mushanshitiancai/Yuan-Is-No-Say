@@ -1,5 +1,7 @@
 package com.yuan.yuanisnosay;
 
+import java.io.File;
+
 import android.app.Application;
 
 import com.yuan.yuanisnosay.login.Login;
@@ -16,6 +18,12 @@ public class YuanApplication extends Application{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		//建立app sd卡目录
+		File folder = new File(Const.YUAN_FOLDER_NAME);
+		if(folder.exists()==false){
+			folder.mkdir();
+		}
 		
 		mLogin=Login.getInstance(getApplicationContext());
 	}

@@ -4,6 +4,7 @@ import com.lee.pullrefresh.ui.ILoadingLayout.State;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -17,7 +18,7 @@ import android.widget.ListView;
  * @since 2013-8-15
  */
 public class PullToRefreshListView extends PullToRefreshBase<ListView> implements OnScrollListener {
-    
+    private static final String TAG="yuan_PullToRefreshListView";
     /**ListView*/
     private ListView mListView;
     /**用于滑到底部自动加载的Footer*/
@@ -201,11 +202,13 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView> implement
         final Adapter adapter = mListView.getAdapter();
 
         if (null == adapter || adapter.isEmpty()) {
+        	//Log.e(TAG, "isFirstItemVisible=true");
             return true;
         }
 
         int mostTop = (mListView.getChildCount() > 0) ? mListView.getChildAt(0).getTop() : 0;
         if (mostTop >= 0) {
+        	//Log.e(TAG, "isFirstItemVisible=true");
             return true;
         }
 

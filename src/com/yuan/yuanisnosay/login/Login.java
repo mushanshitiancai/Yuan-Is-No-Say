@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-
+import android.util.Log;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.Tencent;
 
@@ -15,13 +15,14 @@ import com.tencent.tauth.Tencent;
  * 
  */
 public class Login {
+	private static final String TAG="yuan_Login";
 	private static final String APP_ID = "1101877629";
 	private static final String SCOPE = "get_user_info";
 
 	private static final String SP_NAME = "login"; // sharePreference name
 	private static final String KEY_OPENID = "open_id";
 	private static final String KEY_QQTOKEN = "qq_token";
-	private static final String KEY_QQEXPIRESDATE = "qq_expires_date";
+	private static final String KEY_QQEXPIRES_IN = "qq_expires_in";
 
 	private static Login mInstance = null;
 
@@ -65,16 +66,20 @@ public class Login {
 		// 获取sharePreferences，获取记录的openId和qqToken
 		String mOpenId = mPreferences.getString(KEY_OPENID, null);
 		String mQQToken = mPreferences.getString(KEY_QQTOKEN, null);
-		Long mExpiresDate = mPreferences.getLong(KEY_QQEXPIRESDATE, -1);
-		Long mExpiresIn = (mExpiresDate - System.currentTimeMillis()) / 1000;
+		Long mExpiresIn = mPreferences.getLong(KEY_QQEXPIRES_IN, -1);
+		
+		Log.e(TAG, "读取数据 mExpiresIn="+mExpiresIn);
 
 		// 判断记录是否有效
-		if (mOpenId != null && mQQToken != null && mExpiresDate != -1) {
-			mTencent.setAccessToken(mQQToken, Long.toString(mExpiresDate));
+		if (mOpenId != null && mQQToken != null && mExpiresIn != -1) {
+			Log.e(TAG,"记录有效");
+			mTencent.setAccessToken(mQQToken, Long.toString((mExpiresIn-System.currentTimeMillis())/1000));
 			mTencent.setOpenId(mOpenId);
 		}
-		mTencent.login(activity, SCOPE, new LoginUiListener(activity,mTencent));
-		recordInfo();
+
+		mTencent.login(activity, SCOPE, new LoginUiListener(activity));
+		//recordInfo();
+
 	}
 
 	/**
@@ -86,7 +91,7 @@ public class Login {
 		mEditor = mPreferences.edit();
 		mEditor.remove(KEY_OPENID);
 		mEditor.remove(KEY_QQTOKEN);
-		mEditor.remove(KEY_QQEXPIRESDATE);
+		mEditor.remove(KEY_QQEXPIRES_IN);
 		mEditor.commit();
 
 		mTencent.logout(context);
@@ -107,15 +112,20 @@ public class Login {
 	/**
 	 * 记录id，token，expires到记录文件
 	 */
-	private void recordInfo() {
+	public void recordInfo() {
 		mEditor = mPreferences.edit();
-
-		long mExpiresDate = System.currentTimeMillis()
-				+ mTencent.getExpiresIn() * 1000;
+		
+		Log.e(TAG, "TencentgetExpiresIn="+mTencent.getExpiresIn());
+		//long expiresDate = System.currentTimeMillis()
+		//		+ mTencent.getExpiresIn() ;
 		mEditor.putString(KEY_OPENID, mTencent.getOpenId());
 		mEditor.putString(KEY_QQTOKEN, mTencent.getAccessToken());
-		mEditor.putLong(KEY_QQEXPIRESDATE, mExpiresDate);
+		mEditor.putLong(KEY_QQEXPIRES_IN, mTencent.getExpiresIn());
 
+		//记录数据
+		Log.e(TAG, "记录数据xxxxxxxxxx="+System.currentTimeMillis());
+		Log.e(TAG, "记录数据 mExpiresIn="+mTencent.getExpiresIn());
+		
 		mEditor.commit();
 	}
 	

@@ -1,20 +1,204 @@
 package com.yuan.yuanisnosay;
 
-import android.app.Activity;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class MainActivity extends Activity {
-	
+import com.yuan.yuanisnosay.ui.ConfessFragment;
+
+public class MainActivity extends FragmentActivity {
+	private static final String TAG = "yuan_MainActivity";
+	private static final int TAB_NEARBY = R.id.radio_nearby;
+	private static final int TAB_HOT = R.id.radio_hot;
+
+	private RadioGroup radioGroupMainTab;
+	private RadioButton radioNearby, radioHot;
+	private int curTab = TAB_NEARBY;
+	private boolean radioButtonChange = false;
+
+	private ConfessFragment mFragmentNearby, mFragmentHot;
+
+	// viewpager
+	ViewPager vpMain;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		
+
+		// 设置附近热门TAB
+		radioGroupMainTab = (RadioGroup) findViewById(R.id.radioGroup_mainTab);
+		radioGroupMainTab
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int id) {
+						radioButtonChange = true;
+						// 切换TAB时切换fragment
+						showFragment(id);
+					}
+				});
+
+		View.OnClickListener radioListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				// Log.e(TAG, "RadioButton onClick");
+				if (radioButtonChange) {
+					radioButtonChange = false;
+				} else {
+					refreshFragment(curTab);
+				}
+				// if (curTab == view.getId())
+				// refreshFragment(curTab);
+			}
+		};
+		radioNearby = (RadioButton) findViewById(R.id.radio_nearby);
+		radioHot = (RadioButton) findViewById(R.id.radio_hot);
+		radioNearby.setOnClickListener(radioListener);
+		radioHot.setOnClickListener(radioListener);
+
+		// 获取intent参数,判断Action
+		Intent intent = getIntent();
+
+		// 创建fragment
+		mFragmentNearby = new ConfessFragment(ConfessFragment.TYPE_NEARBY);
+		mFragmentHot = new ConfessFragment(ConfessFragment.TYPE_HOT);
+
+		// 配置Viewpager
+		vpMain = (ViewPager) findViewById(R.id.viewPager_main);
+		List<Fragment> fragmentList = new ArrayList<Fragment>();
+		List<String> titleList = new ArrayList<String>();
+		fragmentList.add(mFragmentNearby);
+		fragmentList.add(mFragmentHot);
+		titleList.add("1");
+		titleList.add("2");
+		PagerAdapter pagerAdapter = new myPagerAdapter(
+				getSupportFragmentManager(), fragmentList, titleList);
+		vpMain.setAdapter(pagerAdapter);
+		vpMain.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int item) {
+				Log.e(TAG, "onPageSelected:" + item);
+				setCurTab(item);
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// Log.e(TAG, "onPageScrolled:"+arg0+" "+arg1+" "+arg2);
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// Log.e(TAG, "onPageScrollStateChanged:"+arg0);
+			}
+		});
+
+		// vpMain.setCurrentItem(1);
+	}
+
+	/**
+	 * 主页Viewpager的适配器
+	 * 
+	 * @author 志彬
+	 * 
+	 */
+	class myPagerAdapter extends FragmentPagerAdapter {
+
+		private List<Fragment> fragmentList;
+		private List<String> titleList;
+
+		public myPagerAdapter(FragmentManager fm, List<Fragment> fragmentList,
+				List<String> titleList) {
+			super(fm);
+			this.fragmentList = fragmentList;
+			this.titleList = titleList;
+		}
+
+		@Override
+		public Fragment getItem(int arg0) {
+			return (fragmentList == null || fragmentList.size() == 0) ? null
+					: fragmentList.get(arg0);
+
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return (titleList.size() > position) ? titleList.get(position) : "";
+
+		}
+
+		@Override
+		public int getCount() {
+			return fragmentList == null ? 0 : fragmentList.size();
+		}
+
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		showFragment(curTab);
+	}
+
+	private void setCurTab(int index) {
+		if (index == 0 && curTab != R.id.radio_nearby) {
+			curTab = R.id.radio_nearby;
+			radioNearby.setChecked(true);
+			radioHot.setChecked(false);
+			radioButtonChange = false;
+		} else if(index == 1 && curTab != R.id.radio_hot) {
+			curTab = R.id.radio_hot;
+			radioNearby.setChecked(false);
+			radioHot.setChecked(true);
+			radioButtonChange = false;
+		}
+	}
+
+	/**
+	 * 显示tab对应的页面
+	 * 
+	 * @param tab
+	 *            tab按钮对于的id
+	 */
+	private void showFragment(int tab) {
+		curTab = tab;
+		if (tab == TAB_NEARBY) {
+			vpMain.setCurrentItem(0, true);
+		} else {
+			vpMain.setCurrentItem(1, true);
+		}
+	}
+
+	/**
+	 * 刷新tab对应的页面
+	 * 
+	 * @param tab
+	 *            tab按钮对于的id
+	 */
+	private void refreshFragment(int tab) {
+		if (tab == TAB_NEARBY) {
+			mFragmentNearby.refesh();
+		} else {
+			mFragmentHot.refesh();
+		}
 	}
 
 	@Override
@@ -31,12 +215,16 @@ public class MainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			Intent intent=new Intent(this,ListTestActivity.class);
+			Intent intent = new Intent(this, ListTestActivity.class);
 			startActivity(intent);
 			return true;
 		}
+		if(id == R.id.action_delete){
+			File confessFile = new File(Const.YUAN_FOLDER_NAME);
+			confessFile.delete();
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
-	
 }
