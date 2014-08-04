@@ -36,6 +36,21 @@
                 android:button="@null"
                 android:text="@string/mainTab_hot" />
         </RadioGroup>
+
+        <Button
+            android:id="@+id/button_mainActivity_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="个人" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="发表" />
+
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

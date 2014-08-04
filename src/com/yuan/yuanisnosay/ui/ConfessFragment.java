@@ -27,6 +27,8 @@ import com.lee.pullrefresh.ui.PullToRefreshListView;
 import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Util;
+import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.storage.StorageModel;
 import com.yuan.yuanisnosay.ui.adpater.ConfessAdapter;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
@@ -40,10 +42,13 @@ public class ConfessFragment extends Fragment {
 	private static final String TAG = "yuan_ConfessFragment";
 	public static final int TYPE_NEARBY = 0;
 	public static final int TYPE_HOT = 1;
+	public static final int TYPE_MINE = 2;
 	
 	public static final String ARGUMENT_VISIABLE="ARGUMENT_VISIABLE";
 
+	private YuanApplication mApp;
 	private int mType;
+	private String mStorageKey;
 	private Bundle mArguments;
 	private PullToRefreshListView mRefreshListView;
 	private ListView mListView;
@@ -52,11 +57,19 @@ public class ConfessFragment extends Fragment {
 	
 	public ConfessFragment(int type) {
 		mType=type;
+		if(mType == TYPE_NEARBY){
+			mStorageKey = StorageModel.KEY_NEARBY_LIST;
+		}else if(mType == TYPE_HOT){
+			mStorageKey = StorageModel.KEY_HOT_LIST;
+		}else if(mType == TYPE_MINE){
+			mStorageKey = StorageModel.KEY_MINE_LIST;
+		}
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mApp = (YuanApplication) getActivity().getApplication();
 		//mArguments = getArguments();
 		//boolean isVisiable = mArguments.getBoolean(ARGUMENT_VISIABLE);
 		
@@ -71,7 +84,12 @@ public class ConfessFragment extends Fragment {
 //		mConfessList = new LinkedList<ConfessItem>();
 		mConfessList = getConfesses();
 //		mConfessList.addAll(ConfessItem.getConfess(0, 3));
-		mAdapter = new ConfessAdapter(getActivity(), mConfessList);
+		if(mType == TYPE_MINE){
+			mAdapter = new ConfessAdapter(getActivity(), ConfessAdapter.TYPE_MINE, mConfessList);
+		}else{
+			mAdapter = new ConfessAdapter(getActivity(),ConfessAdapter.TYPE_NORMAL, mConfessList);
+		}
+		
 		mListView.setAdapter(mAdapter);
 
 		mRefreshListView
@@ -104,8 +122,10 @@ public class ConfessFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		Log.e(TAG, "onStop");
+		
 		//保存表白列表
-		saveConfesses();
+		mApp.getStorage().addData(mStorageKey, mConfessList);
+		//saveConfesses();
 	}
 
 	/**
@@ -123,47 +143,55 @@ public class ConfessFragment extends Fragment {
 		mRefreshListView.setLastUpdatedLabel(text);
 	}
 	
-	/**
-	 * 保存表白列表
-	 */
-	private void saveConfesses(){
-		Log.e(TAG, "saveConfesses():"+mConfessList);
-		File confessFile = new File(Const.YUAN_FOLDER_NAME,Const.CONFESS_FILENAME+mType);
-		try {
-			FileOutputStream fos=new FileOutputStream(confessFile);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(mConfessList);
-			oos.flush();
-			oos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	/**
+//	 * 保存表白列表
+//	 */
+//	private void saveConfesses(){
+//		Log.e(TAG, "saveConfesses():"+mConfessList);
+//		File confessFile = new File(Const.YUAN_FOLDER_NAME,Const.CONFESS_FILENAME+mType);
+//		try {
+//			FileOutputStream fos=new FileOutputStream(confessFile);
+//			ObjectOutputStream oos = new ObjectOutputStream(fos);
+//			oos.writeObject(mConfessList);
+//			oos.flush();
+//			oos.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	/**
+//	 * 获取表白列表
+//	 * @return 
+//	 */
+//	private LinkedList<ConfessItem> getConfesses(){
+//		File confessFile = new File(Const.YUAN_FOLDER_NAME,Const.CONFESS_FILENAME+mType);
+//		try {
+//			FileInputStream fis = new FileInputStream(confessFile);
+//			ObjectInputStream ois = new ObjectInputStream(fis);
+//			mConfessList=(LinkedList<ConfessItem>) ois.readObject();
+//			ois.close();
+//			
+//		} catch (FileNotFoundException e) {
+//			//e.printStackTrace();
+//		} catch (IOException e) {
+//			//e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			//e.printStackTrace();
+//		}
+//		if(mConfessList==null) mConfessList = new LinkedList<ConfessItem>(); 
+//		Log.e(TAG, "getConfesses():"+mConfessList);
+//		return mConfessList;
+//	}
 	
-	/**
-	 * 获取表白列表
-	 * @return 
-	 */
 	private LinkedList<ConfessItem> getConfesses(){
-		File confessFile = new File(Const.YUAN_FOLDER_NAME,Const.CONFESS_FILENAME+mType);
-		try {
-			FileInputStream fis = new FileInputStream(confessFile);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			mConfessList=(LinkedList<ConfessItem>) ois.readObject();
-			ois.close();
-			
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-		} catch (IOException e) {
-			//e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			//e.printStackTrace();
-		}
-		if(mConfessList==null) mConfessList = new LinkedList<ConfessItem>(); 
-		Log.e(TAG, "getConfesses():"+mConfessList);
-		return mConfessList;
+		LinkedList<ConfessItem> confessList;
+		confessList = (LinkedList<ConfessItem>) mApp.getStorage().getData(mStorageKey);
+		if(confessList==null) confessList = new LinkedList<ConfessItem>(); 
+		Log.e(TAG, "getConfesses():"+confessList);
+		return confessList;
 	}
 
 	/**
