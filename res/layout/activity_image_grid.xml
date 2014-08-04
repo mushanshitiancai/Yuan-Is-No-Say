@@ -39,11 +39,11 @@
             android:id="@+id/gridview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:horizontalSpacing="8dp"
-            android:numColumns="3"
-            android:scrollbars="none"
-            android:verticalSpacing="8dp" >
+            android:layout_margin="2dp"
+            android:verticalSpacing="4dp"
+            android:horizontalSpacing="4dp"
+            android:columnWidth="110dp"
+            android:numColumns="3" >
         </GridView>
 
     </RelativeLayout>

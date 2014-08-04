@@ -52,4 +52,10 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
+    <Button
+        android:id="@+id/btn_wantto_confess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我要表白" />
+
 </LinearLayout>

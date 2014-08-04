@@ -1,11 +1,11 @@
-package com.yuan.yuanisnosay.wanttoconfess;
+package com.yuan.yuanisnosay.confessandprofile;
 
 import java.util.List;
 
 /**
  * 一个目录的相册对象
  * 
- * @author Administrator
+ * @author dena
  * 
  */
 public class ImageBucket {

@@ -1,9 +1,9 @@
-package com.yuan.yuanisnosay.wanttoconfess;
+package com.yuan.yuanisnosay.confessandprofile;
 
 import java.util.List;
 
 import com.yuan.yuanisnosay.R;
-import com.yuan.yuanisnosay.wanttoconfess.BitmapCache.ImageCallback;
+//import com.yuan.yuanisnosay.confessandprofile.BitmapCache.ImageCallback;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -16,34 +16,38 @@ import android.widget.TextView;
 
 public class ImageBucketAdapter extends BaseAdapter {
 	final String TAG = getClass().getSimpleName();
-
+	private final int BITMAP_WIDTH = 2000;
+	private final int BITMAP_HEIGHT = 2000;
+	
 	Activity act;
 	/**
 	 * 图片集列表
 	 */
 	List<ImageBucket> dataList;
-	BitmapCache cache;
-	ImageCallback callback = new ImageCallback() {
-		@Override
-		public void imageLoad(ImageView imageView, Bitmap bitmap,
-				Object... params) {
-			if (imageView != null && bitmap != null) {
-				String url = (String) params[0];
-				if (url != null && url.equals((String) imageView.getTag())) {
-					((ImageView) imageView).setImageBitmap(bitmap);
-				} else {
-					Log.e(TAG, "callback, bmp not match");
-				}
-			} else {
-				Log.e(TAG, "callback, bmp null");
-			}
-		}
-	};
+	private ImageAdapterHelper imageAdapterHelper;
+//	BitmapCache cache;
+//	ImageCallback callback = new ImageCallback() {
+//		@Override
+//		public void imageLoad(ImageView imageView, Bitmap bitmap,
+//				Object... params) {
+//			if (imageView != null && bitmap != null) {
+//				String url = (String) params[0];
+//				if (url != null && url.equals((String) imageView.getTag())) {
+//					((ImageView) imageView).setImageBitmap(bitmap);
+//				} else {
+//					Log.e(TAG, "callback, bmp not match");
+//				}
+//			} else {
+//				Log.e(TAG, "callback, bmp null");
+//			}
+//		}
+//	};
 
 	public ImageBucketAdapter(Activity act, List<ImageBucket> list) {
 		this.act = act;
 		dataList = list;
-		cache = new BitmapCache();
+//		cache = new BitmapCache();
+		imageAdapterHelper = new ImageAdapterHelper(act,BITMAP_WIDTH,BITMAP_HEIGHT);
 	}
 
 	@Override
@@ -98,7 +102,8 @@ public class ImageBucketAdapter extends BaseAdapter {
 			String thumbPath = item.imageList.get(0).thumbnailPath;
 			String sourcePath = item.imageList.get(0).imagePath;
 			holder.iv.setTag(sourcePath);
-			cache.displayBmp(holder.iv, thumbPath, sourcePath, callback);
+//			cache.displayBmp(holder.iv, thumbPath, sourcePath, callback);
+			imageAdapterHelper.showImg(sourcePath, holder.iv);
 		} else {
 			holder.iv.setImageBitmap(null);
 			Log.e(TAG, "no images in bucket " + item.bucketName);
