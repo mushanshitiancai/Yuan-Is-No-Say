@@ -50,14 +50,14 @@ public class ConfessItem implements Serializable{
 	}
 	static public void addConfess(int n){
 		for(int i=0;i<n;i++){
-			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), testIcon, 1,1,location);
+			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), null, 1,1,location);
 			testList.addFirst(item);
 		}
 	}
 	static{
 		location.setRegionName("腾讯大厦");
 		for(int i=0;i<10;i++){
-			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), testIcon, 1,1,location);
+			ConfessItem item=new ConfessItem(TYPE_NORMAL, size, size++ +"i love you", "tobynma", new Date(), testIcon+random.nextInt(15), null, 1,1,location);
 			testList.addFirst(item);
 		}
 		new Thread(){

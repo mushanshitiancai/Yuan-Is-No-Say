@@ -1,6 +1,5 @@
 package com.yuan.yuanisnosay;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +13,13 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -35,6 +37,8 @@ public class MainActivity extends FragmentActivity {
 	private int curTab = TAB_NEARBY;
 	private boolean radioButtonChange = false;
 	private Button btnUser;
+	private View btnDistance;
+	private PopupWindow mPopupWindowDistance;
 
 	private ConfessFragment mFragmentNearby, mFragmentHot;
 
@@ -125,6 +129,37 @@ public class MainActivity extends FragmentActivity {
 				startActivity(intent);
 			}
 		});
+		
+		initDistanceButton();
+	}
+	
+	private void initDistanceButton(){
+		btnDistance = findViewById(R.id.relativeLayout_distance);
+		final int height=btnDistance.getLayoutParams().height*2;
+        int width=btnDistance.getLayoutParams().width;
+        View popupView = this.getLayoutInflater().inflate(R.layout.popup_distance, null);
+        
+        View btn=popupView.findViewById(R.id.button1);
+        btn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mPopupWindowDistance.dismiss();
+			}
+		});
+
+        mPopupWindowDistance =new PopupWindow(popupView,width,height);
+        mPopupWindowDistance.setFocusable(true);
+        mPopupWindowDistance.setAnimationStyle(R.style.PopupAnimation);
+        
+        btnDistance.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				int[] location = new int[2];
+				view.getLocationInWindow(location);
+				
+				mPopupWindowDistance.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1]-height);
+			}
+		});
 	}
 
 	/**
@@ -178,11 +213,13 @@ public class MainActivity extends FragmentActivity {
 			radioNearby.setChecked(true);
 			radioHot.setChecked(false);
 			radioButtonChange = false;
+			btnDistance.setVisibility(View.VISIBLE);
 		} else if(index == 1 && curTab != R.id.radio_hot) {
 			curTab = R.id.radio_hot;
 			radioNearby.setChecked(false);
 			radioHot.setChecked(true);
 			radioButtonChange = false;
+			btnDistance.setVisibility(View.GONE);
 		}
 	}
 
