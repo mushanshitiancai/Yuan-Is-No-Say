@@ -125,6 +125,10 @@ public class ServerAccess {
         doPost("read_express_message", params, handler);
     }
 
+    public static void getConfessById(long postID, ServerResponseHandler handler) {
+        getMoreConfessListHeat(postID, 1, handler);
+    }
+
     public static void getNewConfessListHeat(int len, ServerResponseHandler handler) {
         getMoreConfessListHot(~(long)(1<<63), len, handler);
     } 
