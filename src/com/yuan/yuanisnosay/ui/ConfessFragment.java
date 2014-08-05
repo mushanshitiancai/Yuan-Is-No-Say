@@ -80,6 +80,7 @@ public class ConfessFragment extends Fragment {
 		mListView = mRefreshListView.getRefreshableView();
 		mRefreshListView.setPullLoadEnabled(false);
 		mRefreshListView.setScrollLoadEnabled(true);
+		mListView.setVerticalScrollBarEnabled(false);
 
 //		mConfessList = new LinkedList<ConfessItem>();
 		mConfessList = getConfesses();

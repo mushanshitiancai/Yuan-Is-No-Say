@@ -15,16 +15,19 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
+import com.yuan.yuanisnosay.ui.DistancePopup;
 
 public class MainActivity extends FragmentActivity {
 	private static final String TAG = "yuan_MainActivity";
@@ -38,13 +41,16 @@ public class MainActivity extends FragmentActivity {
 	private boolean radioButtonChange = false;
 	private Button btnUser;
 	private Button btnWantToConfess;
-	
+	private View btnDistance;
+	private DistancePopup mDistancePopup;
+	private TextView tvDistance;
+
 	private ConfessFragment mFragmentNearby, mFragmentHot;
 
 	// viewpager
 	ViewPager vpMain;
-	
-	//test
+
+	// test
 	boolean mIsWantToDelete = false;
 
 	@Override
@@ -52,18 +58,17 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mApp = (YuanApplication) getApplication();
-		
+
 		// 设置附近热门TAB
 		radioGroupMainTab = (RadioGroup) findViewById(R.id.radioGroup_mainTab);
-		radioGroupMainTab
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int id) {
-						radioButtonChange = true;
-						// 切换TAB时切换fragment
-						showFragment(id);
-					}
-				});
+		radioGroupMainTab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int id) {
+				radioButtonChange = true;
+				// 切换TAB时切换fragment
+				showFragment(id);
+			}
+		});
 
 		View.OnClickListener radioListener = new View.OnClickListener() {
 			@Override
@@ -98,8 +103,7 @@ public class MainActivity extends FragmentActivity {
 		fragmentList.add(mFragmentHot);
 		titleList.add("1");
 		titleList.add("2");
-		PagerAdapter pagerAdapter = new myPagerAdapter(
-				getSupportFragmentManager(), fragmentList, titleList);
+		PagerAdapter pagerAdapter = new myPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
 		vpMain.setAdapter(pagerAdapter);
 		vpMain.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
@@ -120,11 +124,11 @@ public class MainActivity extends FragmentActivity {
 		});
 
 		// vpMain.setCurrentItem(1);
-		btnUser = (Button)findViewById(R.id.button_mainActivity_user);
+		btnUser = (Button) findViewById(R.id.button_mainActivity_user);
 		btnUser.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View button) {
-				Intent intent=new Intent(MainActivity.this,UserActivity.class);
+				Intent intent = new Intent(MainActivity.this, UserActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -157,6 +161,27 @@ public class MainActivity extends FragmentActivity {
 						mApp.getLogin().getOpenId());
 			}
 		});
+
+		initDistanceButton();
+	}
+
+	private void initDistanceButton() {
+		int[] distanceArr={100,200,500};
+		btnDistance = findViewById(R.id.relativeLayout_distance);
+		tvDistance=(TextView)findViewById(R.id.textView_distance);
+		tvDistance.setText(distanceArr[0]+" m");
+		mDistancePopup=new DistancePopup(this, btnDistance, distanceArr, new DistancePopup.DistancePopupListener() {
+			@Override
+			public void onDistanceChange(int distance) {
+				tvDistance.setText(distance+" m");
+				refreshByDistance(distance);
+			}
+		});
+	}
+	
+	//TODO
+	private void refreshByDistance(int distance){
+		
 	}
 
 	
@@ -172,8 +197,7 @@ public class MainActivity extends FragmentActivity {
 		private List<Fragment> fragmentList;
 		private List<String> titleList;
 
-		public myPagerAdapter(FragmentManager fm, List<Fragment> fragmentList,
-				List<String> titleList) {
+		public myPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList) {
 			super(fm);
 			this.fragmentList = fragmentList;
 			this.titleList = titleList;
@@ -181,8 +205,7 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public Fragment getItem(int arg0) {
-			return (fragmentList == null || fragmentList.size() == 0) ? null
-					: fragmentList.get(arg0);
+			return (fragmentList == null || fragmentList.size() == 0) ? null : fragmentList.get(arg0);
 
 		}
 
@@ -212,11 +235,13 @@ public class MainActivity extends FragmentActivity {
 			radioNearby.setChecked(true);
 			radioHot.setChecked(false);
 			radioButtonChange = false;
-		} else if(index == 1 && curTab != R.id.radio_hot) {
+			btnDistance.setVisibility(View.VISIBLE);
+		} else if (index == 1 && curTab != R.id.radio_hot) {
 			curTab = R.id.radio_hot;
 			radioNearby.setChecked(false);
 			radioHot.setChecked(true);
 			radioButtonChange = false;
+			btnDistance.setVisibility(View.GONE);
 		}
 	}
 
@@ -248,17 +273,38 @@ public class MainActivity extends FragmentActivity {
 			mFragmentHot.refesh();
 		}
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		mApp.getStorage().save();
-		if(mIsWantToDelete){
+		if (mIsWantToDelete) {
 			mApp.getStorage().delete();
 		}
 	}
 	
+	
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		
+		mDistancePopup.dismissDistancePopup();
+
+		return super.onTouchEvent(event);
+
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		if (mDistancePopup.dismissDistancePopup()) {
+			return ;
+		}
+		super.onBackPressed();
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -282,10 +328,10 @@ public class MainActivity extends FragmentActivity {
 			startActivity(intent);
 			return true;
 		}
-		if(id == R.id.action_delete){
+		if (id == R.id.action_delete) {
 			mIsWantToDelete = true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
