@@ -93,12 +93,12 @@ public class ServerAccess {
 	}
 
 	public static void getConfessList(String addr, double longitude,
-			double latiude, long baseID, int len, ServerResponseHandler handler) {
+			double latitude, long baseID, int len, ServerResponseHandler handler) {
 		RequestParams params = new RequestParams();
 
 		params.put("user_location", addr);
 		params.put("user_longitude", longitude);
-		params.put("user_latiude", latiude);
+		params.put("user_latitude", latitude);
 		params.put("base_id", baseID);
 		params.put("length", len);
 
@@ -106,7 +106,7 @@ public class ServerAccess {
 	}
 
 	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latiude, String picPath,
+			String addr, double longitude, double latitude, String picPath,
 			ServerResponseHandler handler) throws FileNotFoundException {
 		RequestParams params = new RequestParams();
 
@@ -114,7 +114,7 @@ public class ServerAccess {
 		params.put("express_msg", confessMsg);
 		params.put("express_location", addr);
 		params.put("express_longitude", longitude);
-		params.put("express_latiude", latiude);
+		params.put("express_latitude", latitude);
 		if ("" != picPath)
 			params.put("express_picture", new File(picPath));
 
@@ -122,10 +122,10 @@ public class ServerAccess {
 	}
 
 	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latiude,
+			String addr, double longitude, double latitude,
 			ServerResponseHandler handler) {
 		try {
-			postNewConfess(openid, confessMsg, addr, longitude, latiude, "",
+			postNewConfess(openid, confessMsg, addr, longitude, latitude, "",
 					handler);
 		} catch (FileNotFoundException e) {
 		}

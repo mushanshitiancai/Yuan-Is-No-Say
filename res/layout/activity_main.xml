@@ -45,7 +45,7 @@
             android:text="个人" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button_mainActivity_confess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

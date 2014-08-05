@@ -1,7 +1,14 @@
 package com.yuan.yuanisnosay;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
+import com.tencent.map.geolocation.TencentLocationManager;
+import com.tencent.map.geolocation.TencentLocationRequest;
+import com.yuan.yuanisnosay.confessandprofile.TencentLocationHelper;
+import com.yuan.yuanisnosay.confessandprofile.TencentLocationModule;
 import com.yuan.yuanisnosay.login.Login;
 import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.storage.StorageModel;
@@ -13,9 +20,16 @@ import com.yuan.yuanisnosay.storage.StorageModel;
  */
 public class YuanApplication extends Application{
 	
+	private static final int M_LOCATION = 0;
+	
 	private Login mLogin;
 	private StorageModel mStorageModel;
 	private Network mNetwork;
+	
+	private TencentLocationManager mLocationManager;
+	private TencentLocationHelper mLocationHelper;
+	private double mLongitude;
+	private double mLatitude;
 	
 	@Override
 	public void onCreate() {
@@ -30,6 +44,10 @@ public class YuanApplication extends Application{
 		
 		mStorageModel.read();
 		
+		//初始化定位变量
+		initLocate();
+		
+		Log.e("mzb", "mLogin.islogin"+mLogin.isLogin());
 		
 	}
 	
@@ -44,4 +62,35 @@ public class YuanApplication extends Application{
 	public Network getNetwork(){
 		return mNetwork;
 	}
+	
+	private void initLocate() {
+		TencentLocationRequest tencentLocationReq = TencentLocationRequest
+				.create().setRequestLevel(
+						TencentLocationRequest.REQUEST_LEVEL_POI);
+		mLocationHelper = new TencentLocationHelper(mHandler);
+		mLocationManager = TencentLocationManager.getInstance(this);
+		mLocationManager.requestLocationUpdates(tencentLocationReq, mLocationHelper);
+	}
+	
+	public double getLongitude() {
+		return mLongitude;
+	}
+
+	public double getLatitude() {
+		return mLatitude;
+	}
+
+	public Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+			case M_LOCATION:
+				TencentLocationModule mLocationModule = (TencentLocationModule)msg.obj;
+				mLongitude = mLocationModule.getLongitude();
+				mLatitude = mLocationModule.getLatitude();
+				mLocationManager.removeUpdates(mLocationHelper);
+				break;
+			}
+		}
+	};
 }
