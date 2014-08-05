@@ -23,6 +23,9 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
+import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
+import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.DistancePopup;
 
@@ -37,6 +40,7 @@ public class MainActivity extends FragmentActivity {
 	private int curTab = TAB_NEARBY;
 	private boolean radioButtonChange = false;
 	private Button btnUser;
+	private Button btnWantToConfess;
 	private View btnDistance;
 	private DistancePopup mDistancePopup;
 	private TextView tvDistance;
@@ -128,6 +132,35 @@ public class MainActivity extends FragmentActivity {
 				startActivity(intent);
 			}
 		});
+		
+		btnWantToConfess = (Button)findViewById(R.id.button_mainActivity_confess);
+		btnWantToConfess.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Network network = mApp.getNetwork();
+				if (!network.isOnline()) {
+					com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
+							"网络连接不可用啊....");
+					return;
+				}
+				if (!mApp.getLogin().isLogin()) {
+					mApp.getLogin().login(MainActivity.this);
+					return;
+				}
+				com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
+						mApp.getLogin().getmRegisterStatus()+"");
+				if(mApp.getLogin().getmRegisterStatus() != Status.Login.M_REGISTER_SUCCESS) {
+					Intent intent = new Intent(MainActivity.this,PersonalProfileActivity.class);
+					startActivity(intent);
+					return;
+				}
+				Intent intent = new Intent(MainActivity.this,WantToConfessActivity.class);
+				startActivity(intent);
+				com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
+						mApp.getLogin().getOpenId());
+			}
+		});
 
 		initDistanceButton();
 	}
@@ -151,6 +184,8 @@ public class MainActivity extends FragmentActivity {
 		
 	}
 
+	
+	
 	/**
 	 * 主页Viewpager的适配器
 	 * 

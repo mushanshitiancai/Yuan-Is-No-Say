@@ -20,7 +20,7 @@
             android:background="@drawable/main_user" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button_mainActivity_confess"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
