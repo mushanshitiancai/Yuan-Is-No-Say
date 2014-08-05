@@ -30,7 +30,7 @@ public class ListTestActivity extends ActionBarActivity {
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
 			R.id.button_getInfo, R.id.button_register,R.id.button_upPic,
-			R.id.btn_wantto_confess};
+			R.id.btn_wantto_confess,R.id.button_network};
 
 	private Handler mHandler;
 
@@ -91,6 +91,9 @@ public class ListTestActivity extends ActionBarActivity {
 			case R.id.button_upPic:
 				uploadPicTest();
 				break;
+			case R.id.button_network:
+				networkTest();
+				break;
 			case R.id.btn_wantto_confess:
 				Intent intent = new Intent(ListTestActivity.this,WantToConfessActivity.class);
 				startActivity(intent);
@@ -138,6 +141,14 @@ public class ListTestActivity extends ActionBarActivity {
 //				}
 			}
 		}.start();
+	}
+	
+	private void networkTest(){
+		if(!mApp.getNetwork().isOnline()){
+			Util.showToast(this, "没有网络连接!!!");
+		}else{
+			Util.showToast(this, "有网络连接");
+		}
 	}
 
 	@Override

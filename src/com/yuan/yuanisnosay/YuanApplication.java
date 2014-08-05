@@ -1,10 +1,9 @@
 package com.yuan.yuanisnosay;
 
-import java.io.File;
-
 import android.app.Application;
 
 import com.yuan.yuanisnosay.login.Login;
+import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.storage.StorageModel;
 
 /**
@@ -16,11 +15,13 @@ public class YuanApplication extends Application{
 	
 	private Login mLogin;
 	private StorageModel mStorageModel;
+	private Network mNetwork;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
+		mNetwork = Network.getInstance(this);
 		mLogin = Login.getInstance(getApplicationContext());
 		mStorageModel = StorageModel.getInstance();
 		
@@ -28,6 +29,7 @@ public class YuanApplication extends Application{
 		StorageModel.createAppFolder();
 		
 		mStorageModel.read();
+		
 		
 	}
 	
@@ -37,5 +39,9 @@ public class YuanApplication extends Application{
 	
 	public StorageModel getStorage(){
 		return mStorageModel;
+	}
+	
+	public Network getNetwork(){
+		return mNetwork;
 	}
 }

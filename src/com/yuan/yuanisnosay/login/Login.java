@@ -72,7 +72,7 @@ public class Login {
 
 		// 判断记录是否有效
 		if (mOpenId != null && mQQToken != null && mExpiresIn != -1) {
-			Log.e(TAG,"记录有效");
+			Log.e(TAG,"记录有效+mOpenId:"+mOpenId+"  mQQToken:"+mQQToken);
 			mTencent.setAccessToken(mQQToken, Long.toString((mExpiresIn-System.currentTimeMillis())/1000));
 			mTencent.setOpenId(mOpenId);
 		}
