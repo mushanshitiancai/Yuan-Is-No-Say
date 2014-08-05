@@ -2,7 +2,10 @@ package com.yuan.yuanisnosay;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
 import android.support.v7.app.ActionBarActivity;
@@ -25,11 +28,13 @@ import android.widget.Toast;
 
 public class CommentActivity extends ActionBarActivity {
 	
-	public final String PARENT_CONFESS = "confessItem";
+	public static final String PARENT_CONFESS = "confessItem";
+	public static final String POST_ID = "postID";
 	private TextView mParentConfess;
-	private ListView mCommentList;
-	private EditText mCommentContent;
-	private Button mCommentSend;
+	private static ListView mCommentList;
+	private static EditText mCommentContent;
+	private static Button mCommentSend;
+	private int postID;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,20 +44,22 @@ public class CommentActivity extends ActionBarActivity {
 		mCommentContent = (EditText) findViewById(R.id.editText_commentContent);
 		mCommentSend = (Button) findViewById(R.id.button_commentSend);
 		
-		//TEST 动态添加List元素		
-		setCommentListContent();
-		
-		/*ServerAccess sa = new ServerAccess();
-		
 		Intent intent = getIntent();
-		ConfessItem confessItem = (ConfessItem) intent.getSerializableExtra(PARENT_CONFESS);
-		mParentConfess.setText(confessItem.getContent());
-		setCommentListContent(confessItem.getId());*/
+		postID = intent.getIntExtra(POST_ID, 0);
 		
+		setParentConfess(postID);
+		setCommentListContent(postID);
+		
+	
 		
 	}
+	//TODO
+	public void setParentConfess(int postID) {
+		//ConfessItem confessItem = ServerAccess.getCommentList(postID, handler)
+		return ;		
+	}
 	
-	private void setCommentListContent() {
+	private void setCommentListContent(final int postID) {
 		final ArrayList<String> strs = new ArrayList<String>();
 		strs.add("first");
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
@@ -67,7 +74,21 @@ public class CommentActivity extends ActionBarActivity {
             		Toast.makeText(getApplicationContext(), "请输入评论内容", 1000).show();
             	} else {
             		//TODO 发送评论
-            		
+            		ServerAccess.getCommentList(postID, new ServerResponseHandler() {
+
+            			@Override
+            			public void onSuccess(JSONObject result) {
+            				// TODO Auto-generated method stub
+            				
+            			}
+
+            			@Override
+            			public void onFailure(Throwable error) {
+            				// TODO Auto-generated method stub
+            				
+            			}
+            			
+            		});
             		strs.add(newComment);
                 	adapter.notifyDataSetChanged(); 
                 	mCommentContent.setText("");
@@ -80,13 +101,7 @@ public class CommentActivity extends ActionBarActivity {
 		//TODO 设置CommentList
 		
 		
-	}
-
-	//TODO
-	public ConfessItem getParentConfess() {
-		return null;		
-	}
-	
+	}	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
