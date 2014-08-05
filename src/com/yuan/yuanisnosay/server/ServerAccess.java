@@ -1,231 +1,133 @@
 package com.yuan.yuanisnosay.server;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.UUID;
 
-//2014年8月2日14:00:02
+import org.json.JSONException;
+import org.json.JSONObject;
 
-//interface ServerAccessable 
-//{
-//    public static String updateUserInfo(String openID, String nickName, String sex, String imgFilePath) throws IOException;
-//    public static String uploadPic(String imgPath);
-//    public static String newPost(String text, String addr, String jingdu, String weidu) throws IOException;
-//    public static String newPost(String text, String addr, String jingdu, String weidu, String imgPath) throws IOException;
-    /*
-    */
-//    public String registerNewUser(String accessToken, String openID) throws IOException;
-//}
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-public class ServerAccess //implements ServerAccessable 
-{
-    private static final String HOST = "http://yswy.r4c00n.com/";//"http://yswy.r4c00n.com/";
-    private static final String REG_NEW_USER = "login";
-    private static final String CHARSET = "utf-8";
-    private static final int TIME_OUT = 10 * 1000; // 超时时间
-    private static final String PREFIX = "--", LINE_END = "\r\n";
-    private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+public class ServerAccess {
 
-/*    public static String uploadPic(String imgPath) throws IOException
-    {
-        return uploadFile("/", "access_token=123123&openid=fuck", imgPath);
-    }
-*/
-    public static String newPost(String openid,String text, String addr, String jingdu, String weidu) throws IOException
-    {
-        return doPost("post_express_message", "user_openid="+openid+"&express_msg="+text+"&express_location="+addr+"&express_longitude="+jingdu+"&express_latitude="+weidu);
-    }
+	public interface ServerResponseHandler {
+		public void onSuccess(JSONObject result);
+		public void onFailure(Throwable error);
+	}
 
-    public static String getUserInfo(String openid) throws IOException {
-        return doPost("download_user_info", "user_openid="+openid);
-    }
+	public final static String HOST = "http://yswy.r4c00n.com/";
 
-    public static String updateUserInfo(String openid, String nickName, String sex, String picPath) throws IOException {
-        return uploadFile("recv_user_info", "user_openid="+openid+"&user_nickname=\""+nickName+"\"&user_sex="+sex, picPath, "user_head");
-    }
-    public static String newPost(String openid, String text, String addr, String jingdu, String weidu, String imgPath) throws IOException
-    {
-        return uploadFile("post_express_message", "user_openid="+openid+"&express_msg="+text+"&express_location="+addr+"&express_longitude="+jingdu+"&express_latitude="+weidu, imgPath, "express_picture");
-    }
+	private static void doPost(String uri, RequestParams params,
+			final ServerResponseHandler handler) {
+		AsyncHttpClient client = new AsyncHttpClient();
 
-    private static String packMutipartData(String boundary, String key, String value)
-    {
-        StringBuffer sb = new StringBuffer();
-        String LINE_END = "\r\n";
+		client.post(HOST + uri, params, new AsyncHttpResponseHandler() {
 
-        sb.append(PREFIX);
-        sb.append(boundary);
-        sb.append(LINE_END);
-        sb.append("Content-Disposition: form-data; name=\""+key+"\""+LINE_END);
-        //sb.append("Content-Type: text/plain; charset=utf-8"+LINE_END);
-        sb.append(LINE_END);
-        sb.append(value);
-        sb.append(LINE_END);
-        //sb.append(PREFIX);
-        //sb.append(boundary);
-        //sb.append(PREFIX+LINE_END);
-        
-        return sb.toString();
-    }
-    
-    private static String uploadFile(String uri, String params, String filePath, String fileParam) throws IOException
-    {
-        int responseCode = 0;
-        String result = null;
-        String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
-        File file = new File(filePath);
-        URL url = new URL(HOST+uri);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        
-        conn.setReadTimeout(TIME_OUT);
-        conn.setConnectTimeout(TIME_OUT);
-        conn.setDoInput(true); // 允许输入流
-        conn.setDoOutput(true); // 允许输出流
-        conn.setUseCaches(false); // 不允许使用缓存
-        conn.setRequestMethod("POST"); // 请求方式
-        conn.setRequestProperty("Charset", CHARSET); // 设置编码
-        conn.setRequestProperty("connection", "keep-alive");
-        conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
+			@Override
+			public void onSuccess(int statusCode,
+					org.apache.http.Header[] headers, byte[] responseBody) {
+				if (null != handler)
+					try {
+						handler.onSuccess(new JSONObject(new String(
+								responseBody)));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
 
-//        if (null != file) 
-        {
-            /**
-             * 当文件不为空时执行上传
-             */
-            DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-            StringBuffer sb = new StringBuffer();
-            /*
-            sb.append(PREFIX);
-            sb.append(BOUNDARY);
-            sb.append(LINE_END);
-            sb.append("Content-Disposition: form-data; name=\"access_token\""+LINE_END);
-            sb.append("Content-Type: text/plain; charset=utf-8"+LINE_END);
-            sb.append(LINE_END);
-            sb.append(params);
-            sb.append(LINE_END);
-            sb.append(PREFIX);
-            sb.append(BOUNDARY);
-            sb.append(PREFIX+LINE_END);
-            */
-            String[] paramsArray = params.split("&");
-            for (int i = 0; i < paramsArray.length; i++) 
-            {
-                int idxOfEqu = paramsArray[i].indexOf("=");
-	            sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
-	            System.out.println(paramsArray[i].substring(0, idxOfEqu)+paramsArray[i].substring(idxOfEqu+1));
-            }
-            
-            sb.append(PREFIX);
-            sb.append(BOUNDARY);
-            sb.append(LINE_END);
-            /**
-             * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
-             * filename是文件的名字，包含后缀名
-             */
-            sb.append("Content-Disposition: form-data; name=\""+fileParam+"\"; filename=\""
-                + file.getName() + "\"" + LINE_END);
-            sb.append("Content-Type: application/octet-stream; charset="
-                + CHARSET + LINE_END);
-            sb.append(LINE_END);
+			public void onFailure(int statusCode,
+					org.apache.http.Header[] headers, byte[] responseBody,
+					Throwable error) {
+				if (null != handler)
+					handler.onFailure(error);
+			}
+		});
+	}
 
-            System.out.println(sb);
-            dos.write(sb.toString().getBytes());
-            
-            InputStream is = new FileInputStream(file);
-            byte[] bytes = new byte[1024];
-            int len = 0;
-            
-            while ((len = is.read(bytes)) != -1) 
-            {
-                dos.write(bytes, 0, len);
-            }
-            is.close();
-            
-            dos.write(LINE_END.getBytes());
-            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
-                .getBytes();
-            dos.write(end_data);
-            dos.flush();
-            /**
-             * 获取响应码 200=成功 当响应成功，获取响应的流
-             */
-            responseCode = conn.getResponseCode();
-            //System.out.println(responseCode);
-            //System.out.println(TAG+":\n\tresponse code:" + res);
-            if (200 == responseCode) 
-            {
-                //System.out.println(TAG+"\n\trequest success");
-                InputStream input = conn.getInputStream();
-                StringBuffer sb1 = new StringBuffer();
-                int ss;
-                
-                while ((ss = input.read()) != -1) 
-                {
-                    sb1.append((char) ss);
-                }
-                result = sb1.toString();
-                //System.out.println(TAG+":\n\tresult : " + result);
-            }
-        }
-//	else
-//	{
-//	    throw new IOException();
-//	}
-        
-        return result;
-    }
+	public static void registerNewUser(String accessToken, String openid,
+			ServerResponseHandler handler) {
+		RequestParams params = new RequestParams();
 
-    public String registerNewUser(String accessToken, String openID) throws IOException
-    {
-        String response = null;
+		params.put("user_token", accessToken);
+		params.put("user_openid", openid);
 
-        response = doPost(REG_NEW_USER, "user_token=" + accessToken + "&user_openid=" + openID);
+		doPost("login", params, handler);
+	}
 
-        return response;
-    }
+	public static void getUserInfo(String openid, ServerResponseHandler handler) {
+		RequestParams params = new RequestParams();
 
-    private static String doPost(String uri, String params) throws IOException
-    {
-        String response = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
+		params.put("user_openid", openid);
 
-        //try
-        //{
-            URL url = new URL(HOST+uri);
-            URLConnection conn = (HttpURLConnection) url.openConnection();
+		doPost("download_user_info", params, handler);
+	}
 
-            //System.out.println("1");
+	public static void updateUserInfo(String openid, String nickName,
+			String sex, String picPath, ServerResponseHandler handler)
+			throws java.io.FileNotFoundException {
+		RequestParams params = new RequestParams();
 
-            conn.setDoInput(true); // 允许输入流
-            conn.setDoOutput(true); // 允许输出流
-            conn.setUseCaches(false); // 不允许使用缓存
-            //conn.setRequestMethod("POST"); // 请求方式
-            conn.setRequestProperty("Charset", CHARSET); // 设置编码
+		params.put("user_openid", openid);
+		params.put("user_nickname", nickName);
+		params.put("user_sex", sex);
+		params.put("user_head", new File(picPath));
 
-            out = new PrintWriter(conn.getOutputStream());
-            out.print(params);
-            out.flush();
+		doPost("recv_user_info", params, handler);
+	}
 
-            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            response = "";
-            String line;
-            while ((line = in.readLine()) != null)
-            {
-                response = response + line;
-            }
-//        }
+	public static void updateUserInfo(String openid, String nickName,
+			String sex, InputStream streamDefaultPic,
+			ServerResponseHandler handler) {
+		RequestParams params = new RequestParams();
 
-        return response;
-    }
+		params.put("user_openid", openid);
+		params.put("user_nickname", nickName);
+		params.put("user_sex", sex);
+		params.put("user_head", streamDefaultPic);
 
+		doPost("recv_user_info", params, handler);
+	}
 
+	public static void getConfessList(String addr, double longitude,
+			double latiude, long baseID, int len, ServerResponseHandler handler) {
+		RequestParams params = new RequestParams();
+
+		params.put("user_location", addr);
+		params.put("user_longitude", longitude);
+		params.put("user_latiude", latiude);
+		params.put("base_id", baseID);
+		params.put("length", len);
+
+		doPost("read_express_message", params, handler);
+	}
+
+	public static void postNewConfess(String openid, String confessMsg,
+			String addr, double longitude, double latiude, String picPath,
+			ServerResponseHandler handler) throws FileNotFoundException {
+		RequestParams params = new RequestParams();
+
+		params.put("user_openid", openid);
+		params.put("express_msg", confessMsg);
+		params.put("express_location", addr);
+		params.put("express_longitude", longitude);
+		params.put("express_latiude", latiude);
+		if ("" != picPath)
+			params.put("express_picture", new File(picPath));
+
+		doPost("post_express_message", params, handler);
+	}
+
+	public static void postNewConfess(String openid, String confessMsg,
+			String addr, double longitude, double latiude,
+			ServerResponseHandler handler) {
+		try {
+			postNewConfess(openid, confessMsg, addr, longitude, latiude, "",
+					handler);
+		} catch (FileNotFoundException e) {
+		}
+	}
 }
