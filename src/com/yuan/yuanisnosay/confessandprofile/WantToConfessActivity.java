@@ -1,5 +1,6 @@
 package com.yuan.yuanisnosay.confessandprofile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 //import java.text.DateFormat;
 //import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.RequestParams;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
@@ -192,50 +194,89 @@ public class WantToConfessActivity extends Activity implements
 				final String text = editConfessContentInput.getText()
 						.toString();
 				final String addr = mLocationModule.getAddr();
-				final String latitude = mLocationModule.getLatitude() + "";
-				final String longtitude = mLocationModule.getLongitude() + "";
-				// ServerAccess sa = new ServerAccess();
+				final double latitude = mLocationModule.getLatitude();
+				final double longtitude = mLocationModule.getLongitude();
 				if (Bimp.drr.size() != 0) {
-					new Thread() {
-						public void run() {
-							try {
-								String response = ServerAccess.newPost(openId, text, addr,
-										latitude, longtitude, Bimp.drr.get(0));
-								JSONObject status = new JSONObject(response);
-								int responseCode = status.getInt("status");
-								mHandler.sendEmptyMessage(responseCode);
-								Log.e("back", response);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}catch (JSONException e) {
-								Log.e(TAG, "");
-								e.printStackTrace();
-							}
-						}
+					
+					try {
+						ServerAccess.postNewConfess(openId, text, addr,longtitude,
+								latitude,  Bimp.drr.get(0),
+								new ServerAccess.ServerResponseHandler(){
 
-					}.start();
+									@Override
+									public void onSuccess(
+											JSONObject result) {
+										// TODO Auto-generated method stub
+										if(result == null) {
+											return;
+										}
+										else {
+											try {
+												int status = result.getInt("status");
+												switch(status) {
+												case CONFESS_SEND_SUCCESS:
+													Util.dismissDialog();
+													Util.showToast(WantToConfessActivity.this, "表白成功！");
+													break;
+													
+												}
+											} catch (JSONException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}
+									}
+
+									@Override
+									public void onFailure(Throwable error) {
+										// TODO Auto-generated method stub
+										Util.dismissDialog();
+										Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来设置吧");
+									}
+							
+						});
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Util.showProgressDialog(WantToConfessActivity.this, "请稍后",
 							"正在发送...");
 				} else {
-					new Thread() {
-						public void run() {
-							try {
-								String response = ServerAccess.newPost(openId, text, addr,
-										latitude, longtitude);
-								JSONObject status = new JSONObject(response);
-								int responseCode = status.getInt("status");
-								mHandler.sendEmptyMessage(responseCode);
-								Log.e("back", response);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}catch (JSONException e) {
-								Log.e(TAG, "");
-								e.printStackTrace();
+					ServerAccess.postNewConfess(openId, text, addr,longtitude,
+						latitude,new ServerAccess.ServerResponseHandler(){
+
+							@Override
+							public void onSuccess(
+									JSONObject result) {
+								// TODO Auto-generated method stub
+								if(result == null) {
+									return;
+								}
+								else {
+									try {
+										int status = result.getInt("status");
+										switch(status) {
+										case CONFESS_SEND_SUCCESS:
+											Util.dismissDialog();
+											Util.showToast(WantToConfessActivity.this, "表白成功！");
+											break;
+											
+										}
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 							}
-						}
-					}.start();
+
+							@Override
+							public void onFailure(Throwable error) {
+								// TODO Auto-generated method stub
+								Util.dismissDialog();
+								Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+							}
+					
+				});
 				}
 				Util.showProgressDialog(WantToConfessActivity.this, "请稍后",
 						"正在发送...");
@@ -286,7 +327,7 @@ public class WantToConfessActivity extends Activity implements
 //		mSdf = SimpleDateFormat.getTimeInstance();
 		if (error == TencentLocation.ERROR_OK) {
 			setTencentLocationModule(location);
-			txtLocationShow.setText(mLocationModule.getRegionName());
+			txtLocationShow.setText(mLocationModule.getCity()+" "+mLocationModule.getRegionName());
 			mLocated = true;
 		} else if (error == TencentLocation.ERROR_NETWORK) {
 			// Toast toast = Toast.makeText(this, "网络不可用,请检查网络连接",

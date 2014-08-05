@@ -2,6 +2,7 @@ package com.yuan.yuanisnosay.confessandprofile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -48,7 +49,7 @@ public class PersonalProfileActivity extends Activity {
 	
 	class ViewHolder {
 		private TextView txtBack;
-		private Button btnEnter;
+		private TextView txtEnter;
 		private EditText editNickName;
 		private GridView gridThumbnailShower;
 	}
@@ -89,7 +90,7 @@ public class PersonalProfileActivity extends Activity {
 	private void initView(){
 		mHolder = new ViewHolder();
 		mHolder.txtBack = (TextView)findViewById(R.id.back);
-		mHolder.btnEnter = (Button)findViewById(R.id.btn_send);
+		mHolder.txtEnter = (TextView)findViewById(R.id.send);
 		mHolder.gridThumbnailShower = (GridView)findViewById(R.id.img_show_thumbnail);
 		mHolder.gridThumbnailShower.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		mHolder.editNickName = (EditText)findViewById(R.id.edit_nickname);
@@ -114,7 +115,7 @@ public class PersonalProfileActivity extends Activity {
 			}
 		});
 		
-		mHolder.btnEnter.setOnClickListener(new OnClickListener() {
+		mHolder.txtEnter.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				final String text = mHolder.editNickName.getText()
@@ -123,55 +124,129 @@ public class PersonalProfileActivity extends Activity {
 				Log.e("personalprofileActivity", openId);
 				
 				if (Bimp.drr.size() != 0) {
-					new Thread() {
-						public void run() {
-							try {
-//								long startTime = System.currentTimeMillis();
-								String response = ServerAccess.updateUserInfo(openId
-										, "1",text,Bimp.drr.get(0) );
-								if(response == null) {
-									return;
+//					new Thread() {
+//						public void run() {
+//							try {
+////							long startTime = System.currentTimeMillis();
+								try {
+									ServerAccess.updateUserInfo(openId,text
+											, "1",Bimp.drr.get(0),new ServerAccess.ServerResponseHandler() {
+												
+												@Override
+												public void onSuccess(JSONObject result) {
+													// TODO Auto-generated method stub
+													if(result == null) {
+														return;
+													}
+													else {
+														try {
+															int status = result.getInt("status");
+															switch(status) {
+															case INFO_SEND_SUCCESS:
+																Util.dismissDialog();
+																Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
+																break;
+																
+															}
+														} catch (JSONException e) {
+															// TODO Auto-generated catch block
+															e.printStackTrace();
+														}
+														
+													}
+												}
+												
+												@Override
+												public void onFailure(Throwable error) {
+													// TODO Auto-generated method stub
+													Util.dismissDialog();
+													Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
+												}
+											} );
+								} catch (FileNotFoundException e) {
+									// TODO Auto-generated catch block
+									Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
+									e.printStackTrace();
 								}
-//								long endTime = System.currentTimeMillis();
-								JSONObject status = new JSONObject(response);
-								int responseCode = status.getInt("status");
-								mHandler.sendEmptyMessage(responseCode);
-								Log.e("personalprofileActivity", response);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (JSONException e) {
-								Log.e(TAG, "");
-								e.printStackTrace();
-							}
-
-						}
-
-					}.start();
+//								if(response == null) {
+//									return;
+//								}
+////								long endTime = System.currentTimeMillis();
+//								JSONObject status = new JSONObject(response);
+//								int responseCode = status.getInt("status");
+//								mHandler.sendEmptyMessage(responseCode);
+//								Log.e("personalprofileActivity", response);
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							} catch (JSONException e) {
+//								Log.e(TAG, "");
+//								e.printStackTrace();
+//							}
+//
+//						}
+//
+//					}.start();
 					Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
 							"正在上传资料...");
 				} else {
-					new Thread() {
-						public void run() {
-//							AssetManager aManager= getApplication().getAssets();
+//					new Thread() {
+//						public void run() {
+							AssetManager aManager= getApplication().getAssets();
+							try {
+								InputStream is = aManager.open("ic_launcher.png");
+								ServerAccess.updateUserInfo(openId,text
+										, "1",is,new ServerAccess.ServerResponseHandler() {
+
+											@Override
+											public void onSuccess(
+													JSONObject result) {
+												// TODO Auto-generated method stub
+												if(result == null) {
+													return;
+												}
+												else {
+													try {
+														int status = result.getInt("status");
+														switch(status) {
+														case INFO_SEND_SUCCESS:
+															Util.dismissDialog();
+															Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
+															break;
+															
+														}
+													} catch (JSONException e) {
+														// TODO Auto-generated catch block
+														
+														e.printStackTrace();
+													}
+													
+												}
+											}
+
+											@Override
+											public void onFailure(
+													Throwable error) {
+												// TODO Auto-generated method stub
+												Util.dismissDialog();
+												Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
+											}
+									
+								});
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 //							try {
-//								InputStream is = aManager.open("ic_launcher.png");
-//								AssetFileDescriptor afd = aManager.openFd("ic_launcher.png");
 //								
 //							} catch (IOException e) {
 //								// TODO Auto-generated catch block
 //								e.printStackTrace();
 //							}
-//							try {
-//								
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-						}
-					}.start();
+//						}
+//					}.start();
 				}
-				// finish();
+//				 finish();
 			}
 		});
 
@@ -189,10 +264,10 @@ public class PersonalProfileActivity extends Activity {
 				// TODO Auto-generated method stub
 				int strLen = s.toString().trim().length();
 				if(strLen == 0) {
-					mHolder.btnEnter.setEnabled(false);
+					mHolder.txtEnter.setEnabled(false);
 					return;
 				}
-				mHolder.btnEnter.setEnabled(true);
+				mHolder.txtEnter.setEnabled(true);
 			}
 
 			@Override

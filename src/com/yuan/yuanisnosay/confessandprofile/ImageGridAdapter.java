@@ -156,7 +156,7 @@ public class ImageGridAdapter extends BaseAdapter {
 						Bimp.drr.add(list.get(i));
 					}
 				}
-//				act.finish();
+				act.finish();
 			}
 
 		});
