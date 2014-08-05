@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +27,7 @@ public class ListTestActivity extends ActionBarActivity {
 
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
-			R.id.button_getInfo, R.id.button_register,R.id.button_upPic };
+			R.id.button_getInfo, R.id.button_register,R.id.button_upPic, R.id.button_comment };
 
 	private Handler mHandler;
 
@@ -87,8 +88,11 @@ public class ListTestActivity extends ActionBarActivity {
 			case R.id.button_upPic:
 				uploadPicTest();
 				break;
+			case R.id.button_comment:
+				commentTest();
 			}
 		}
+
 	}
 
 	private void registerTest() {
@@ -106,6 +110,17 @@ public class ListTestActivity extends ActionBarActivity {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}.start();
+	}
+	
+	private void commentTest() {
+		// TODO Auto-generated method stub
+		new Thread() {
+			public void run() {
+				Intent intent = new Intent();
+				intent.setClass(ListTestActivity.this, CommentActivity.class);
+				startActivity(intent);
 			}
 		}.start();
 	}

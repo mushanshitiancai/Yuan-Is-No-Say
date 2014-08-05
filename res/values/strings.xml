@@ -9,5 +9,7 @@
     <string name="mainTab_hot">热门</string>
     <string name="confessItem_flowers">送花</string>
     <string name="confessItem_comment">评论</string>
+    <string name="title_activity_comment">CommentActivity</string>
+    <string name="send">发送</string>
 
 </resources>
