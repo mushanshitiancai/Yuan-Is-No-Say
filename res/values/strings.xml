@@ -12,5 +12,7 @@
     <string name="confessItem_comment">评论</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="user_wantToConfess">我要表白</string>
+    <string name="title_activity_comment">CommentActivity</string>
+    <string name="send">发送</string>
 
 </resources>

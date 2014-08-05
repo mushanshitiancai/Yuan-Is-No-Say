@@ -14,7 +14,7 @@
             android:layout_centerVertical="true"
             android:text="返回"
             android:textSize="20sp"/>
-        <Button android:id="@+id/btn_send"
+        <TextView android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -38,6 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/txt_nickname_tag"
         android:layout_below="@id/menu_container"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="请输入昵称"
         android:ems="10"
         android:maxLength="24" >
