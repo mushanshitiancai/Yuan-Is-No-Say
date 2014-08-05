@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout_info"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/relativeLayout_content"
+        android:background="@color/style_confess_item_1_info_bg" >
+
+        <TextView
+            android:id="@+id/textView_confessItem_publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="2dp"
+            android:text="2014-8-2 16:13:06"
+            android:textColor="@color/style_confess_item_1_info_text"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/textView_confessItem_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/textView_confessItem_publishTime"
+            android:text="腾讯大厦"
+            android:textColor="@color/style_confess_item_1_info_text"
+            android:textSize="10sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="24dp" >
+
+            <Button
+                android:id="@+id/button_confessItem_flowers"
+                android:layout_width="79dp"
+                android:layout_height="26dp"
+                android:background="@drawable/confess_item_button"
+                android:drawableLeft="@drawable/confess_item_flower"
+                android:paddingLeft="11dp"
+                android:text="@string/confessItem_flowers"
+                android:textColor="@color/style_confess_item_1_info_button_text"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/button_confessItem_comment"
+                android:layout_width="79dp"
+                android:layout_height="26dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/confess_item_button"
+                android:drawableLeft="@drawable/confess_item_comment"
+                android:paddingLeft="11dp"
+                android:text="@string/confessItem_comment"
+                android:textColor="@color/style_confess_item_1_info_button_text"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </RelativeLayout>

@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/button1"
+        style="@style/distanceButton"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/distanceButton"
+        android:text="Button" />
+
+</LinearLayout>

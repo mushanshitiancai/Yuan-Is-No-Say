@@ -92,8 +92,8 @@ public class ServerAccess {
 		doPost("recv_user_info", params, handler);
 	}
 
-	public static void getConfessList(String addr, double longitude,
-			double latiude, long baseID, int len, ServerResponseHandler handler) {
+	public static void getMoreConfessListNearby(String addr, double longitude,
+			double latiude, long baseID, int len, int distance, ServerResponseHandler handler) {
 		RequestParams params = new RequestParams();
 
 		params.put("user_location", addr);
@@ -101,9 +101,33 @@ public class ServerAccess {
 		params.put("user_latiude", latiude);
 		params.put("base_id", baseID);
 		params.put("length", len);
+        params.put("neibor", 1);
+        params.put("distance", distance);
 
 		doPost("read_express_message", params, handler);
 	}
+
+    public static void getNewConfessListNearby(String addr, double longitude, double latiude, int len, int distance, ServerResponseHandler handler) {
+        getMoreConfessListNearby(addr, longitude, latiude, ~(long)(1<<63), len, distance, handler);
+    }
+
+    public static void getMoreConfessListHeat(long baseID, int len, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("user_location", "123");
+        params.put("user_longitude", 0);
+        params.put("user_latiude", 0);
+        params.put("base_id", baseID);
+        params.put("length", len);
+        params.put("neibor", 0);
+        params.put("distance", 0);
+
+        doPost("read_express_message", params, handler);
+    }
+
+    public static void getNewConfessListHeat(int len, ServerResponseHandler handler) {
+        getMoreConfessListHeat(~(long)(1<<63), len, handler);
+    } 
 
 	public static void postNewConfess(String openid, String confessMsg,
 			String addr, double longitude, double latiude, String picPath,
@@ -130,4 +154,44 @@ public class ServerAccess {
 		} catch (FileNotFoundException e) {
 		}
 	}
+
+    public static void like(long postID, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("express_id", postID);
+
+        doPost("add_like", params, handler);
+    }
+
+    public static void getCommentList(long postID ,ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("express_id", postID);
+
+        doPost("read_comment", params, handler);
+    }
+
+    public static void postNewComment(String openid, long postID, String text, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("openid", openid);
+        params.put("express_id", postID);
+        params.put("reply_msg", text);
+
+        doPost("post_comment", params, handler);
+    }
+
+    public static void delMyPost(String openid, long postID, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("user_openid", openid);
+        params.put("express_id", postID);
+
+        doPost("delete_express_message", params, handler);
+    }
+
+    public static void getNewCommentCount(String openid, ServerResponseHandler hander) {
+        RequestParams params = new RequestParams();
+        params.put("user_openid", openid);
+    }
 }

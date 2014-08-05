@@ -85,12 +85,20 @@ public class ConfessAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		ConfessItem curConfess=mConfessList.get(position);
 		ViewHolder viewHolder;
 		if(convertView==null){
-			if(mType == TYPE_NORMAL){
+//			if(mType == TYPE_NORMAL){
+//				convertView=mInflater.inflate(R.layout.item_confess, null);
+//			}else{
+//				convertView=mInflater.inflate(R.layout.item_my_confess, null);
+//			}
+			
+			//
+			if(curConfess.getPicture()==null || curConfess.getPicture().equals("")){
 				convertView=mInflater.inflate(R.layout.item_confess, null);
 			}else{
-				convertView=mInflater.inflate(R.layout.item_my_confess, null);
+				convertView=mInflater.inflate(R.layout.item_confess_with_picture, null);
 			}
 			
 			viewHolder=new ViewHolder();
@@ -102,12 +110,14 @@ public class ConfessAdapter extends BaseAdapter {
 			viewHolder.btncomment=(Button)convertView.findViewById(R.id.button_confessItem_comment);
 			
 			viewHolder.layoutContent=convertView.findViewById(R.id.relativeLayout_content);
-			viewHolder.layoutPicture=convertView.findViewById(R.id.relativeLayout_picture);
+//			viewHolder.layoutPicture=convertView.findViewById(R.id.relativeLayout_picture);
 			viewHolder.layoutInfo=convertView.findViewById(R.id.relativeLayout_info);
 			
-			if(mType == TYPE_NORMAL){
-				viewHolder.author=(TextView)convertView.findViewById(R.id.textView_confessItem_author);
-				viewHolder.ivIcon=(ImageView)convertView.findViewById(R.id.imageView_confessItem_icon);
+			viewHolder.author=(TextView)convertView.findViewById(R.id.textView_confessItem_author);
+			viewHolder.ivIcon=(ImageView)convertView.findViewById(R.id.imageView_confessItem_icon);
+			if(mType == TYPE_MINE){
+				viewHolder.author.setVisibility(View.GONE);
+				viewHolder.ivIcon.setVisibility(View.GONE);
 			}
 			
 			
@@ -116,13 +126,13 @@ public class ConfessAdapter extends BaseAdapter {
 			viewHolder=(ViewHolder) convertView.getTag();
 		}
 		
-		ConfessItem curConfess=mConfessList.get(position);
+		
 		viewHolder.content.setText(curConfess.getContent());
 		viewHolder.publishDate.setText(Util.formatDateTime(curConfess.getPublishDate()));
 		viewHolder.position.setText(curConfess.getPosition().getRegionName());
 		
 		
-		viewHolder.layoutPicture.setVisibility(View.GONE);
+//		viewHolder.layoutPicture.setVisibility(View.GONE);
 //		viewHolder.layoutInfo.setVisibility(View.GONE);
 		
 		if(mType == TYPE_NORMAL){
