@@ -1,18 +1,14 @@
 package com.yuan.yuanisnosay.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,10 +20,11 @@ import android.widget.ListView;
 import com.lee.pullrefresh.ui.PullToRefreshBase;
 import com.lee.pullrefresh.ui.PullToRefreshBase.OnRefreshListener;
 import com.lee.pullrefresh.ui.PullToRefreshListView;
-import com.yuan.yuanisnosay.Const;
+import com.yuan.yuanisnosay.DateUtil;
 import com.yuan.yuanisnosay.R;
-import com.yuan.yuanisnosay.Util;
 import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.storage.StorageModel;
 import com.yuan.yuanisnosay.ui.adpater.ConfessAdapter;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
@@ -44,6 +41,8 @@ public class ConfessFragment extends Fragment {
 	public static final int TYPE_HOT = 1;
 	public static final int TYPE_MINE = 2;
 	
+	public static final int MESSAGE_REFRESH_LIST = 0;
+	
 	public static final String ARGUMENT_VISIABLE="ARGUMENT_VISIABLE";
 
 	private YuanApplication mApp;
@@ -54,6 +53,7 @@ public class ConfessFragment extends Fragment {
 	private ListView mListView;
 	private ConfessAdapter mAdapter;
 	private LinkedList<ConfessItem> mConfessList;
+	private Handler mHandler; 
 	
 	public ConfessFragment(int type) {
 		mType=type;
@@ -73,6 +73,26 @@ public class ConfessFragment extends Fragment {
 		//mArguments = getArguments();
 		//boolean isVisiable = mArguments.getBoolean(ARGUMENT_VISIABLE);
 		
+		mHandler=new Handler(){
+			public void handleMessage(android.os.Message msg) {
+				switch(msg.what){
+				case MESSAGE_REFRESH_LIST:
+//				{
+//					
+//					mAdapter.notifyDataSetChanged();
+//					if (mAction == ACTION_PULL_TO_MORE) {
+//						mRefreshListView.onPullUpRefreshComplete();
+//					} else {
+//						mRefreshListView.onPullDownRefreshComplete();
+//					}
+//					mRefreshListView.setHasMoreData(hasMoreData);
+//					setLastUpdateTime();
+//					break;
+//				}
+				}
+			};
+		};
+		
 		View rootView = inflater.inflate(R.layout.fragment_confess, container,
 				false);
 		mRefreshListView = (PullToRefreshListView) rootView
@@ -82,9 +102,7 @@ public class ConfessFragment extends Fragment {
 		mRefreshListView.setScrollLoadEnabled(true);
 		mListView.setVerticalScrollBarEnabled(false);
 
-//		mConfessList = new LinkedList<ConfessItem>();
 		mConfessList = getConfesses();
-//		mConfessList.addAll(ConfessItem.getConfess(0, 3));
 		if(mType == TYPE_MINE){
 			mAdapter = new ConfessAdapter(getActivity(), ConfessAdapter.TYPE_MINE, mConfessList);
 		}else{
@@ -99,25 +117,42 @@ public class ConfessFragment extends Fragment {
 					public void onPullDownToRefresh(
 							PullToRefreshBase<ListView> refreshView) {
 						Log.e(TAG, "onPullDownToRefresh");
-						new GetConfessTask()
-								.execute(GetConfessTask.ACTION_PULL_TO_REFRESH,0,1);
+//						new GetConfessTask()
+//								.execute(GetConfessTask.ACTION_PULL_TO_REFRESH,0,1);
+						ServerAccess.getNewConfessListHeat(10, new ServerResponseHandler() {
+							@Override
+							public void onSuccess(JSONObject result) {
+								try {
+									if(ServerAccess.getStatus(result)!=0) return;
+									List<ConfessItem> confessList=ConfessItem.getConfessList(result);
+									Log.e(TAG, confessList.toString());
+								} catch (JSONException e) {
+									Log.e(TAG, "Json 解析出错");
+									//e.printStackTrace();
+								}
+							}
+							
+							@Override
+							public void onFailure(Throwable error) {
+								Log.e(TAG, "onPullDownToRefresh:"+error.toString());
+								Util.showToast(getActivity(), "下拉刷新失败");
+							}
+						});
 					}
 
 					@Override
 					public void onPullUpToRefresh(
 							PullToRefreshBase<ListView> refreshView) {
 						Log.e(TAG, "onPullUpToRefresh");
-						new GetConfessTask()
-								.execute(GetConfessTask.ACTION_PULL_TO_MORE,mConfessList.size(),1);
+//						new GetConfessTask()
+//								.execute(GetConfessTask.ACTION_PULL_TO_MORE,mConfessList.size(),1);
 					}
 				});
 		
-		// mRefreshListView.doPullRefreshing(true, 500);
-
-		//if(isVisiable==false)
-		//	rootView.setVisibility(View.GONE);
+		
 		return rootView;
 	}
+	
 	
 	@Override
 	public void onStop() {
@@ -140,7 +175,7 @@ public class ConfessFragment extends Fragment {
 	 *  设置listview的更新时间文本为当前时间
 	 */
 	private void setLastUpdateTime() {
-		String text = Util.formatDateTime(System.currentTimeMillis());
+		String text = DateUtil.formatDateTime(System.currentTimeMillis());
 		mRefreshListView.setLastUpdatedLabel(text);
 	}
 	
@@ -201,7 +236,6 @@ public class ConfessFragment extends Fragment {
 					}
 					curStart+=mGetCount;
 				}
-				
 			}else if(mAction == ACTION_PULL_TO_MORE){
 				result=ConfessItem.getConfess(start, mGetCount);
 				if(result.size()<mGetCount){

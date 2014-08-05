@@ -24,7 +24,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yuan.yuanisnosay.R;
-import com.yuan.yuanisnosay.Util;
+import com.yuan.yuanisnosay.DateUtil;
 
 public class ConfessAdapter extends BaseAdapter {
 	public static final int TYPE_NORMAL = 0; // 主界面表白类型
@@ -128,8 +128,8 @@ public class ConfessAdapter extends BaseAdapter {
 		}
 
 		viewHolder.content.setText(curConfess.getContent());
-		viewHolder.publishDate.setText(Util.formatDateTime(curConfess.getPublishDate()));
-		viewHolder.position.setText(curConfess.getPosition().getRegionName());
+		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess.getPublishDate()));
+		viewHolder.position.setText(curConfess.getPosition());
 
 		viewHolder.btnFlower.setText(mContext.getString(R.string.confessItem_flowers) + " "
 				+ curConfess.getFlowersCount());

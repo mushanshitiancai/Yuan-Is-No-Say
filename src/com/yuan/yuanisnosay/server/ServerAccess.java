@@ -12,6 +12,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
+	public static final String KEY_STATUS="status";
+	
+	public static final int getStatus(JSONObject json) throws JSONException{
+		return json.getInt(KEY_STATUS);
+	}
 
 	public interface ServerResponseHandler {
 		public void onSuccess(JSONObject result);
@@ -107,8 +112,8 @@ public class ServerAccess {
 		doPost("read_express_message", params, handler);
 	}
 
-    public static void getNewConfessListNearby(String addr, double longitude, double latiude, int len, int distance, ServerResponseHandler handler) {
-        getMoreConfessListNearby(addr, longitude, latiude, ~(long)(1<<63), len, distance, handler);
+    public static void getNewConfessListNearby(String addr, double longitude, double latitude, int len, int distance, ServerResponseHandler handler) {
+        getMoreConfessListNearby(addr, longitude, latitude, ~(long)(1<<63), len, distance, handler);
     }
 
     public static void getMoreConfessListHeat(long baseID, int len, ServerResponseHandler handler) {
@@ -116,7 +121,7 @@ public class ServerAccess {
 
         params.put("user_location", "123");
         params.put("user_longitude", 0);
-        params.put("user_latiude", 0);
+        params.put("user_latitude", 0);
         params.put("base_id", baseID);
         params.put("length", len);
         params.put("neibor", 0);

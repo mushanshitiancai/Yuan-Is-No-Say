@@ -48,6 +48,7 @@ public class ListTestActivity extends ActionBarActivity {
 	private ServerAccess.ServerResponseHandler mServerHandler=new ServerResponseHandler() {
 		@Override
 		public void onSuccess(JSONObject result) {
+			Log.e(TAG, ""+result.toString());
 			Message msg=mHandler.obtainMessage();
 			msg.what=M_JSON_RESULT;
 			msg.obj=result;
@@ -59,7 +60,7 @@ public class ListTestActivity extends ActionBarActivity {
 			if(error==null){
 				Log.e(TAG, "error == null");
 			}else{
-				Log.e(TAG, error.getLocalizedMessage());
+				Log.e(TAG, error.toString());
 			}
 		}
 	};
@@ -136,8 +137,8 @@ public class ListTestActivity extends ActionBarActivity {
 				commentTest();
 				break;
 			case R.id.button_getConfess:
-				ServerAccess.getNewConfessListHeat(10, mServerHandler);
-				ServerAccess.getNewConfessListNearby("xxx", 10, 10, 10, 1000, mServerHandler);
+				//ServerAccess.getNewConfessListHeat(10, mServerHandler);
+				ServerAccess.getNewConfessListNearby("中国，广东，深圳，南山区",  113.934071,22.540923, 10, 1000, mServerHandler);
 				break;
 			}
 		}
