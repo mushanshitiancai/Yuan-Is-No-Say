@@ -108,7 +108,7 @@ public class ServerAccess {
 	}
 
     public static void getNewConfessListNearby(String addr, double longitude, double latiude, int len, int distance, ServerResponseHandler handler) {
-        getNewConfessListNearby(addr, longitude, latiude, ~(long)(1<<63), len, distance, handler);
+        getMoreConfessListNearby(addr, longitude, latiude, ~(long)(1<<63), len, distance, handler);
     }
 
     public static void getMoreConfessListHeat(long baseID, int len, ServerResponseHandler handler) {
@@ -163,12 +163,12 @@ public class ServerAccess {
         doPost("add_like", params, handler);
     }
 
-    public static void getCommentList(long postID ServerResponseHandler handler) {
+    public static void getCommentList(long postID ,ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("express_id", postID);
 
-        doPost("read_comment", params handler);
+        doPost("read_comment", params, handler);
     }
 
     public static void postNewComment(String openid, long postID, String text, ServerResponseHandler handler) {
