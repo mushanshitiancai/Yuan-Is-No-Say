@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Application;
 
 import com.yuan.yuanisnosay.login.Login;
+import com.yuan.yuanisnosay.storage.StorageModel;
 
 /**
  * app入口
@@ -14,21 +15,27 @@ import com.yuan.yuanisnosay.login.Login;
 public class YuanApplication extends Application{
 	
 	private Login mLogin;
+	private StorageModel mStorageModel;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
-		//建立app sd卡目录
-		File folder = new File(Const.YUAN_FOLDER_NAME);
-		if(folder.exists()==false){
-			folder.mkdir();
-		}
+		mLogin = Login.getInstance(getApplicationContext());
+		mStorageModel = StorageModel.getInstance();
 		
-		mLogin=Login.getInstance(getApplicationContext());
+		//建立app sd卡目录
+		StorageModel.createAppFolder();
+		
+		mStorageModel.read();
+		
 	}
 	
 	public Login getLogin(){
 		return mLogin;
+	}
+	
+	public StorageModel getStorage(){
+		return mStorageModel;
 	}
 }

@@ -36,7 +36,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
-            <intent-filter>
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,6 +62,7 @@
         <activity
             android:name=".ListTestActivity"
             android:label="@string/title_activity_list_test" >
+           
         </activity>
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity" 
             android:windowSoftInputMode="adjustResize|stateVisible"/>
@@ -77,15 +78,6 @@
         <activity
             android:name="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity"
             android:label="@string/title_activity_personal_profile" >
-        </activity>
-        <activity
-            android:name=".UserActivity"
-            android:label="@string/title_activity_user"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".CommentActivity"
-            android:label="@string/title_activity_comment" >
         </activity>
     </application>
 

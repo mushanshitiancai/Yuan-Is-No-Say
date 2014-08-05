@@ -2,7 +2,10 @@ package com.lee.pullrefresh.ui;
 
 import com.lee.pullrefresh.ui.ILoadingLayout.State;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -42,21 +45,11 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView> implement
      * @param attrs attrs
      */
     public PullToRefreshListView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+//        this(context, attrs, 0);
+    	super(context,attrs);
     }
     
-    /**
-     * 构造方法
-     * 
-     * @param context context
-     * @param attrs attrs
-     * @param defStyle defStyle
-     */
-    public PullToRefreshListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        
-        setPullLoadEnabled(false);
-    }
+
 
     @Override
     protected ListView createRefreshableView(Context context, AttributeSet attrs) {

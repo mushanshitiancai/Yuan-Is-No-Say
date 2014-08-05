@@ -57,5 +57,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="我要表白" />
+    
+    <Button
+        android:id="@+id/button_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="评论" />
 
 </LinearLayout>

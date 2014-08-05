@@ -1,3 +1,4 @@
+
 package com.yuan.yuanisnosay;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class ListTestActivity extends ActionBarActivity {
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
 			R.id.button_getInfo, R.id.button_register,R.id.button_upPic,
-			R.id.btn_wantto_confess};
+			R.id.btn_wantto_confess, R.id.button_comment};
 
 	private Handler mHandler;
 
@@ -103,8 +104,21 @@ public class ListTestActivity extends ActionBarActivity {
 				Intent intent = new Intent(ListTestActivity.this,WantToConfessActivity.class);
 				startActivity(intent);
 				break;
+			case R.id.button_comment:
+				commentTest();
 			}
 		}
+	}
+	
+	private void commentTest() {
+		// TODO Auto-generated method stub
+		new Thread() {
+			public void run() {
+				Intent intent = new Intent();
+				intent.setClass(ListTestActivity.this, CommentActivity.class);
+				startActivity(intent);
+			}
+		}.start();
 	}
 
 	private void registerTest() {
