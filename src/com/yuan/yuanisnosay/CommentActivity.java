@@ -3,6 +3,7 @@ package com.yuan.yuanisnosay;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class CommentActivity extends ActionBarActivity {
+	
+	public final String PARENT_CONFESS = "confessItem";
 	private TextView mParentConfess;
 	private ListView mCommentList;
 	private EditText mCommentContent;
@@ -35,6 +38,10 @@ public class CommentActivity extends ActionBarActivity {
 				new String[] {"first", "second", "third", "fourth", "fifth"};
 		mCommentList.setAdapter(new ArrayAdapter<String>(this, 
 				android.R.layout.simple_dropdown_item_1line, strs));
+		/*Intent intent = getIntent();
+		ConfessItem confessItem = (ConfessItem) intent.getSerializableExtra(PARENT_CONFESS);
+		mParentConfess.setText(confessItem.getContent());*/
+		
 	}
 
 	//TODO
