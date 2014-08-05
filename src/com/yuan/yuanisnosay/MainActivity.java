@@ -17,7 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -29,21 +29,27 @@ public class MainActivity extends FragmentActivity {
 	private static final int TAB_NEARBY = R.id.radio_nearby;
 	private static final int TAB_HOT = R.id.radio_hot;
 
+	private YuanApplication mApp;
 	private RadioGroup radioGroupMainTab;
 	private RadioButton radioNearby, radioHot;
 	private int curTab = TAB_NEARBY;
 	private boolean radioButtonChange = false;
+	private Button btnUser;
 
 	private ConfessFragment mFragmentNearby, mFragmentHot;
 
 	// viewpager
 	ViewPager vpMain;
+	
+	//test
+	boolean mIsWantToDelete = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		mApp = (YuanApplication) getApplication();
+		
 		// 设置附近热门TAB
 		radioGroupMainTab = (RadioGroup) findViewById(R.id.radioGroup_mainTab);
 		radioGroupMainTab
@@ -111,6 +117,14 @@ public class MainActivity extends FragmentActivity {
 		});
 
 		// vpMain.setCurrentItem(1);
+		btnUser = (Button)findViewById(R.id.button_mainActivity_user);
+		btnUser.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View button) {
+				Intent intent=new Intent(MainActivity.this,UserActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	/**
@@ -200,6 +214,21 @@ public class MainActivity extends FragmentActivity {
 			mFragmentHot.refesh();
 		}
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		mApp.getStorage().save();
+		if(mIsWantToDelete){
+			mApp.getStorage().delete();
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,8 +249,7 @@ public class MainActivity extends FragmentActivity {
 			return true;
 		}
 		if(id == R.id.action_delete){
-			File confessFile = new File(Const.YUAN_FOLDER_NAME);
-			confessFile.delete();
+			mIsWantToDelete = true;
 		}
 		
 		return super.onOptionsItemSelected(item);

@@ -9,7 +9,7 @@ import java.util.Random;
 
 import android.util.Log;
 
-import com.yuan.yuanisnosay.wanttoconfess.TencentLocationModule;
+import com.yuan.yuanisnosay.confessandprofile.TencentLocationModule;
 
 /**
  * 表白条目

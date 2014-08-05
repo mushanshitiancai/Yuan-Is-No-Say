@@ -1,4 +1,4 @@
-package com.yuan.yuanisnosay.wanttoconfess;
+package com.yuan.yuanisnosay.confessandprofile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.yuan.yuanisnosay.R;
-import com.yuan.yuanisnosay.wanttoconfess.BitmapCache.ImageCallback;
+//import com.yuan.yuanisnosay.confessandprofile.BitmapCache.ImageCallback;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -21,29 +21,33 @@ import android.widget.TextView;
 
 
 public class ImageGridAdapter extends BaseAdapter {
-
+	
 	final String TAG = getClass().getSimpleName();
+	private final int BITMAP_WIDTH = 300;
+	private final int BITMAP_HEIGHT = 300;
+	
 	Activity act;
 	List<ImageItem> dataList;
 	LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-	BitmapCache cache;
 	
-	ImageCallback callback = new ImageCallback() {
-		@Override
-		public void imageLoad(ImageView imageView, Bitmap bitmap,
-				Object... params) {
-			if (imageView != null && bitmap != null) {
-				String url = (String) params[0];
-				if (url != null && url.equals((String) imageView.getTag())) {
-					((ImageView) imageView).setImageBitmap(bitmap);
-				} else {
-					Log.e(TAG, "callback, bmp not match");
-				}
-			} else {
-				Log.e(TAG, "callback, bmp null");
-			}
-		}
-	};
+	private ImageAdapterHelper imageAdapterHelper;
+//	BitmapCache cache;
+//	ImageCallback callback = new ImageCallback() {
+//		@Override
+//		public void imageLoad(ImageView imageView, Bitmap bitmap,
+//				Object... params) {
+//			if (imageView != null && bitmap != null) {
+//				String url = (String) params[0];
+//				if (url != null && url.equals((String) imageView.getTag())) {
+//					((ImageView) imageView).setImageBitmap(bitmap);
+//				} else {
+//					Log.e(TAG, "callback, bmp not match");
+//				}
+//			} else {
+//				Log.e(TAG, "callback, bmp null");
+//			}
+//		}
+//	};
 
 	public static interface TextCallback {
 		public void onListen(int count);
@@ -53,7 +57,8 @@ public class ImageGridAdapter extends BaseAdapter {
 	public ImageGridAdapter(Activity act, List<ImageItem> list) {
 		this.act = act;
 		dataList = list;
-		cache = new BitmapCache();
+//		cache = new BitmapCache();
+		imageAdapterHelper = new ImageAdapterHelper(act,BITMAP_WIDTH,BITMAP_HEIGHT);
 	}
 
 	@Override
@@ -102,8 +107,9 @@ public class ImageGridAdapter extends BaseAdapter {
 		final ImageItem item = dataList.get(position);
 
 		holder.iv.setTag(item.imagePath);
-		cache.displayBmp(holder.iv, item.thumbnailPath, item.imagePath,
-				callback);
+//		cache.displayBmp(holder.iv, item.thumbnailPath, item.imagePath,
+//				callback);
+		imageAdapterHelper.showImg(item.imagePath, holder.iv);
 		if (item.isSelected) {
 			holder.selected.setImageResource(R.drawable.icon_data_select);  
 			holder.text.setBackgroundResource(R.drawable.bgd_relatly_line);
@@ -150,7 +156,7 @@ public class ImageGridAdapter extends BaseAdapter {
 						Bimp.drr.add(list.get(i));
 					}
 				}
-				act.finish();
+//				act.finish();
 			}
 
 		});

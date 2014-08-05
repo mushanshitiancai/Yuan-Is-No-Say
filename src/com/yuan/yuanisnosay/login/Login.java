@@ -3,8 +3,8 @@ package com.yuan.yuanisnosay.login;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
-
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.Tencent;
 
@@ -32,11 +32,15 @@ public class Login {
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
 
-	// private String mOpenId;
-	// private String mQQToken;
-	// private long mExpiresIn; // token剩余有效时间
-	// private long mExpiresDate; // token失效时间
+//	private String mOpenId;
+//	private String mQQToken;
+	private String mNickname;
+	private String mIconPath;
+	
+	private long mExpiresIn; // token剩余有效时间
+	private long mExpiresDate; // token失效时间
 
+	
 	// private boolean isLogin = false;
 
 	public static Login getInstance(Context context) {
@@ -65,15 +69,17 @@ public class Login {
 		Long mExpiresIn = mPreferences.getLong(KEY_QQEXPIRES_IN, -1);
 		
 		Log.e(TAG, "读取数据 mExpiresIn="+mExpiresIn);
-		
+
 		// 判断记录是否有效
 		if (mOpenId != null && mQQToken != null && mExpiresIn != -1) {
 			Log.e(TAG,"记录有效");
 			mTencent.setAccessToken(mQQToken, Long.toString((mExpiresIn-System.currentTimeMillis())/1000));
 			mTencent.setOpenId(mOpenId);
 		}
+
 		mTencent.login(activity, SCOPE, new LoginUiListener(activity));
 		//recordInfo();
+
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class Login {
 	public boolean isLogin() {
 		return mTencent.isSessionValid();
 	}
-
+	
 	public String getOpenId() {
 		return mTencent.getOpenId();
 	}
@@ -122,5 +128,25 @@ public class Login {
 		
 		mEditor.commit();
 	}
-
+	
+//	public void setOpenId(String openId) {
+//		this.mOpenId = openId;
+//	}
+//	
+//	public void setQQToken(String qqToken) {
+//		this.mQQToken = qqToken;
+//	}
+	public String getNickname() {
+		return mNickname;
+	}
+	public void setNickname(String nickname) {
+		this.mNickname = nickname;
+	}
+	public String getIconPath() {
+		return mIconPath;
+	}
+	public void setIconPath(String iconPath) {
+		this.mIconPath = iconPath;
+	}
+	
 }

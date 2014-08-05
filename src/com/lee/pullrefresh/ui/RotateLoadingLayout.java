@@ -144,12 +144,20 @@ public class RotateLoadingLayout extends LoadingLayout {
         mHintTextView.setText(R.string.pull_to_refresh_header_hint_loading);
     }
     
+    ImageViewRotationHelper mRotationHelper;
     @Override
     public void onPull(float scale) {
-        float angle = scale * 180f; // SUPPRESS CHECKSTYLE
-        ImageViewRotationHelper imageViewRotationHelper=new ImageViewRotationHelper(mArrowImageView);
-        imageViewRotationHelper.setRotation(angle);
-        //mArrowImageView.setRotation(angle);
+//        float angle = scale * 180f; // SUPPRESS CHECKSTYLE
+//        ImageViewRotationHelper imageViewRotationHelper=new ImageViewRotationHelper(mArrowImageView);
+//        imageViewRotationHelper.setRotation(angle);
+//        //mArrowImageView.setRotation(angle);
+        
+        if (null == mRotationHelper) {  
+            mRotationHelper = new ImageViewRotationHelper(mArrowImageView);  
+        }  
+          
+        float angle = scale * 180f; // SUPPRESS CHECKSTYLE  
+        mRotationHelper.setRotation(angle);  
     }
     
     /**

@@ -1,8 +1,9 @@
 package com.lee.pullrefresh.ui;
 
-import com.lee.pullrefresh.ui.ILoadingLayout.State;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import com.lee.pullrefresh.ui.ILoadingLayout.State;
 
 /**
  * 这个实现了下拉刷新和上拉加载更多的功能
@@ -105,17 +108,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         init(context, attrs);
     }
 
-    /**
-     * 构造方法
-     * 
-     * @param context context
-     * @param attrs attrs
-     * @param defStyle defStyle
-     */
-    public PullToRefreshBase(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(context, attrs);
-    }
+
+    
 
     /**
      * 初始化

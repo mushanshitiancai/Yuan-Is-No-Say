@@ -1,4 +1,4 @@
-package com.yuan.yuanisnosay.wanttoconfess;
+package com.yuan.yuanisnosay.confessandprofile;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -38,7 +38,7 @@ public class Bimp {
 		int i = 0;
 		Bitmap bitmap = null;
 		while (true) {
-			if ((options.outWidth >> i <= 1000)
+			if ((options.outWidth >> i <= 2000)
 					&& (options.outHeight >> i <= 1000)) {
 				in = new BufferedInputStream(
 						new FileInputStream(new File(path)));

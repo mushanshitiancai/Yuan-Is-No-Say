@@ -25,6 +25,10 @@ import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Util;
 
 public class ConfessAdapter extends BaseAdapter {
+	public static final int TYPE_NORMAL = 0;	//主界面表白类型
+	public static final int TYPE_MINE = 1;		//个人界面表白类型 
+	
+	private int mType;	//adapter类型 
 	Context mContext;
 	LayoutInflater mInflater;
 	LinkedList<ConfessItem> mConfessList;
@@ -46,7 +50,8 @@ public class ConfessAdapter extends BaseAdapter {
 		View layoutInfo;
 	}
 
-	public ConfessAdapter(Context context, LinkedList<ConfessItem> confessList) {
+	public ConfessAdapter(Context context, int type ,LinkedList<ConfessItem> confessList) {
+		mType = type;
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
 		mConfessList = confessList;
@@ -60,7 +65,7 @@ public class ConfessAdapter extends BaseAdapter {
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
-		.displayer(new RoundedBitmapDisplayer(20))
+//		.displayer(new RoundedBitmapDisplayer(20))
 		.build();
 	}
 
@@ -83,21 +88,30 @@ public class ConfessAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;
 		if(convertView==null){
-			convertView=mInflater.inflate(R.layout.item_confess, null);
+			if(mType == TYPE_NORMAL){
+				convertView=mInflater.inflate(R.layout.item_confess, null);
+			}else{
+				convertView=mInflater.inflate(R.layout.item_my_confess, null);
+			}
+			
 			viewHolder=new ViewHolder();
 			viewHolder.content=(TextView)convertView.findViewById(R.id.textView_confessItem_content);
 			viewHolder.publishDate=(TextView)convertView.findViewById(R.id.textView_confessItem_publishTime);
 			viewHolder.position=(TextView)convertView.findViewById(R.id.textView_confessItem_position);
-			viewHolder.author=(TextView)convertView.findViewById(R.id.textView_confessItem_author);
 			
 			viewHolder.btnFlower=(Button)convertView.findViewById(R.id.button_confessItem_flowers);
 			viewHolder.btncomment=(Button)convertView.findViewById(R.id.button_confessItem_comment);
 			
-			viewHolder.ivIcon=(ImageView)convertView.findViewById(R.id.imageView_confessItem_icon);
-			
 			viewHolder.layoutContent=convertView.findViewById(R.id.relativeLayout_content);
 			viewHolder.layoutPicture=convertView.findViewById(R.id.relativeLayout_picture);
 			viewHolder.layoutInfo=convertView.findViewById(R.id.relativeLayout_info);
+			
+			if(mType == TYPE_NORMAL){
+				viewHolder.author=(TextView)convertView.findViewById(R.id.textView_confessItem_author);
+				viewHolder.ivIcon=(ImageView)convertView.findViewById(R.id.imageView_confessItem_icon);
+			}
+			
+			
 			convertView.setTag(viewHolder);
 		}else{
 			viewHolder=(ViewHolder) convertView.getTag();
@@ -107,13 +121,15 @@ public class ConfessAdapter extends BaseAdapter {
 		viewHolder.content.setText(curConfess.getContent());
 		viewHolder.publishDate.setText(Util.formatDateTime(curConfess.getPublishDate()));
 		viewHolder.position.setText(curConfess.getPosition().getRegionName());
-		viewHolder.author.setText(curConfess.getAuthor());
+		
 		
 		viewHolder.layoutPicture.setVisibility(View.GONE);
 //		viewHolder.layoutInfo.setVisibility(View.GONE);
 		
-		mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon,mOptions,animateFirstListener);
-		
+		if(mType == TYPE_NORMAL){
+			viewHolder.author.setText(curConfess.getAuthor());
+			mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon,mOptions,animateFirstListener);
+		}
 		
 		return convertView;
 	}

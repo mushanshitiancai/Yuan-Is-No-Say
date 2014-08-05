@@ -4,11 +4,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
 import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.yuan.yuanisnosay.ListTestActivity;
+import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.ui.Util;
 
@@ -18,6 +22,7 @@ import com.yuan.yuanisnosay.ui.Util;
  *
  */
 public class LoginUiListener implements IUiListener{
+	private Tencent mTencent;
 	private Activity mContext;
 	private boolean mIsCaneled;
 	private static final int ON_COMPLETE = 0;
@@ -34,6 +39,9 @@ public class LoginUiListener implements IUiListener{
                 Util.dismissDialog();
                 YuanApplication app=(YuanApplication) mContext.getApplication();
                 app.getLogin().recordInfo();
+                
+                Intent intent = new Intent(mContext,PersonalProfileActivity.class);
+				mContext.startActivity(intent);
                 break;
             case ON_ERROR:
                 UiError e = (UiError)msg.obj;

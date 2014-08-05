@@ -1,3 +1,4 @@
+
 package com.yuan.yuanisnosay;
 
 import java.io.File;
@@ -16,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
+import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccessable;
 import com.yuan.yuanisnosay.ui.Util;
@@ -27,7 +30,8 @@ public class ListTestActivity extends ActionBarActivity {
 
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
-			R.id.button_getInfo, R.id.button_register,R.id.button_upPic, R.id.button_comment };
+			R.id.button_getInfo, R.id.button_register,R.id.button_upPic,
+			R.id.btn_wantto_confess, R.id.button_comment};
 
 	private Handler mHandler;
 
@@ -88,30 +92,14 @@ public class ListTestActivity extends ActionBarActivity {
 			case R.id.button_upPic:
 				uploadPicTest();
 				break;
+			case R.id.btn_wantto_confess:
+				Intent intent = new Intent(ListTestActivity.this,WantToConfessActivity.class);
+				startActivity(intent);
+				break;
 			case R.id.button_comment:
 				commentTest();
 			}
 		}
-
-	}
-
-	private void registerTest() {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					ServerAccess a = new ServerAccess();
-					String b = a.registerNewUser("1", "");
-					Log.e("mzb", "" + b);
-					Message msg = mHandler.obtainMessage();
-					msg.what = M_REGISTER_END;
-					msg.obj = b;
-					mHandler.sendMessage(msg);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
 	}
 	
 	private void commentTest() {
@@ -124,6 +112,25 @@ public class ListTestActivity extends ActionBarActivity {
 			}
 		}.start();
 	}
+
+	private void registerTest() {
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					ServerAccess a = new ServerAccess();
+					String b = a.registerNewUser(mApp.getLogin().getQQToken(),mApp.getLogin().getOpenId());
+					Log.e("mzb", "" + b);
+					Message msg = mHandler.obtainMessage();
+					msg.what = M_REGISTER_END;
+					msg.obj = b;
+					mHandler.sendMessage(msg);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 	
 	private void uploadPicTest(){
 		final String TEST_FILE_NAME = "Universal Image Loader @#&=+-_.,!()~'%20.png";
@@ -133,16 +140,16 @@ public class ListTestActivity extends ActionBarActivity {
 			@Override
 			public void run() {
 				ServerAccess a = new ServerAccess();
-				try {
-					String b=a.uploadPic(testImageOnSdCard.getCanonicalPath());
-					
-					Message msg = mHandler.obtainMessage();
-					msg.what = M_UPLOADPIC_END;
-					msg.obj = b;
-					mHandler.sendMessage(msg);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					String b=a.uploadPic(testImageOnSdCard.getCanonicalPath());
+//					
+//					Message msg = mHandler.obtainMessage();
+//					msg.what = M_UPLOADPIC_END;
+//					msg.obj = b;
+//					mHandler.sendMessage(msg);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 			}
 		}.start();
 	}
