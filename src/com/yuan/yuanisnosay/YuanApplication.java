@@ -85,6 +85,10 @@ public class YuanApplication extends Application{
 		return mRegionName;
 	}
 
+	public String getRegionName() {
+		return mRegionName;
+	}
+
 	public Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {

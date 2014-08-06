@@ -63,8 +63,7 @@
             android:name=".ListTestActivity"
             android:label="@string/title_activity_list_test" >
         </activity>
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity" 
-            android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity"/>
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageBucketActivity" />
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageGridActivity" />
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.PublishedActivity" />

@@ -47,13 +47,13 @@ public class PhotoActivity extends Activity {
 		}
 		max = Bimp.max;
 
-		Button photo_bt_exit = (Button) findViewById(R.id.photo_bt_exit);
-		photo_bt_exit.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-
-				finish();
-			}
-		});
+//		Button photo_bt_exit = (Button) findViewById(R.id.photo_bt_exit);
+//		photo_bt_exit.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//
+//				finish();
+//			}
+//		});
 		Button photo_bt_del = (Button) findViewById(R.id.photo_bt_del);
 		photo_bt_del.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
