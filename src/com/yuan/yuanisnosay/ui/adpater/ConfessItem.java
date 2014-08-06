@@ -102,10 +102,16 @@ public class ConfessItem implements Serializable{
 		this.id = json.getInt("express_id");
 		this.content = json.getString("express_msg");
 		this.author = json.getString("user_nickname");
-		this.publishDate = new Date(json.getLong("express_time"));
+		this.publishDate = new Date(json.getLong("express_time")*1000);
 		String openId=json.getString("user_openid");
-		this.icon = ServerAccess.HOST+"/download_user_head?user_openid="+openId;
-		this.picture = ServerAccess.HOST+"/read_express_pav?express_id="+this.id;
+		this.icon = ServerAccess.HOST+"download_user_head?user_openid="+openId;
+		Log.e(TAG, "icon:"+this.icon);
+		if(json.getInt("express_picture")==0){
+			this.picture = null;
+		}else{
+			this.picture = ServerAccess.HOST+"read_express_pav?express_id="+this.id;
+			Log.e(TAG, "picture:"+this.picture);
+		}
 		this.flowersCount = json.getInt("express_like_cnt");
 		this.commentCount = json.getInt("express_reply_cnt");
 		this.position = json.getString("express_location");

@@ -10,7 +10,6 @@
 <item android:bottom="1dp"> 
      <shape> 
            <solid android:color="@color/style_gray" />
-           
            <padding android:bottom="3dp"
            	 android:left="0dp"
            	 android:right="0dp"
