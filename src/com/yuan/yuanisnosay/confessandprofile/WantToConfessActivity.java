@@ -10,24 +10,19 @@ import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.RequestParams;
-import com.tencent.map.geolocation.TencentLocation;
-import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.yuan.yuanisnosay.R;
+import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -37,12 +32,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -50,27 +42,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class WantToConfessActivity extends Activity implements
-		TencentLocationListener {
+public class WantToConfessActivity extends Activity {
 	private static final String TAG = "WantToConfessActivity";
 	private static final int LOCATING_MSG_CODE = -1;
 	private static final String LOCATING_MSG_DOT_COUNT_CODE = "dotCount";
-	private static final int CONFESS_SEND_SUCCESS = 0;
-	private static final int CONFESS_SEND_FAIL_NOT_LOGIN = 1;
-	private static final int CONFESS_SEND_FAIL_OTHER = 2;
+	private static final int M_LOCATION = 0;
 	
 	YuanApplication mApp;
 
-//	private DateFormat mSdf;
 	private TencentLocationModule mLocationModule;
 	protected TencentLocationManager mLocationManager;
-//	private boolean mStarted;
-	private boolean mLocated;
+	private TencentLocationHelper mLocationHelper;
 
-	private TextView txtBack;
+	private ImageView imgBack;
 	private EditText editConfessContentInput;
 	private TextView txtLocationShow;
-	private Button btnSend;
+	private TextView txtSend;
 
 	private GridView gridThumbnailShower;
 	private PicThumAdapter mthumbnailAdapter;
@@ -91,34 +78,21 @@ public class WantToConfessActivity extends Activity implements
 		public void handleMessage(Message msg) {
 			switch(msg.what) {
 			case LOCATING_MSG_CODE:
-				if (!mLocated) {
+				if (!mLocationHelper.getLocated()) {
 					int count = msg.getData().getInt(
 							LOCATING_MSG_DOT_COUNT_CODE);
 					StringBuffer sb = new StringBuffer();
-					sb.append("正在定位");
+					sb.append("  正在定位");
 					for (int i = 0; i < count + 1; i++) {
 						sb.append(".");
 					}
 					txtLocationShow.setText(sb.toString());
 				}
 				break;
-			case CONFESS_SEND_SUCCESS:
-				Util.dismissDialog();
-				Util.showToast(WantToConfessActivity.this, "表白成功！");
-				Bimp.bmp.clear();
-				Bimp.drr.clear();
-				Bimp.max = 0;
-				finish();
-				break;
-			case CONFESS_SEND_FAIL_NOT_LOGIN:
-				Util.dismissDialog();
-				Util.showToast(WantToConfessActivity.this, "你还没登录呢，先登录吧...");
-				finish();
-				break;
-			case CONFESS_SEND_FAIL_OTHER:
-				Util.dismissDialog();
-				Util.showToast(WantToConfessActivity.this, "网络不给力啊，发送失败了！");
-//				finish();
+			case M_LOCATION:
+				mLocationModule = (TencentLocationModule)msg.obj;
+				mLocationManager.removeUpdates(mLocationHelper);
+				txtLocationShow.setText("  "+mLocationModule.getCity()+" "+mLocationModule.getRegionName());
 				break;
 				
 			}
@@ -130,9 +104,9 @@ public class WantToConfessActivity extends Activity implements
 				.create().setRequestLevel(
 						TencentLocationRequest.REQUEST_LEVEL_POI);
 		mLocationManager = TencentLocationManager.getInstance(this);
-		mLocationManager.requestLocationUpdates(tencentLocationReq, this);
+		mLocationHelper = new TencentLocationHelper(mHandler);
+		mLocationManager.requestLocationUpdates(tencentLocationReq, mLocationHelper);
 
-//		mStarted = true;
 		mLocationModule = new TencentLocationModule();
 
 		new Timer().schedule(new TimerTask() {
@@ -140,7 +114,7 @@ public class WantToConfessActivity extends Activity implements
 			@Override
 			public void run() {
 				int tmp = 0;
-				while (!mLocated) {
+				while (!mLocationHelper.getLocated()) {
 					Message msg = new Message();
 					Bundle data = new Bundle();
 					tmp++;
@@ -155,10 +129,10 @@ public class WantToConfessActivity extends Activity implements
 		}, 0, 2000);
 
 	}
-
+	
 	private void initView() {
 		editConfessContentInput = (EditText) findViewById(R.id.text_edit);
-		txtLocationShow = (TextView) findViewById(R.id.view_location);
+		txtLocationShow = (TextView) findViewById(R.id.textView_location);
 
 		gridThumbnailShower = (GridView) findViewById(R.id.img_show_thumbnail);
 		gridThumbnailShower.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -182,101 +156,31 @@ public class WantToConfessActivity extends Activity implements
 			}
 		});
 
-		btnSend = (Button) findViewById(R.id.btn_send);
-		btnSend.setOnClickListener(new OnClickListener() {
+		txtSend = (TextView) findViewById(R.id.textView_send);
+		txtSend.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (!mLocated) {
+				if (!mLocationHelper.getLocated()) {
 					Util.showToast(WantToConfessActivity.this, "请确定网络连接后,再重新发送");
 					return;
 				}
 				final String openId = mApp.getLogin().getOpenId();
 				final String text = editConfessContentInput.getText()
 						.toString();
-				final String addr = mLocationModule.getAddr();
+				final String addr = mLocationModule.getRegionName();
 				final double latitude = mLocationModule.getLatitude();
 				final double longtitude = mLocationModule.getLongitude();
-				if (Bimp.drr.size() != 0) {
-					
-					try {
+				
+				try{
+					if (Bimp.drr.size() != 0) {
 						ServerAccess.postNewConfess(openId, text, addr,longtitude,
-								latitude,  Bimp.drr.get(0),
-								new ServerAccess.ServerResponseHandler(){
-
-									@Override
-									public void onSuccess(
-											JSONObject result) {
-										// TODO Auto-generated method stub
-										if(result == null) {
-											return;
-										}
-										else {
-											try {
-												int status = result.getInt("status");
-												switch(status) {
-												case CONFESS_SEND_SUCCESS:
-													Util.dismissDialog();
-													Util.showToast(WantToConfessActivity.this, "表白成功！");
-													break;
-													
-												}
-											} catch (JSONException e) {
-												// TODO Auto-generated catch block
-												e.printStackTrace();
-											}
-										}
-									}
-
-									@Override
-									public void onFailure(Throwable error) {
-										// TODO Auto-generated method stub
-										Util.dismissDialog();
-										Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来设置吧");
-									}
-							
-						});
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+								latitude,  Bimp.drr.get(0),new ConfessResponseHandler());
+					}else{
+						ServerAccess.postNewConfess(openId, text, addr,longtitude,
+								latitude,new ConfessResponseHandler());
 					}
-					Util.showProgressDialog(WantToConfessActivity.this, "请稍后",
-							"正在发送...");
-				} else {
-					ServerAccess.postNewConfess(openId, text, addr,longtitude,
-						latitude,new ServerAccess.ServerResponseHandler(){
-
-							@Override
-							public void onSuccess(
-									JSONObject result) {
-								// TODO Auto-generated method stub
-								if(result == null) {
-									return;
-								}
-								else {
-									try {
-										int status = result.getInt("status");
-										switch(status) {
-										case CONFESS_SEND_SUCCESS:
-											Util.dismissDialog();
-											Util.showToast(WantToConfessActivity.this, "表白成功！");
-											break;
-											
-										}
-									} catch (JSONException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							}
-
-							@Override
-							public void onFailure(Throwable error) {
-								// TODO Auto-generated method stub
-								Util.dismissDialog();
-								Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
-							}
-					
-				});
+				}catch (FileNotFoundException e) {
+					e.printStackTrace();
 				}
 				Util.showProgressDialog(WantToConfessActivity.this, "请稍后",
 						"正在发送...");
@@ -296,9 +200,9 @@ public class WantToConfessActivity extends Activity implements
 					int count) {
 				// TODO Auto-generated method stub
 				if (s.toString().trim().length() != 0) {
-					btnSend.setEnabled(true);
+					txtSend.setEnabled(true);
 				} else {
-					btnSend.setEnabled(false);
+					txtSend.setEnabled(false);
 				}
 			}
 
@@ -310,8 +214,8 @@ public class WantToConfessActivity extends Activity implements
 
 		});
 
-		txtBack = (TextView) findViewById(R.id.back);
-		txtBack.setOnClickListener(new OnClickListener() {
+		imgBack = (ImageView) findViewById(R.id.imageView_back);
+		imgBack.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -320,38 +224,51 @@ public class WantToConfessActivity extends Activity implements
 
 		});
 	}
+	
+	private class ConfessResponseHandler implements ServerResponseHandler{
 
-	@Override
-	public void onLocationChanged(TencentLocation location, int error,
-			String reason) {
-//		mSdf = SimpleDateFormat.getTimeInstance();
-		if (error == TencentLocation.ERROR_OK) {
-			setTencentLocationModule(location);
-			txtLocationShow.setText(mLocationModule.getCity()+" "+mLocationModule.getRegionName());
-			mLocated = true;
-		} else if (error == TencentLocation.ERROR_NETWORK) {
-			// Toast toast = Toast.makeText(this, "网络不可用,请检查网络连接",
-			// Toast.LENGTH_SHORT);
-			// toast.show();
+		@Override
+		public void onSuccess(JSONObject result) {
+			if(result == null) {
+				return;
+			}
+			else {
+				try {
+					int status = result.getInt("status");
+					switch(status) {
+					case Status.Confess.CONFESS_SEND_SUCCESS:
+						Util.dismissDialog();
+						Util.showToast(WantToConfessActivity.this, "表白成功！");
+						confessClear();
+						finish();
+						break;
+					default:
+						Util.dismissDialog();
+						Util.showToast(WantToConfessActivity.this, "表白失败！");
+						break;	
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-	}
 
-	public void setTencentLocationModule(TencentLocation location) {
-		mLocationModule.setLatitude(location.getLatitude());
-		mLocationModule.setLongitude(location.getLongitude());
-		mLocationModule.setAccuracy(location.getAccuracy());
-		mLocationModule.setNation(location.getNation());
-		mLocationModule.setProvince(location.getProvince());
-		mLocationModule.setCity(location.getCity());
-		mLocationModule.setDistrict(location.getDistrict());
-		mLocationModule.setRegionName(location.getPoiList().get(0).getName());
+		@Override
+		public void onFailure(Throwable error) {
+			Util.dismissDialog();
+			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+			Log.e(TAG, error.toString());
+		}
+		
 	}
-
-	@Override
-	public void onStatusUpdate(String arg0, int arg1, String arg2) {
-		// TODO Auto-generated method stub
+	
+	private void confessClear(){
+		Bimp.bmp.clear();
+		Bimp.drr.clear();
+		Bimp.max = 0;
+		mLocationManager.removeUpdates(mLocationHelper);
 	}
-
+	
 	public String getString(String s) {
 		String path = null;
 		if (s == null)

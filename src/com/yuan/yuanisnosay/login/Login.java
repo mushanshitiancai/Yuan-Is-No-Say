@@ -32,7 +32,8 @@ public class Login {
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
 
-//	private String mOpenId;
+	private int mRegisterStatus;//用户注册时返回的status，详情参考api
+	//	private String mOpenId;
 //	private String mQQToken;
 	private String mNickname;
 	private String mIconPath;
@@ -79,7 +80,7 @@ public class Login {
 
 		mTencent.login(activity, SCOPE, new LoginUiListener(activity));
 		//recordInfo();
-
+		
 	}
 
 	/**
@@ -148,5 +149,10 @@ public class Login {
 	public void setIconPath(String iconPath) {
 		this.mIconPath = iconPath;
 	}
-	
+	public int getmRegisterStatus() {
+		return mRegisterStatus;
+	}
+	public void setmRegisterStatus(int mRegisterStatus) {
+		this.mRegisterStatus = mRegisterStatus;
+	}
 }

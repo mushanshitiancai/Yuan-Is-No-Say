@@ -28,20 +28,43 @@ import com.yuan.yuanisnosay.server.ServerAccessable;
 import com.yuan.yuanisnosay.ui.Util;
 
 public class ListTestActivity extends ActionBarActivity {
+	private static final String TAG= "yuan_ListTestActivity";
 	private static final int M_REGISTER_END = 0;
 	private static final int M_UPLOADPIC_END = 1;
 	private static final int M_REGISTER_SUCCESS = 0;
 	private static final int M_FIRST_LOGIN = 1;
 	private static final int M_VERITY_FAIL = 2;
 	
+	private static final int M_JSON_RESULT = 10;
+	
 	YuanApplication mApp;
 
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
 			R.id.button_getInfo, R.id.button_register,R.id.button_upPic,
-			R.id.btn_wantto_confess, R.id.button_network,R.id.button_comment};
+			R.id.btn_wantto_confess, R.id.button_network,R.id.button_comment,
+			R.id.button_getConfess,R.id.button_profile};
 
 	private Handler mHandler;
+	private ServerAccess.ServerResponseHandler mServerHandler=new ServerResponseHandler() {
+		@Override
+		public void onSuccess(JSONObject result) {
+			Log.e(TAG, ""+result.toString());
+			Message msg=mHandler.obtainMessage();
+			msg.what=M_JSON_RESULT;
+			msg.obj=result;
+			mHandler.sendMessage(msg);
+		}
+		
+		@Override
+		public void onFailure(Throwable error) {
+			if(error==null){
+				Log.e(TAG, "error == null");
+			}else{
+				Log.e(TAG, error.toString());
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +92,10 @@ public class ListTestActivity extends ActionBarActivity {
 							msg.obj.toString(), "");
 					break;
 				case M_UPLOADPIC_END:
+					Util.showResultDialog(ListTestActivity.this,
+							msg.obj.toString(), "");
+					break;
+				case M_JSON_RESULT:
 					Util.showResultDialog(ListTestActivity.this,
 							msg.obj.toString(), "");
 					break;
@@ -109,9 +136,20 @@ public class ListTestActivity extends ActionBarActivity {
 				break;
 			case R.id.button_comment:
 				commentTest();
+				break;
+			case R.id.button_getConfess:
+				//ServerAccess.getNewConfessListHeat(10, mServerHandler);
+				ServerAccess.getNewConfessListNearby("中国，广东，深圳，南山区",  113.934071,22.540923, 10, 1000, mServerHandler);
+				break;
+			case R.id.button_profile:
+				Intent intent1 = new Intent(ListTestActivity.this,PersonalProfileActivity.class);
+				startActivity(intent1);
+				break;
 			}
 		}
 	}
+	
+	
 	
 	private void commentTest() {
 		// TODO Auto-generated method stub
@@ -175,6 +213,8 @@ public class ListTestActivity extends ActionBarActivity {
 //			}
 //		}.start();
 	}
+	
+	
 	
 	private void uploadPicTest(){
 		final String TEST_FILE_NAME = "Universal Image Loader @#&=+-_.,!()~'%20.png";

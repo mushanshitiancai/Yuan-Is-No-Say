@@ -12,6 +12,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
+	public static final String KEY_STATUS="status";
+	
+	public static final int getStatus(JSONObject json) throws JSONException{
+		return json.getInt(KEY_STATUS);
+	}
 
 	public interface ServerResponseHandler {
 		public void onSuccess(JSONObject result);
@@ -93,12 +98,12 @@ public class ServerAccess {
 	}
 
 	public static void getMoreConfessListNearby(String addr, double longitude,
-			double latiude, long baseID, int len, int distance, ServerResponseHandler handler) {
+			double latitude, long baseID, int len, int distance, ServerResponseHandler handler) {
 		RequestParams params = new RequestParams();
 
 		params.put("user_location", addr);
 		params.put("user_longitude", longitude);
-		params.put("user_latiude", latiude);
+		params.put("user_latitude", latitude);
 		params.put("base_id", baseID);
 		params.put("length", len);
         params.put("neibor", 1);
@@ -107,16 +112,16 @@ public class ServerAccess {
 		doPost("read_express_message", params, handler);
 	}
 
-    public static void getNewConfessListNearby(String addr, double longitude, double latiude, int len, int distance, ServerResponseHandler handler) {
-        getMoreConfessListNearby(addr, longitude, latiude, ~(long)(1<<63), len, distance, handler);
+    public static void getNewConfessListNearby(String addr, double longitude, double latitude, int len, int distance, ServerResponseHandler handler) {
+        getMoreConfessListNearby(addr, longitude, latitude, ~(long)(1<<63), len, distance, handler);
     }
 
-    public static void getMoreConfessListHeat(long baseID, int len, ServerResponseHandler handler) {
+    public static void getMoreConfessListHot(long baseID, int len, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("user_location", "123");
         params.put("user_longitude", 0);
-        params.put("user_latiude", 0);
+        params.put("user_latitude", 0);
         params.put("base_id", baseID);
         params.put("length", len);
         params.put("neibor", 0);
@@ -126,15 +131,15 @@ public class ServerAccess {
     }
 
     public static void getConfessById(long postID, ServerResponseHandler handler) {
-        getMoreConfessListHeat(postID, 1, handler);
+        getMoreConfessListHot(postID, 1, handler);
     }
 
-    public static void getNewConfessListHeat(int len, ServerResponseHandler handler) {
-        getMoreConfessListHeat(~(long)(1<<63), len, handler);
+    public static void getNewConfessListHot(int len, ServerResponseHandler handler) {
+        getMoreConfessListHot(~(long)(1<<63), len, handler);
     } 
 
 	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latiude, String picPath,
+			String addr, double longitude, double latitude, String picPath,
 			ServerResponseHandler handler) throws FileNotFoundException {
 		RequestParams params = new RequestParams();
 
@@ -142,7 +147,7 @@ public class ServerAccess {
 		params.put("express_msg", confessMsg);
 		params.put("express_location", addr);
 		params.put("express_longitude", longitude);
-		params.put("express_latiude", latiude);
+		params.put("express_latitude", latitude);
 		if ("" != picPath)
 			params.put("express_picture", new File(picPath));
 
@@ -150,16 +155,16 @@ public class ServerAccess {
 	}
 
 	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latiude,
+			String addr, double longitude, double latitude,
 			ServerResponseHandler handler) {
 		try {
-			postNewConfess(openid, confessMsg, addr, longitude, latiude, "",
+			postNewConfess(openid, confessMsg, addr, longitude, latitude, "",
 					handler);
 		} catch (FileNotFoundException e) {
 		}
 	}
 
-    public static void like(long postID, ServerResponseHandler handler) {
+    public static void flower(long postID, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("express_id", postID);

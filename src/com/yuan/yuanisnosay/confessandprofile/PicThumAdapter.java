@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import com.yuan.yuanisnosay.R;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -77,12 +79,22 @@ public class PicThumAdapter extends BaseAdapter{
 		ViewHolder holder = null;
 		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(mContext);
-			convertView = inflater.inflate(R.layout.item_published_grida,
-					parent, false);
-			holder = new ViewHolder();
-			holder.image = (ImageView) convertView
-					.findViewById(R.id.item_grida_image);
-			convertView.setTag(holder);
+			if(forWho == FOR_PERSONAL_PROFILE){
+				convertView = inflater.inflate(R.layout.item_profile_grid,
+						parent, false);
+				holder = new ViewHolder();
+				holder.image = (CircleImageView) convertView
+						.findViewById(R.id.imageView_user_icon);
+				convertView.setTag(holder);
+			}else{
+				convertView = inflater.inflate(R.layout.item_published_grida,
+						parent, false);
+				holder = new ViewHolder();
+				holder.image = (ImageView) convertView
+						.findViewById(R.id.item_grida_image);
+				convertView.setTag(holder);
+			}
+			
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
@@ -90,11 +102,11 @@ public class PicThumAdapter extends BaseAdapter{
 		if (position == Bimp.bmp.size()) {
 			if (forWho == FOR_PERSONAL_PROFILE) {
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
-						mContext.getResources(), R.drawable.ic_launcher));
+						mContext.getResources(), R.drawable.user2_03));
 			} else if (forWho == FOR_SEND_CONFESS) {
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
 						mContext.getResources(),
-						R.drawable.icon_addpic_unfocused));
+						R.drawable.add_pic_03));
 			}
 			if (position == 1) {
 				holder.image.setVisibility(View.GONE);

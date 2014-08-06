@@ -6,7 +6,7 @@
 	android:paddingBottom="6dp"
     android:orientation="vertical" >
 
-    <include android:id="@+id/relativeLayout_content" layout="@layout/item_confess_context"/>
+    <include android:id="@+id/relativeLayout_content" layout="@layout/item_confess_content"/>
 
     <include android:id="@+id/relativeLayout_info" layout="@layout/item_confess_info"/>
 
@@ -18,7 +18,8 @@
         android:layout_marginTop="2dp"
         android:layout_toLeftOf="@+id/imageView_confessItem_icon"
         android:text="TextView"
-        android:textSize="10sp" />
+        android:textColor="@color/style_text_black"
+        android:textSize="12sp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,7 +28,7 @@
         android:layout_height="70.5dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout_content"
-        android:layout_marginRight="36dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="-35dp"
         android:src="@drawable/ic_launcher"
         app:border_color="@color/white"

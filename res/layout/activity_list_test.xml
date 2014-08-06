@@ -10,58 +10,77 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.yuan.yuanisnosay.ListTestActivity" >
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登录" />
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/button_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登出" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/button_getInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取信息" />
+            <Button
+                android:id="@+id/button_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录" />
 
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="注册" />
+            <Button
+                android:id="@+id/button_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登出" />
 
-    <Button
-        android:id="@+id/button_upPic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="上传图片" />
+            <Button
+                android:id="@+id/button_getInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取信息" />
 
-    <Button
-        android:id="@+id/button_network"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="检测网络状态" />
+            <Button
+                android:id="@+id/button_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注册" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+            <Button
+                android:id="@+id/button_upPic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传图片" />
 
-    <Button
-        android:id="@+id/btn_wantto_confess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我要表白" />
-    
-    <Button
-        android:id="@+id/button_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="评论" />
+            <Button
+                android:id="@+id/button_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="检测网络状态" />
+
+            <Button
+                android:id="@+id/button_getConfess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="get list" />
+
+            <Button
+                android:id="@+id/btn_wantto_confess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我要表白" />
+
+            <Button
+                android:id="@+id/button_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="评论" />
+
+            <Button
+                android:id="@+id/button_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置个人资料" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
