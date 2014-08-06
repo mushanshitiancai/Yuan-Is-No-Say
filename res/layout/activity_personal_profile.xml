@@ -10,10 +10,10 @@
 
         <ImageView
             android:id="@+id/imageView_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
+            android:layout_marginLeft="6dp"
             android:src="@drawable/back_03" />
 
         <TextView
@@ -44,14 +44,42 @@
             android:verticalSpacing="5dp" >
         </GridView>
 
+        <RadioGroup
+            android:id="@+id/radioGroup_choose_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_show_thumbnail"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="41dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioButton_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_female"
+                android:drawableLeft="@drawable/personal_profile_03" 
+                android:drawablePadding="6dp"
+                android:button="@null"/>
+            <RadioButton
+                android:id="@+id/radioButton_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_male"
+                android:drawableLeft="@drawable/personal_profile_03" 
+                android:drawablePadding="6dp"
+                android:layout_marginLeft="20dp"
+                android:button="@null"/>
+        </RadioGroup>
+
         <RelativeLayout
             android:id="@+id/nickname_container"
             android:layout_width="294dp"
             android:layout_height="42dp"
-            android:layout_below="@id/img_show_thumbnail"
+            android:layout_below="@id/radioGroup_choose_sex"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="45dp" >
+            android:layout_marginTop="33dp" >
 
             <Button
                 android:id="@+id/button_nickname_tag"
@@ -75,7 +103,7 @@
                 android:padding="10dp"
                 android:text="@string/enter"
                 android:textColor="@color/style_profile_text_white" />
-
+            
             <EditText
                 android:id="@+id/edit_nickname"
                 android:layout_width="match_parent"

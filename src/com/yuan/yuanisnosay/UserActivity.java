@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yuan.yuanisnosay.ui.ConfessFragment;
@@ -15,7 +16,7 @@ public class UserActivity extends FragmentActivity {
 
 	private ImageView btnBack;
 //	private Button btnMessage;
-	private Button btnWantToConfess;
+	private RelativeLayout layoutWantToConfess;
 	private ImageView ivIcon;
 	private TextView tvName;
 	
@@ -30,10 +31,10 @@ public class UserActivity extends FragmentActivity {
 		ButtonLisener buttonLisener=new ButtonLisener();
 		btnBack = (ImageView)findViewById(R.id.imageView_user_back);
 //		btnMessage = (Button)findViewById(R.id.button_user_message);
-		btnWantToConfess = (Button)findViewById(R.id.button_user_wangToConfess);
+		layoutWantToConfess = (RelativeLayout)findViewById(R.id.layout_user_wantToConfess);
 		btnBack.setOnClickListener(buttonLisener);
 //		btnMessage.setOnClickListener(buttonLisener);
-		btnWantToConfess.setOnClickListener(buttonLisener);
+		layoutWantToConfess.setOnClickListener(buttonLisener);
 		
 		ivIcon = (ImageView)findViewById(R.id.imageView_user_icon);
 		tvName = (TextView)findViewById(R.id.textView_user_name);
@@ -58,7 +59,7 @@ public class UserActivity extends FragmentActivity {
 //			case R.id.button_user_message:
 				
 //				break;
-			case R.id.button_user_wangToConfess:
+			case R.id.layout_user_wantToConfess:
 				
 				break;
 			}
