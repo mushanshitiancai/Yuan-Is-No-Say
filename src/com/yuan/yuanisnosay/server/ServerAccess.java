@@ -2,6 +2,7 @@ package com.yuan.yuanisnosay.server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.json.JSONException;
@@ -83,6 +84,24 @@ public class ServerAccess {
 
 		doPost("recv_user_info", params, handler);
 	}
+	public static void getNewcommentnum(String openID,ServerResponseHandler handler) throws IOException
+    {
+    	
+    	RequestParams params = new RequestParams();
+    	params.put("user_openid", openID);
+    	doPost("get_unread_comment_cnt",params, handler);
+    	
+    	
+    }
+    public static void  getNewcommentlist(String openID,ServerResponseHandler handler) throws IOException
+    {
+    	
+    	RequestParams params = new RequestParams();
+    	params.put("user_openid", openID);
+    	doPost("get_unread_comment_list",params, handler);
+    	
+    	
+    }
 
 	public static void updateUserInfo(String openid, String nickName,
 			String sex, InputStream streamDefaultPic,
