@@ -3,7 +3,7 @@ package com.yuan.yuanisnosay;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Util {
+public class DateUtil {
 	
 	public static String formatDateTime(long time) {
 		if (0 == time)return "";

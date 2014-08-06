@@ -11,6 +11,7 @@
     <color name="style_blue">#00a0e9</color>
     <color name="style_text_blue">#3598d8</color>
     <color name="style_gray">#f3f3f3</color>
+    <color name="style_gray_border">#bbbbbb</color>
     <color name="style_text_black">#5b5b5b</color>
     
     <color name="style_confess_item_1_content_bg">#e67f22</color>

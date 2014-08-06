@@ -80,6 +80,10 @@ public class YuanApplication extends Application{
 	public double getLatitude() {
 		return mLatitude;
 	}
+	
+	public String getRegionName(){
+		return mRegionName;
+	}
 
 	public String getRegionName() {
 		return mRegionName;

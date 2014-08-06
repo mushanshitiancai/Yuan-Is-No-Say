@@ -24,7 +24,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yuan.yuanisnosay.R;
-import com.yuan.yuanisnosay.Util;
+import com.yuan.yuanisnosay.DateUtil;
 
 public class ConfessAdapter extends BaseAdapter {
 	public static final int TYPE_NORMAL = 0; // 主界面表白类型
@@ -48,6 +48,7 @@ public class ConfessAdapter extends BaseAdapter {
 		Button btnFlower;
 		Button btnComment;
 		ImageView ivIcon;
+		ImageView ivPicture;
 		View layoutContent;
 		View layoutPicture;
 		View layoutInfo;
@@ -95,13 +96,17 @@ public class ConfessAdapter extends BaseAdapter {
 			// }
 
 			//
-			if (curConfess.getPicture() == null || curConfess.getPicture().equals("")) {
-				convertView = mInflater.inflate(R.layout.item_confess, null);
-			} else {
-				convertView = mInflater.inflate(R.layout.item_confess_with_picture, null);
-			}
-
 			viewHolder = new ViewHolder();
+			convertView = mInflater.inflate(R.layout.item_confess, null);
+			viewHolder.ivPicture=(ImageView) convertView.findViewById(R.id.imageView_picture);
+//			if (curConfess.getPicture() == null || curConfess.getPicture().equals("")) {
+//				convertView = mInflater.inflate(R.layout.item_confess, null);
+//			} else {
+//				convertView = mInflater.inflate(R.layout.item_confess_with_picture, null);
+//				viewHolder.ivPicture=(ImageView) convertView.findViewById(R.id.imageView_picture);
+//			}
+
+			
 			viewHolder.content = (TextView) convertView.findViewById(R.id.textView_confessItem_content);
 			viewHolder.publishDate = (TextView) convertView.findViewById(R.id.textView_confessItem_publishTime);
 			viewHolder.position = (TextView) convertView.findViewById(R.id.textView_confessItem_position);
@@ -128,8 +133,8 @@ public class ConfessAdapter extends BaseAdapter {
 		}
 
 		viewHolder.content.setText(curConfess.getContent());
-		viewHolder.publishDate.setText(Util.formatDateTime(curConfess.getPublishDate()));
-		viewHolder.position.setText(curConfess.getPosition().getRegionName());
+		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess.getPublishDate()));
+		viewHolder.position.setText(curConfess.getPosition());
 
 		viewHolder.btnFlower.setText(mContext.getString(R.string.confessItem_flowers) + " "
 				+ curConfess.getFlowersCount());
@@ -142,6 +147,13 @@ public class ConfessAdapter extends BaseAdapter {
 		if (mType == TYPE_NORMAL) {
 			viewHolder.author.setText(curConfess.getAuthor());
 			mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon, mOptions, animateFirstListener);
+		}
+		
+		if(curConfess.getPicture() != null && !curConfess.getPicture().equals("")){
+			viewHolder.ivPicture.setVisibility(View.VISIBLE);
+			mImageLoader.displayImage(curConfess.getPicture(), viewHolder.ivPicture, mOptions, animateFirstListener);
+		}else{
+			viewHolder.ivPicture.setVisibility(View.GONE);
 		}
 
 		return convertView;

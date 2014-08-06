@@ -12,6 +12,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
+	public static final String KEY_STATUS="status";
+	
+	public static final int getStatus(JSONObject json) throws JSONException{
+		return json.getInt(KEY_STATUS);
+	}
 
 	public interface ServerResponseHandler {
 		public void onSuccess(JSONObject result);
@@ -111,7 +116,7 @@ public class ServerAccess {
         getMoreConfessListNearby(addr, longitude, latitude, ~(long)(1<<63), len, distance, handler);
     }
 
-    public static void getMoreConfessListHeat(long baseID, int len, ServerResponseHandler handler) {
+    public static void getMoreConfessListHot(long baseID, int len, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("user_location", "123");
@@ -126,11 +131,11 @@ public class ServerAccess {
     }
 
     public static void getConfessById(long postID, ServerResponseHandler handler) {
-        getMoreConfessListHeat(postID, 1, handler);
+        getMoreConfessListHot(postID, 1, handler);
     }
 
-    public static void getNewConfessListHeat(int len, ServerResponseHandler handler) {
-        getMoreConfessListHeat(~(long)(1<<63), len, handler);
+    public static void getNewConfessListHot(int len, ServerResponseHandler handler) {
+        getMoreConfessListHot(~(long)(1<<63), len, handler);
     } 
 
 	public static void postNewConfess(String openid, String confessMsg,
@@ -159,7 +164,7 @@ public class ServerAccess {
 		}
 	}
 
-    public static void like(long postID, ServerResponseHandler handler) {
+    public static void flower(long postID, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("express_id", postID);
