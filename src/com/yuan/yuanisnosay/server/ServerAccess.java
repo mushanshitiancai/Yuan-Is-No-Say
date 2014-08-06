@@ -199,7 +199,7 @@ public class ServerAccess {
         doPost("delete_express_message", params, handler);
     }
 
-    public static void getNewCommentCount(String openid, ServerResponseHandler hander) {
+    public static void getNewCommentCount(String openid, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("user_openid", openid);
 
