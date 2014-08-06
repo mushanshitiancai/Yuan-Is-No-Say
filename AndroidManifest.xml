@@ -63,8 +63,7 @@
             android:name=".ListTestActivity"
             android:label="@string/title_activity_list_test" >
         </activity>
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity" 
-            android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity"/>
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageBucketActivity" />
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageGridActivity" />
         <activity android:name="com.yuan.yuanisnosay.confessandprofile.PublishedActivity" />
@@ -87,6 +86,12 @@
             android:name=".CommentActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_comment" >
+        </activity>
+        <activity android:name=".NewCommentActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

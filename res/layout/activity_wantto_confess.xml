@@ -6,71 +6,79 @@
 
     <RelativeLayout
         android:id="@+id/menu_container"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#CCCCFF" >
+        style="@style/header" >
 
-        <TextView
-            android:id="@+id/text_back"
+        <ImageView
+            android:id="@+id/imageView_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="返回"
-            android:textSize="20sp" />
+            android:layout_marginLeft="13dp"
+            android:src="@drawable/back_03" />
 
-        <Button
-            android:id="@+id/button_send"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/send_confess"
+            android:textColor="@color/style_profile_gray"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textView_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:enabled="false"
-            android:text="发送"
-            android:textSize="20sp" />
+            android:layout_marginRight="13dp"
+            android:text="@string/send"
+            android:textColor="@color/style_wantto_confess_blue"
+            android:textSize="22sp" />
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/text_edit"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/menu_container"
-        android:layout_marginTop="5dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="left|top"
-        android:hint="表白内容"
-        android:inputType="textMultiLine"
-        android:lines="4" >
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/style_wantto_confess_gray" >
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edit_confess_content"
+            android:gravity="left|top"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:paddingLeft="2dp"
+            android:textSize="20sp" />
 
-    <GridView
-        android:id="@+id/img_show_thumbnail"
-        android:layout_width="300dp"
-        android:layout_height="90dp"
-        android:layout_below="@id/text_edit"
-        android:layout_marginLeft="5dp"
-        android:horizontalSpacing="3dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp" >
-    </GridView>
+        <GridView
+            android:id="@+id/img_show_thumbnail"
+            android:layout_width="600dp"
+            android:layout_height="100dp"
+            android:layout_below="@id/text_edit"
+            android:layout_marginTop="5dp"
+            android:horizontalSpacing="3dp"
+            android:numColumns="1"
+            android:scrollbars="none"
+            android:verticalSpacing="5dp" >
+        </GridView>
 
-    <TextView
-        android:id="@+id/text_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="位置："
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/text_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/text_tag"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textView_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_show_thumbnail"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/position_07"
+            android:padding="2dp"
+            android:textColor="@color/style_profile_nickname_blue"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
 </RelativeLayout>
