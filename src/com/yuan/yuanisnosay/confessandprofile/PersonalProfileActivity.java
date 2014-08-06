@@ -9,9 +9,12 @@ import java.io.InputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.R;
+import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
 
 import android.text.Editable;
@@ -37,216 +40,93 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class PersonalProfileActivity extends Activity {
-	
+
 	private static final String TAG = "PersonalProfileActivity";
-	private static final int INFO_SEND_SUCCESS = 0;
-	private static final int INFO_SEND_FAIL_NOT_LOGIN = 1;
-	private static final int INFO_SEND_FAIL_OTHER = 2;
 	
 	class ViewHolder {
-		private TextView txtBack;
-		private TextView txtEnter;
+		private ImageView imgBack;
+		private TextView txtSend;
 		private EditText editNickName;
 		private GridView gridThumbnailShower;
 	}
-	
+
 	private ViewHolder mHolder;
 	private PicThumAdapter mthumbnailAdapter;
 	private YuanApplication mApp;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_profile);
-		
+
 		initView();
 		mApp = (YuanApplication) getApplication();
 	}
 
-	private Handler mHandler = new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what){
-			case INFO_SEND_SUCCESS:
-				Util.dismissDialog();
-				Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
-				break;
-			case INFO_SEND_FAIL_NOT_LOGIN:
-				Util.dismissDialog();
-				Util.showToast(PersonalProfileActivity.this, "你还没登录呢，先登录吧...");
-				break;
-			case INFO_SEND_FAIL_OTHER:
-				Util.dismissDialog();
-				Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
-				break;
-			}
-		}
-	};
-	
-	private void initView(){
+	private void initView() {
 		mHolder = new ViewHolder();
-		mHolder.txtBack = (TextView)findViewById(R.id.back);
-		mHolder.txtEnter = (TextView)findViewById(R.id.send);
-		mHolder.gridThumbnailShower = (GridView)findViewById(R.id.img_show_thumbnail);
-		mHolder.gridThumbnailShower.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		mHolder.editNickName = (EditText)findViewById(R.id.edit_nickname);
-		
-		mthumbnailAdapter = new PicThumAdapter(this,0);
+		mHolder.imgBack = (ImageView) findViewById(R.id.img_back);
+		mHolder.txtSend = (TextView) findViewById(R.id.button_enter);
+		mHolder.gridThumbnailShower = (GridView) findViewById(R.id.img_show_thumbnail);
+		mHolder.gridThumbnailShower.setSelector(new ColorDrawable(
+				Color.TRANSPARENT));
+		mHolder.editNickName = (EditText) findViewById(R.id.edit_nickname);
+
+		mthumbnailAdapter = new PicThumAdapter(this, 0);
 		mthumbnailAdapter.update();
 		mHolder.gridThumbnailShower.setAdapter(mthumbnailAdapter);
-		mHolder.gridThumbnailShower.setOnItemClickListener(new OnItemClickListener() {
+		mHolder.gridThumbnailShower
+				.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				if (arg2 == Bimp.bmp.size()) {
-					Intent intent = new Intent(PersonalProfileActivity.this,
-							ImageBucketActivity.class);
-					startActivity(intent);
-				} else {
-					Intent intent = new Intent(PersonalProfileActivity.this,
-							PhotoActivity.class);
-					intent.putExtra("ID", arg2);
-					startActivity(intent);
-				}
-			}
-		});
-		
-		mHolder.txtEnter.setOnClickListener(new OnClickListener() {
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						if (arg2 == Bimp.bmp.size()) {
+							Intent intent = new Intent(
+									PersonalProfileActivity.this,
+									ImageBucketActivity.class);
+							startActivity(intent);
+						} else {
+							Intent intent = new Intent(
+									PersonalProfileActivity.this,
+									PhotoActivity.class);
+							intent.putExtra("ID", arg2);
+							startActivity(intent);
+						}
+					}
+				});
+
+		mHolder.txtSend.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				final String text = mHolder.editNickName.getText()
-						.toString();
+				final String text = mHolder.editNickName.getText().toString();
 				final String openId = mApp.getLogin().getOpenId();
 				Log.e("personalprofileActivity", openId);
-				
-				if (Bimp.drr.size() != 0) {
-//					new Thread() {
-//						public void run() {
-//							try {
-////							long startTime = System.currentTimeMillis();
-								try {
-									ServerAccess.updateUserInfo(openId,text
-											, "1",Bimp.drr.get(0),new ServerAccess.ServerResponseHandler() {
-												
-												@Override
-												public void onSuccess(JSONObject result) {
-													// TODO Auto-generated method stub
-													if(result == null) {
-														return;
-													}
-													else {
-														try {
-															int status = result.getInt("status");
-															switch(status) {
-															case INFO_SEND_SUCCESS:
-																Util.dismissDialog();
-																Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
-																break;
-																
-															}
-														} catch (JSONException e) {
-															// TODO Auto-generated catch block
-															e.printStackTrace();
-														}
-														
-													}
-												}
-												
-												@Override
-												public void onFailure(Throwable error) {
-													// TODO Auto-generated method stub
-													Util.dismissDialog();
-													Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
-												}
-											} );
-								} catch (FileNotFoundException e) {
-									// TODO Auto-generated catch block
-									Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
-									e.printStackTrace();
-								}
-//								if(response == null) {
-//									return;
-//								}
-////								long endTime = System.currentTimeMillis();
-//								JSONObject status = new JSONObject(response);
-//								int responseCode = status.getInt("status");
-//								mHandler.sendEmptyMessage(responseCode);
-//								Log.e("personalprofileActivity", response);
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							} catch (JSONException e) {
-//								Log.e(TAG, "");
-//								e.printStackTrace();
-//							}
-//
-//						}
-//
-//					}.start();
-					Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
-							"正在上传资料...");
-				} else {
-//					new Thread() {
-//						public void run() {
-							AssetManager aManager= getApplication().getAssets();
-							try {
-								InputStream is = aManager.open("ic_launcher.png");
-								ServerAccess.updateUserInfo(openId,text
-										, "1",is,new ServerAccess.ServerResponseHandler() {
 
-											@Override
-											public void onSuccess(
-													JSONObject result) {
-												// TODO Auto-generated method stub
-												if(result == null) {
-													return;
-												}
-												else {
-													try {
-														int status = result.getInt("status");
-														switch(status) {
-														case INFO_SEND_SUCCESS:
-															Util.dismissDialog();
-															Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
-															break;
-															
-														}
-													} catch (JSONException e) {
-														// TODO Auto-generated catch block
-														
-														e.printStackTrace();
-													}
-													
-												}
-											}
-
-											@Override
-											public void onFailure(
-													Throwable error) {
-												// TODO Auto-generated method stub
-												Util.dismissDialog();
-												Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
-											}
-									
-								});
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-//							try {
-//								
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//						}
-//					}.start();
+				try {
+					if (Bimp.drr.size() != 0) {
+						ServerAccess.updateUserInfo(openId, text, "1",
+								Bimp.drr.get(0),
+								new SetProfileResponseHandler());
+					} else {
+						AssetManager aManager = getApplication().getAssets();
+						InputStream is = aManager.open("ic_launcher.png");
+						ServerAccess.updateUserInfo(openId, text, "1", is,
+								new SetProfileResponseHandler());
+					}
+				} catch (FileNotFoundException e) {
+					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-//				 finish();
+				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
+						"正在上传资料...");
+				// finish();
 			}
 		});
 
@@ -263,11 +143,11 @@ public class PersonalProfileActivity extends Activity {
 					int count) {
 				// TODO Auto-generated method stub
 				int strLen = s.toString().trim().length();
-				if(strLen == 0) {
-					mHolder.txtEnter.setEnabled(false);
+				if (strLen == 0) {
+					mHolder.txtSend.setEnabled(false);
 					return;
 				}
-				mHolder.txtEnter.setEnabled(true);
+				mHolder.txtSend.setEnabled(true);
 			}
 
 			@Override
@@ -278,7 +158,7 @@ public class PersonalProfileActivity extends Activity {
 
 		});
 
-		mHolder.txtBack.setOnClickListener(new OnClickListener() {
+		mHolder.imgBack.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -287,7 +167,39 @@ public class PersonalProfileActivity extends Activity {
 
 		});
 	}
-	
+
+	private class SetProfileResponseHandler implements ServerResponseHandler {
+
+		@Override
+		public void onSuccess(JSONObject result) {
+			if (result == null) {
+				return;
+			} else {
+				try {
+					int status = result.getInt("status");
+					switch (status) {
+					case Status.SetInfo.INFO_SEND_SUCCESS:
+						Util.dismissDialog();
+						Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
+						Intent intent = getIntent();
+						PersonalProfileActivity.this.setResult(Const.REQUEST_CODE_CONFESS_PROFILE, intent);
+						PersonalProfileActivity.this.finish();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void onFailure(Throwable error) {
+			Util.dismissDialog();
+			Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
+		}
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -306,13 +218,13 @@ public class PersonalProfileActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onRestart() {
 		mthumbnailAdapter.update();
 		super.onRestart();
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -321,11 +233,24 @@ public class PersonalProfileActivity extends Activity {
 		}
 		return false;
 	}
-	
+
 	private void showChangeSaveAlert() {
 		if ((Bimp.bmp.size() == 0 || Bimp.drr.size() == 0)
 				&& (mHolder.editNickName.getText() == null || mHolder.editNickName
 						.getText().toString().trim().length() == 0)) {
+
+			final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+					.setTitle("设置个人资料").setMessage("不设置个人资料，就无法表白哦，真的确定不表白了？");
+			builder.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							finish();
+						}
+
+					});
+			builder.setNegativeButton("取消", null).create().show();
 			finish();
 			return;
 		}

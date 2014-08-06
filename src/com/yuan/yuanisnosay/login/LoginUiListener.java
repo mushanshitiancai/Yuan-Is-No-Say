@@ -1,5 +1,6 @@
 package com.yuan.yuanisnosay.login;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -12,8 +13,11 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yuan.yuanisnosay.ListTestActivity;
+import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
 
 /**
@@ -34,14 +38,47 @@ public class LoginUiListener implements IUiListener{
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case ON_COMPLETE:
-                JSONObject response = (JSONObject)msg.obj;
-                Util.showResultDialog(mContext, response.toString(), "onComplete");
-                Util.dismissDialog();
-                YuanApplication app=(YuanApplication) mContext.getApplication();
+//                JSONObject response = (JSONObject)msg.obj;
+//                Util.showResultDialog(mContext, response.toString(), "onComplete");
+//                Util.dismissDialog();
+                final YuanApplication app=(YuanApplication) mContext.getApplication();
                 app.getLogin().recordInfo();
                 
-                Intent intent = new Intent(mContext,PersonalProfileActivity.class);
-				mContext.startActivity(intent);
+                
+                ServerAccess.registerNewUser(app.getLogin().getQQToken(),app.getLogin().getOpenId(), new ServerResponseHandler() {
+					
+					@Override
+					public void onSuccess(JSONObject result) {
+						if(result == null) {
+							return;
+						}
+						try {
+							int status = result.getInt("status");
+							switch(status){
+							case Status.Login.M_REGISTER_SUCCESS:
+								Util.showToast(mContext, "注册成功！");
+								break;
+							case Status.Login.M_FIRST_LOGIN:
+								Util.showToast(mContext, "首次登陆，注册到系统");
+								Intent intent = new Intent(mContext,PersonalProfileActivity.class);
+								mContext.startActivity(intent);
+								break;
+							case Status.Login.M_VERITY_FAIL:
+								Util.showToast(mContext, "验证无效！");
+								break;
+							}
+							app.getLogin().setmRegisterStatus(status);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					@Override
+					public void onFailure(Throwable error) {
+						Util.showToast(mContext, "网络连接有问题，请检查");
+					}
+				});
                 break;
             case ON_ERROR:
                 UiError e = (UiError)msg.obj;

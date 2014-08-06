@@ -2,68 +2,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity" >
+    tools:context="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity" 
+    android:background="@drawable/personal_profile_bg_02">
 
-    <RelativeLayout android:id="@+id/menu_container"
+    <RelativeLayout
+        android:id="@+id/menu_container"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#CCCCFF" >
-        <TextView android:id="@+id/back"
+        android:layout_height="48dp"
+        android:background="#F3F3F3" >
+
+        <ImageView
+            android:id="@+id/img_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="返回"
-            android:textSize="20sp"/>
-        <TextView android:id="@+id/send"
+            android:layout_marginLeft="13dp"
+            android:src="@drawable/back_03" />
+
+        <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="确定"
-            android:enabled="false"
-            android:textSize="20sp"/>
+            android:layout_centerInParent="true"
+            android:text="个人资料"
+            android:textColor="#8C8C8C"
+            android:textSize="22sp" />
     </RelativeLayout>
-    
-    <TextView
-        android:id="@+id/txt_nickname_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below = "@id/menu_container"
-        android:text="昵称:"
-        android:textSize="@dimen/picture_album_item_title_height" />
 
-    <EditText
-        android:id="@+id/edit_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/txt_nickname_tag"
-        android:layout_below="@id/menu_container"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:hint="请输入昵称"
-        android:ems="10"
-        android:maxLength="24" >
-        <requestFocus />
-    </EditText>
-
-  	 <TextView
-        android:id="@+id/txt_head_pic_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txt_nickname_tag"
-        android:text="头像:"
-        android:textSize="@dimen/picture_album_item_title_height" />
-  	 
-  	 <GridView 
+    <GridView
         android:id="@+id/img_show_thumbnail"
         android:layout_width="300dp"
         android:layout_height="90dp"
-        android:layout_below="@id/txt_head_pic_tag"
+        android:layout_below="@id/menu_container"
         android:layout_marginLeft="5dp"
-        android:horizontalSpacing="3dp"        
+        android:horizontalSpacing="3dp"
         android:numColumns="4"
         android:scrollbars="none"
         android:verticalSpacing="5dp" >
     </GridView>
-  	 
+
+    <RelativeLayout
+        android:id="@+id/nickname_container"
+        android:layout_width="294dp"
+        android:layout_height="42dp"
+        android:layout_below="@id/img_show_thumbnail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+        android:layout_marginLeft="20dp" >
+
+        <Button
+            android:id="@+id/txt_nickname_tag"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="#63BBF1"
+            android:enabled="false"
+            android:text="昵称"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/button_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+            android:background="#63BBF1"
+            android:text="确定"
+            android:textColor="#FFFFFF" 
+            android:drawableLeft="@drawable/back_03"/>
+        
+        <EditText
+            android:id="@+id/edit_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/txt_nickname_tag"
+            android:layout_toLeftOf="@id/button_enter"
+            android:textColor="#63BBF1"
+            android:ems="10"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLength="24" >
+            <requestFocus />
+        </EditText>
+        
+        
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -12,6 +12,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
+	public static final String KEY_STATUS="status";
+	
+	public static final int getStatus(JSONObject json) throws JSONException{
+		return json.getInt(KEY_STATUS);
+	}
 
 	public interface ServerResponseHandler {
 		public void onSuccess(JSONObject result);
