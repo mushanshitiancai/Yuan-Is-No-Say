@@ -27,9 +27,10 @@ import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
+import com.yuan.yuanisnosay.ui.ConfessFragment.ConfessActivityInterface;
 import com.yuan.yuanisnosay.ui.DistancePopup;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements ConfessActivityInterface{
 	private static final String TAG = "yuan_MainActivity";
 	private static final int TAB_NEARBY = R.id.radio_nearby;
 	private static final int TAB_HOT = R.id.radio_hot;
@@ -181,7 +182,7 @@ public class MainActivity extends FragmentActivity {
 	
 	//TODO
 	private void refreshByDistance(int distance){
-		
+		mFragmentNearby.onRefershByDistance(distance);
 	}
 
 	
@@ -333,6 +334,11 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public int getDistance() {
+		return mDistancePopup.getDistance();
 	}
 
 }

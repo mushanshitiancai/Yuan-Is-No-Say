@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.lee.pullrefresh.ui.PullToRefreshBase.OnRefreshListener;
 import com.lee.pullrefresh.ui.PullToRefreshListView;
 import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.DateUtil;
+import com.yuan.yuanisnosay.MainActivity;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.server.ServerAccess;
@@ -62,6 +64,10 @@ public class ConfessFragment extends Fragment {
 	private Handler mHandler;
 	private PullDownResponseHandler mPullDownResponseHandler;
 	private PullUpResponseHandler mPullUpResponseHandler;
+	
+	public interface ConfessActivityInterface{
+		public int getDistance();
+	}
 
 	public ConfessFragment(int type) {
 		mType = type;
@@ -142,27 +148,35 @@ public class ConfessFragment extends Fragment {
 		mRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.e(TAG, "onPullDownToRefresh" + 0);
-				// new GetConfessTask()
-				// .execute(GetConfessTask.ACTION_PULL_TO_REFRESH,0,1);
-				ServerAccess.getNewConfessListHeat(10, mPullDownResponseHandler);
+				Log.e(TAG, "onPullDownToRefresh");
+				if(mType==TYPE_NEARBY){
+					int distance = 0;
+					Activity activity=getActivity();
+					if(activity instanceof ConfessActivityInterface){
+						ConfessActivityInterface mainActivity=(ConfessActivityInterface) activity;
+						distance = mainActivity.getDistance();
+					}
+					ServerAccess.getNewConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), Const.GET_COUNT, distance, mPullDownResponseHandler);
+				}else{
+					ServerAccess.getNewConfessListHeat(Const.GET_COUNT, mPullDownResponseHandler);
+				}
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.e(TAG, "onPullUpToRefresh");
-				// new GetConfessTask()
-				// .execute(GetConfessTask.ACTION_PULL_TO_MORE,mConfessList.size(),1);
-
-				// result=ConfessItem.getConfess(start, mGetCount);
-				// if(result.size()<mGetCount){
-				// Log.e(TAG, "已经到底啦");
-				// hasMoreData=false;
-				// }
-				// mConfessList.addAll(result);
-				final int getCount = 10;
 				int baseId = mConfessList.getLast().getId();
-				ServerAccess.getMoreConfessListHeat(baseId, getCount, mPullUpResponseHandler);
+				if(mType==TYPE_NEARBY){
+					int distance = 0;
+					Activity activity=getActivity();
+					if(activity instanceof ConfessActivityInterface){
+						ConfessActivityInterface mainActivity=(ConfessActivityInterface) activity;
+						distance = mainActivity.getDistance();
+					}
+					ServerAccess.getMoreConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), baseId,Const.GET_COUNT, distance, mPullUpResponseHandler);
+				}else{
+					ServerAccess.getMoreConfessListHeat(baseId, Const.GET_COUNT, mPullUpResponseHandler);
+				}
 			}
 		});
 
@@ -190,7 +204,7 @@ public class ConfessFragment extends Fragment {
 				} else {
 					isExistedConfessTooOld = !isItemsContains(resultConfessList);
 					if (isExistedConfessTooOld) {
-						mConfessList.remove();
+						mConfessList.clear();
 						mConfessList.addAll(resultConfessList);
 					} else {
 						LinkedList<ConfessItem> tempList = new LinkedList<ConfessItem>();
@@ -274,6 +288,17 @@ public class ConfessFragment extends Fragment {
 	 */
 	public void refesh() {
 		mRefreshListView.doPullRefreshing(true, 50);
+	}
+	
+	/**
+	 * 改变距离时刷新列表
+	 * @param distance
+	 */
+	public void onRefershByDistance(int distance){
+		if(mType==TYPE_HOT) return ;
+		mConfessList.clear();
+		mRefreshListView.setHasMoreData(true);
+		refesh();
 	}
 
 	/**

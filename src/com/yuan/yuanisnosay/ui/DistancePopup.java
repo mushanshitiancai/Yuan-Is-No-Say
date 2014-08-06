@@ -88,4 +88,8 @@ public class DistancePopup {
 		}
 		return false;
 	}
+	
+	public int getDistance(){
+		return mCurDistance;
+	}
 }
