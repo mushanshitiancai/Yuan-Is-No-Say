@@ -48,6 +48,15 @@ public class ServerAccess {
     }
 
     public static void doPost(String uri, String params, String uploadName, String filePath, ServerResponseHandler handler) {
+        new Thread() {
+            @Override
+            public void run() {
+                sendPacket(uri, params, uploadName, filePath, handler);
+            }
+        }.start();
+    }
+
+    private static void sendPacket(String uri, String params, String uploadName, String filePath, ServerResponseHandler handler) {
         int responseCode = 0;
         String result = null;
         String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
