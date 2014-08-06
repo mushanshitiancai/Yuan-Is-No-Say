@@ -135,6 +135,9 @@ public class ConfessFragment extends Fragment {
 		mListView.setVerticalScrollBarEnabled(false);
 
 		mConfessList = getConfesses();
+		if(mConfessList.size()==0){
+			refesh();
+		}
 		if (mType == TYPE_MINE) {
 			mAdapter = new ConfessAdapter(getActivity(), ConfessAdapter.TYPE_MINE, mConfessList);
 		} else {
@@ -157,8 +160,10 @@ public class ConfessFragment extends Fragment {
 						distance = mainActivity.getDistance();
 					}
 					ServerAccess.getNewConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), Const.GET_COUNT, distance, mPullDownResponseHandler);
-				}else{
+				}else if(mType==TYPE_HOT){
 					ServerAccess.getNewConfessListHot(Const.GET_COUNT, mPullDownResponseHandler);
+				}else if(mType==TYPE_MINE){
+					ServerAccess.getPostHistory(mApp.getLogin().getOpenId(), ~(long)(1<<63), Const.GET_COUNT, mPullDownResponseHandler);
 				}
 			}
 
@@ -174,8 +179,10 @@ public class ConfessFragment extends Fragment {
 						distance = mainActivity.getDistance();
 					}
 					ServerAccess.getMoreConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), baseId,Const.GET_COUNT, distance, mPullUpResponseHandler);
-				}else{
+				}else if(mType==TYPE_HOT){
 					ServerAccess.getMoreConfessListHot(baseId, Const.GET_COUNT, mPullUpResponseHandler);
+				}else if(mType==TYPE_MINE){
+					ServerAccess.getPostHistory(mApp.getLogin().getOpenId(), baseId, Const.GET_COUNT, mPullUpResponseHandler);
 				}
 			}
 		});
@@ -220,7 +227,8 @@ public class ConfessFragment extends Fragment {
 				}
 				mHandler.sendEmptyMessage(MESSAGE_PULL_DOWN_REFRESH_COMPLETE);
 			} catch (JSONException e) {
-				Log.e(TAG, "Json 解析出错");
+				Log.e(TAG, "Json 解析出错"+e.getLocalizedMessage());
+				Log.e(TAG, "Json 解析出错"+result.toString());
 				mHandler.sendEmptyMessage(MESSAGE_PULL_DOWN_REFRESH_FAIL);
 				// e.printStackTrace();
 			}
@@ -311,8 +319,7 @@ public class ConfessFragment extends Fragment {
 
 	private LinkedList<ConfessItem> getConfesses() {
 		LinkedList<ConfessItem> confessList = null;
-		// confessList = (LinkedList<ConfessItem>)
-		// mApp.getStorage().getData(mStorageKey); TODO
+		confessList = (LinkedList<ConfessItem>)mApp.getStorage().getData(mStorageKey);
 		if (confessList == null)
 			confessList = new LinkedList<ConfessItem>();
 		Log.e(TAG, "getConfesses():" + confessList);

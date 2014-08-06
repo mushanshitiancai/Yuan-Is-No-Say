@@ -13,116 +13,123 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
+
 	public static final String KEY_STATUS = "status";
 
 	public static final int getStatus(JSONObject json) throws JSONException {
 		return json.getInt(KEY_STATUS);
 	}
+    public interface ServerResponseHandler {
+        public void onSuccess(JSONObject result);
+        public void onFailure(Throwable error);
+    }
 
-	public interface ServerResponseHandler {
-		public void onSuccess(JSONObject result);
+    public final static String HOST = "http://yswy.r4c00n.com/";
 
-		public void onFailure(Throwable error);
-	}
+    private static void doPost(String uri, RequestParams params,
+            final ServerResponseHandler handler) {
+        AsyncHttpClient client = new AsyncHttpClient();
 
-	public final static String HOST = "http://yswy.r4c00n.com/";
+        client.post(HOST + uri, params, new AsyncHttpResponseHandler() {
 
-	private static void doPost(String uri, RequestParams params,
-			final ServerResponseHandler handler) {
-		AsyncHttpClient client = new AsyncHttpClient();
+            @Override
+            public void onSuccess(int statusCode,
+                    org.apache.http.Header[] headers, byte[] responseBody) {
+                if (null != handler)
+                    try {
+                        handler.onSuccess(new JSONObject(new String(
+                                responseBody)));
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+            }
 
-		client.post(HOST + uri, params, new AsyncHttpResponseHandler() {
+            public void onFailure(int statusCode,
+                    org.apache.http.Header[] headers, byte[] responseBody,
+                    Throwable error) {
+                if (null != handler)
+                    handler.onFailure(error);
+            }
+        });
+    }
 
-			@Override
-			public void onSuccess(int statusCode,
-					org.apache.http.Header[] headers, byte[] responseBody) {
-				if (null != handler)
-					try {
-						handler.onSuccess(new JSONObject(new String(
-								responseBody)));
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			}
+    public static void registerNewUser(String accessToken, String openid,
+            ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
 
-			public void onFailure(int statusCode,
-					org.apache.http.Header[] headers, byte[] responseBody,
-					Throwable error) {
-				if (null != handler)
-					handler.onFailure(error);
-			}
-		});
-	}
+        params.put("user_token", accessToken);
+        params.put("user_openid", openid);
 
-	public static void registerNewUser(String accessToken, String openid,
-			ServerResponseHandler handler) {
-		RequestParams params = new RequestParams();
+        doPost("login", params, handler);
+    }
 
-		params.put("user_token", accessToken);
-		params.put("user_openid", openid);
+    public static void getUserInfo(String openid, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
 
-		doPost("login", params, handler);
-	}
+        params.put("user_openid", openid);
 
-	public static void getUserInfo(String openid, ServerResponseHandler handler) {
-		RequestParams params = new RequestParams();
+        doPost("download_user_info", params, handler);
+    }
 
-		params.put("user_openid", openid);
+    public static void updateUserInfo(String openid, String nickName,
+            String sex, String picPath, ServerResponseHandler handler)
+            throws java.io.FileNotFoundException {
+        RequestParams params = new RequestParams();
 
-		doPost("download_user_info", params, handler);
-	}
+        params.put("user_openid", openid);
+        params.put("user_nickname", nickName);
+        params.put("user_sex", sex);
+        params.put("user_head", new File(picPath));
 
-	public static void updateUserInfo(String openid, String nickName,
-			String sex, String picPath, ServerResponseHandler handler)
-			throws java.io.FileNotFoundException {
-		RequestParams params = new RequestParams();
+        doPost("recv_user_info", params, handler);
+    }
+	public static void getNewcommentnum(String openID,ServerResponseHandler handler) throws IOException
+    {
+    	
+    	RequestParams params = new RequestParams();
+    	params.put("user_openid", openID);
+    	doPost("get_unread_comment_cnt",params, handler);
+    	
+    	
+    }
+    public static void  getNewcommentlist(String openID,ServerResponseHandler handler) throws IOException
+    {
+    	
+    	RequestParams params = new RequestParams();
+    	params.put("user_openid", openID);
+    	doPost("get_unread_comment_list",params, handler);
+    	
+    	
+    }
 
-		params.put("user_openid", openid);
-		params.put("user_nickname", nickName);
-		params.put("user_sex", sex);
-		params.put("user_head", new File(picPath));
+    public static void updateUserInfo(String openid, String nickName,
+            String sex, InputStream streamDefaultPic,
+            ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
 
-		doPost("recv_user_info", params, handler);
-	}
+        params.put("user_openid", openid);
+        params.put("user_nickname", nickName);
+        params.put("user_sex", sex);
+        params.put("user_head", streamDefaultPic);
 
-	public static void updateUserInfo(String openid, String nickName,
-			String sex, InputStream streamDefaultPic,
-			ServerResponseHandler handler) {
-		RequestParams params = new RequestParams();
+        doPost("recv_user_info", params, handler);
+    }
 
-		params.put("user_openid", openid);
-		params.put("user_nickname", nickName);
-		params.put("user_sex", sex);
-		params.put("user_head", streamDefaultPic);
+    public static void getMoreConfessListNearby(String addr, double longitude,
+            double latitude, long baseID, int len, int distance, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
 
-		doPost("recv_user_info", params, handler);
-	}
+        params.put("user_location", addr);
+        params.put("user_longitude", longitude);
+        params.put("user_latitude", latitude);
+        params.put("base_id", baseID);
+        params.put("length", len);
+        params.put("neibor", 1);
+        params.put("distance", distance);
 
-	public static void getNewcommentlist(String openID,
-			ServerResponseHandler handler) throws IOException {
-
-		RequestParams params = new RequestParams();
-		params.put("user_openid", openID);
-		doPost("get_unread_comment_list", params, handler);
-
-	}
-
-	public static void getMoreConfessListNearby(String addr, double longitude,
-			double latitude, long baseID, int len, int distance,
-			ServerResponseHandler handler) {
-		RequestParams params = new RequestParams();
-
-		params.put("user_location", addr);
-		params.put("user_longitude", longitude);
-		params.put("user_latitude", latitude);
-		params.put("base_id", baseID);
-		params.put("length", len);
-		params.put("neibor", 1);
-		params.put("distance", distance);
-
-		doPost("read_express_message", params, handler);
-	}
+        doPost("read_express_message", params, handler);
+    }
 
 	public static void getNewConfessListNearby(String addr, double longitude,
 			double latitude, int len, int distance,
@@ -155,31 +162,31 @@ public class ServerAccess {
 		getMoreConfessListHot(~(long) (1 << 63), len, handler);
 	}
 
-	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latitude, String picPath,
-			ServerResponseHandler handler) throws FileNotFoundException {
-		RequestParams params = new RequestParams();
+    public static void postNewConfess(String openid, String confessMsg,
+            String addr, double longitude, double latitude, String picPath,
+            ServerResponseHandler handler) throws FileNotFoundException {
+        RequestParams params = new RequestParams();
 
-		params.put("user_openid", openid);
-		params.put("express_msg", confessMsg);
-		params.put("express_location", addr);
-		params.put("express_longitude", longitude);
-		params.put("express_latitude", latitude);
-		if ("" != picPath)
-			params.put("express_picture", new File(picPath));
+        params.put("user_openid", openid);
+        params.put("express_msg", confessMsg);
+        params.put("express_location", addr);
+        params.put("express_longitude", longitude);
+        params.put("express_latitude", latitude);
+        if ("" != picPath)
+            params.put("express_picture", new File(picPath));
 
-		doPost("post_express_message", params, handler);
-	}
+        doPost("post_express_message", params, handler);
+    }
 
-	public static void postNewConfess(String openid, String confessMsg,
-			String addr, double longitude, double latitude,
-			ServerResponseHandler handler) {
-		try {
-			postNewConfess(openid, confessMsg, addr, longitude, latitude, "",
-					handler);
-		} catch (FileNotFoundException e) {
-		}
-	}
+    public static void postNewConfess(String openid, String confessMsg,
+            String addr, double longitude, double latitude,
+            ServerResponseHandler handler) {
+        try {
+            postNewConfess(openid, confessMsg, addr, longitude, latitude, "",
+                    handler);
+        } catch (FileNotFoundException e) {
+        }
+    }
 
 	public static void flower(long postID, ServerResponseHandler handler) {
 		RequestParams params = new RequestParams();
@@ -201,9 +208,13 @@ public class ServerAccess {
 			ServerResponseHandler handler) {
 		RequestParams params = new RequestParams();
 
+
 		params.put("openid", openid);
 		params.put("express_id", postID);
 		params.put("reply_msg", text);
+        params.put("user_openid", openid);
+        params.put("express_id", postID);
+        params.put("reply_msg", text);
 
 		doPost("post_comment", params, handler);
 	}
@@ -218,9 +229,21 @@ public class ServerAccess {
 		doPost("delete_express_message", params, handler);
 	}
 
-	public static void getNewCommentCount(String openid,
-			ServerResponseHandler hander) {
-		RequestParams params = new RequestParams();
-		params.put("user_openid", openid);
-	}
+    public static void getNewCommentList(String openid, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("user_openid", openid);
+
+        doPost("get_unread_comment_list", params, handler);
+    }
+
+    public static void getPostHistory(String openid, long baseID, int len, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("user_openid", openid);
+        params.put("base_id", baseID);
+        params.put("length", len);
+
+        doPost("express_history", params, handler);
+    } 
 }

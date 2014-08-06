@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/button_mainActivity_confess"
-            android:layout_width="24dp"
+            android:layout_width="43.2dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"

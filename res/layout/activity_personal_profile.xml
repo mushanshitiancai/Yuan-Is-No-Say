@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/gender_female"
                 android:drawableLeft="@drawable/personal_profile_03" 
-                android:drawablePadding="6dp"
+                android:drawablePadding="4dp"
                 android:button="@null"/>
             <RadioButton
                 android:id="@+id/radioButton_male"
@@ -67,8 +67,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/gender_male"
                 android:drawableLeft="@drawable/personal_profile_03" 
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="20dp"
+                android:drawablePadding="4dp"
+                android:layout_marginLeft="10dp"
                 android:button="@null"/>
         </RadioGroup>
 

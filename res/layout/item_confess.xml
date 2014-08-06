@@ -17,6 +17,7 @@
         android:layout_below="@id/relativeLayout_content"
         android:layout_marginTop="2dp"
         android:layout_toLeftOf="@+id/imageView_confessItem_icon"
+        android:paddingRight="5dp"
         android:text="TextView"
         android:textColor="@color/style_text_black"
         android:textSize="12sp" />
@@ -24,12 +25,12 @@
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/imageView_confessItem_icon"
-        android:layout_width="70.5dp"
-        android:layout_height="70.5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout_content"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="-35dp"
+        android:layout_marginTop="-25dp"
         android:src="@drawable/ic_launcher"
         app:border_color="@color/white"
         app:border_width="1dp" />

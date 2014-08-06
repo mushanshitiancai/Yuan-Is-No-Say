@@ -34,136 +34,91 @@ public class NewCommentActivity extends Activity {
 	YuanApplication mApp;
 	private static final int PULL_SUCCESS = 0;
 	private static final int PULL_FAIL = 1;
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
+	
 	@Override
-	public void onCreate(final Bundle savedInstanceState) {
+	public void onCreate(final Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newcomment);
-		//绑定layout里面的listview
 		list_newcomment=(ListView) findViewById(R.id.ListView_newcomment);
 		setnewcommentlistcontent();
-		/*
-		list_newcomment.setOnItemClickListener(new OnItemClickListener(){
-			 
-	            @Override
-	            public void onItemClick(AdapterView<?> parent, View view, int position,
-	                    long id) {
-	                // TODO Auto-generated method stub
-	               
-	            }
-	             
-	        });
-	        */
-	       
-
 	}
 	  
 	public void setnewcommentlistcontent(){
-		/*ArrayList<String> newcontent = new ArrayList<String>();
-		newcontent.add("hello");
-		newcontent.add("hi");
-		*/
+		
 		ArrayList<ItemData_newcomment> mylist_newcomment = new ArrayList<ItemData_newcomment>();
-		requestdata(mylist_newcomment);
-//		NewCommentAdapter adapter=new NewCommentAdapter(this,mylist_newcomment);
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,newcontent);
-//		list_newcomment.setAdapter(adapter);
-	
-	}
-	public void requestdata(final ArrayList<ItemData_newcomment> mlist){
-		mApp = (YuanApplication) getApplication();
 		try {
-			ServerAccess.getNewcommentlist("1", new ServerResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject result) {
-						// TODO Auto-generated method stub
-						if(result == null) {
-							Util.showResultDialog(NewCommentActivity.this, "获取新私语", "result是null");
-							return;
-						} 
-						String msg = "";
-						try {
-							int status = result.getInt("status");
-//							String msg = result.getString("message");
-							switch(status){
-							case PULL_SUCCESS:
-								
-//								Util.showToast(NewCommentActivity.this, "获取新私语成功！");
-							    JSONArray commentarray = result.getJSONArray("comment_list");
-							    Util.showResultDialog(NewCommentActivity.this, "获取新私语成功！"+status+"  "+msg+commentarray.toString(),"获取新私语" );
-								int length = commentarray.length();
-								ItemData_newcomment Item_comment = new ItemData_newcomment();
-								for(int i=0;i<length;i++)
-								{
-									JSONObject oj = commentarray.getJSONObject(i);
-									Item_comment.sethisNickname(oj.getString("user_nickname"));
-									Item_comment.setNewComment(oj.getString("reply_msg"));
-									Item_comment.setRawConfess(oj.getString("express_msg"));
-									Item_comment.setRawConfessid(oj.getInt("express_id"));
-									mlist.add(Item_comment);
-									Log.e("NewComment", Item_comment.tostring());
-								}
-								
-								NewCommentAdapter adapter=new NewCommentAdapter(NewCommentActivity.this,mlist);
-								list_newcomment.setAdapter(adapter);
-								break;
-							case PULL_FAIL:
-								Util.showResultDialog(NewCommentActivity.this, "获取新私语", "获取新私语失败Fail！"+status+"  "+msg);
-//								Util.showToast(NewCommentActivity.this, "获取新私语失败");
-								break;
-							default:
-//								Util.showToast(NewCommentActivity.this, "获取新私语失败");
-								Util.showResultDialog(NewCommentActivity.this, "获取新私语", "获取新私语失败,不知原因"+status+"  "+msg);
-								break;
-							
-							}
-							
-						} catch (JSONException e) {
-							Util.showResultDialog(NewCommentActivity.this, "获取新私语", "json exception");
-							e.printStackTrace();
-						}
-						
-					}
-					
-					@Override
-					public void onFailure(Throwable error) {
-						// TODO Auto-generated method stub
-//						Util.showToast(NewCommentActivity.this, "获取新消息失败");
-						Util.showResultDialog(NewCommentActivity.this, "获取新私语", "连接失败");
-					}
-				});
+			requestdata(mylist_newcomment);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
+	}
+	public void requestdata(final ArrayList<ItemData_newcomment> mlist) throws IOException{
+		mApp = (YuanApplication) getApplication();
+		ServerAccess.getNewCommentList("1", new ServerResponseHandler() {
+				@Override
+				public void onSuccess(JSONObject result) {
+					// TODO Auto-generated method stub
+					if(result == null) {
+						Util.showResultDialog(NewCommentActivity.this, "获取新私语", "result是null");
+						return;
+					} 
+					String msg = "";
+					try {
+						int status = result.getInt("status");
+//							String msg = result.getString("message");
+						switch(status){
+						case PULL_SUCCESS:
+							
+//								Util.showToast(NewCommentActivity.this, "获取新私语成功！");
+						    JSONArray commentarray = result.getJSONArray("comment_list");
+						    Util.showResultDialog(NewCommentActivity.this, "获取新私语成功！"+status+"  "+msg+commentarray.toString(),"获取新私语" );
+							int length = commentarray.length();
+							ItemData_newcomment Item_comment = new ItemData_newcomment();
+							for(int i=0;i<length;i++)
+							{
+								JSONObject oj = commentarray.getJSONObject(i);
+								Item_comment.sethisNickname(oj.getString("user_nickname"));
+								Item_comment.setNewComment(oj.getString("reply_msg"));
+								Item_comment.setRawConfess(oj.getString("express_msg"));
+								Item_comment.setRawConfessid(oj.getInt("express_id"));
+								mlist.add(Item_comment);
+								Log.e("NewComment", Item_comment.tostring());
+							}
+							
+							NewCommentAdapter adapter=new NewCommentAdapter(NewCommentActivity.this,mlist);
+							list_newcomment.setAdapter(adapter);
+							break;
+						case PULL_FAIL:
+							Util.showResultDialog(NewCommentActivity.this, "获取新私语", "获取新私语失败Fail！"+status+"  "+msg);
+//								Util.showToast(NewCommentActivity.this, "获取新私语失败");
+							break;
+						default:
+//								Util.showToast(NewCommentActivity.this, "获取新私语失败");
+							Util.showResultDialog(NewCommentActivity.this, "获取新私语", "获取新私语失败,不知原因"+status+"  "+msg);
+							break;
+						
+						}
+						
+					} catch (JSONException e) {
+						Util.showResultDialog(NewCommentActivity.this, "获取新私语", "json exception");
+						e.printStackTrace();
+					}
+					
+				}
+				
+				@Override
+				public void onFailure(Throwable error) {
+					// TODO Auto-generated method stub
+//						Util.showToast(NewCommentActivity.this, "获取新消息失败");
+					Util.showResultDialog(NewCommentActivity.this, "获取新私语", "连接失败");
+				}
+			});
 			
 	}
-
-/*
-	public ArrayList<HashMap<String,Object>> getItem(){
-		//生成动态数组，加入数据
-		ArrayList<HashMap<String,Object>> item = new ArrayList<HashMap<String,Object>>();
-		for(int i=0;i<ItemData_newcomment.getItemNum();i++)
-		{
-				HashMap<String,Object> map = new HashMap<String, Object>();
-				map.put("ItemIamge",ItemData_newcomment.getImage());
-				map.put("ItemHisNickname", ItemData_newcomment.gethisNickname())
-				map.put("ItemNewComment", ItemData_newcomment.getNewComment());
-				map.put("ItemRawconfess", ItemData_newcomment.getRawConfess());
-				item.add(map);
-			
-		}
-			//生成适配器的Item和动态数组对应的元素
-	}
-	*/
-		
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onStart()
-	 */
+	
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -171,9 +126,6 @@ public class NewCommentActivity extends Activity {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
 	@Override
 	public void onResume() {
 		super.onResume();

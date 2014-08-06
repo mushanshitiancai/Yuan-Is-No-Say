@@ -101,7 +101,12 @@ public class ConfessItem implements Serializable{
 		this.type = TYPE_NORMAL;
 		this.id = json.getInt("express_id");
 		this.content = json.getString("express_msg");
-		this.author = json.getString("user_nickname");
+		if(json.has("user_nickname")){
+			this.author = json.getString("user_nickname");
+		}else{
+			this.author = "";
+		}
+		
 		this.publishDate = new Date(json.getLong("express_time")*1000);
 		String openId=json.getString("user_openid");
 		this.icon = ServerAccess.HOST+"download_user_head?user_openid="+openId;

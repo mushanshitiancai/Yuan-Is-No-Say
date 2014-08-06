@@ -1,4 +1,4 @@
-package com.yuan.yuanisnosay.ui.adpater;
+ package com.yuan.yuanisnosay.ui.adpater;
 
 import java.util.Collections;
 import java.util.LinkedList;
