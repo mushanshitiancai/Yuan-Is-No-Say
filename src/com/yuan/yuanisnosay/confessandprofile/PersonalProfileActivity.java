@@ -38,6 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -105,27 +106,30 @@ public class PersonalProfileActivity extends Activity {
 			public void onClick(View v) {
 				final String text = mHolder.editNickName.getText().toString();
 				final String openId = mApp.getLogin().getOpenId();
-				Log.e("personalprofileActivity", openId);
+				final RadioButton rb = (RadioButton)findViewById(mHolder.rgGender.getCheckedRadioButtonId());
+				final String gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
+//				Log.e("personalprofileActivity", openId);
+				Util.showToast(PersonalProfileActivity.this, gender);
 
-				try {
-					if (Bimp.drr.size() != 0) {
-						ServerAccess.updateUserInfo(openId, text, "1",
-								Bimp.drr.get(0),
-								new SetProfileResponseHandler());
-					} else {
-						AssetManager aManager = getApplication().getAssets();
-						InputStream is = aManager.open("user2_03.png");
-						ServerAccess.updateUserInfo(openId, text, "1", is,
-								new SetProfileResponseHandler());
-					}
-				} catch (FileNotFoundException e) {
-					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
-						"正在上传资料...");
+//				try {
+//					if (Bimp.drr.size() != 0) {
+//						ServerAccess.updateUserInfo(openId, text, gender,
+//								Bimp.drr.get(0),
+//								new SetProfileResponseHandler());
+//					} else {
+//						AssetManager aManager = getApplication().getAssets();
+//						InputStream is = aManager.open("user2_03.png");
+//						ServerAccess.updateUserInfo(openId, text, "1", is,
+//								new SetProfileResponseHandler());
+//					}
+//				} catch (FileNotFoundException e) {
+//					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
+//						"正在上传资料...");
 				// finish();
 			}
 		});
@@ -171,7 +175,7 @@ public class PersonalProfileActivity extends Activity {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-//				RadioButton rb = (RadioButton)
+				
 			}
 			
 		});
