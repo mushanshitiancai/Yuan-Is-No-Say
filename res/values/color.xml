@@ -30,4 +30,11 @@
     
     <color name="style_wantto_confess_blue">#40a6d4</color>
     <color name="style_wantto_confess_gray">#f2f2f2</color>
+    
+    <color name="newcomment_item">#EEEBEB</color>
+    <color name="newcomment_itempush">#CCCCFF</color>
+    <color name="newcomment_distance">#F6F6F6</color>
+    <color name="newcomment_head">#F3F3F3</color>
+    <color name="newcomment_font">#777777</color>
+    
 </resources>

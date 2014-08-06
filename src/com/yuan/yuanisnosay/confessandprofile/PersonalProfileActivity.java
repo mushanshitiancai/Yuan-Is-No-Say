@@ -58,7 +58,8 @@ public class PersonalProfileActivity extends Activity {
 	private ViewHolder mHolder;
 	private PicThumAdapter mthumbnailAdapter;
 	private YuanApplication mApp;
-
+	
+	private String gender = "1";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -157,7 +158,7 @@ public class PersonalProfileActivity extends Activity {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-
+				
 			}
 
 		});
@@ -175,7 +176,7 @@ public class PersonalProfileActivity extends Activity {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				
+//				gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
 			}
 			
 		});

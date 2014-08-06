@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip">
+    android:layout_height="fill_parent"
+    android:layout_marginTop="24dp"
+    android:background="@drawable/newcomment_colorselector">
    
    <TextView  
         android:id="@+id/newcomment"
-        android:layout_width="fill_parent"
-        android:layout_height="26dip" 
-        android:layout_toRightOf="@id/icon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:text="newcomment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="新消息"
+        android:textColor="@color/newcomment_font" 
+        android:textSize="14sp"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="54dp"
+        android:layout_centerInParent="true"
+        android:background="@color/newcomment_item">
+     </TextView>
    
 </RelativeLayout>

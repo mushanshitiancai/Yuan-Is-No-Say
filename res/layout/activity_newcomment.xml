@@ -3,12 +3,42 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/LinearLayout_newcomment">
+   <RelativeLayout
+        android:id="@+id/menu_container"
+        style="@style/header" 
+        android:background="@color/newcomment_head">
+
+        <ImageView
+            android:id="@+id/imageView_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13dp"
+            android:src="@drawable/back_03" />
+
+        <TextView
+            android:id="@+id/textView_newcomment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="消息列表"
+            android:textColor="@color/newcomment_font"
+            android:textSize="30sp" />
+
+        
+    </RelativeLayout>
 
     <ListView
-        android:layout_marginTop="40dp"
+        
         android:id="@+id/ListView_newcomment"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:dividerHeight="16dp"
+        android:divider="@color/newcomment_distance"
+        android:background="@color/newcomment_distance"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:cacheColorHint="@android:color/transparent">
     </ListView>
-
 </LinearLayout>

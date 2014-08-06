@@ -163,7 +163,7 @@ public class ConfessFragment extends Fragment {
 				}else if(mType==TYPE_HOT){
 					ServerAccess.getNewConfessListHot(Const.GET_COUNT, mPullDownResponseHandler);
 				}else if(mType==TYPE_MINE){
-					ServerAccess.getPostHistory(mApp.getLogin().getOpenId(), ~(long)(1<<63), Const.GET_COUNT, mPullDownResponseHandler);
+					ServerAccess.getNewConfessHistoryList(mApp.getLogin().getOpenId(),Const.GET_COUNT, mPullDownResponseHandler);
 				}
 			}
 
@@ -182,7 +182,7 @@ public class ConfessFragment extends Fragment {
 				}else if(mType==TYPE_HOT){
 					ServerAccess.getMoreConfessListHot(baseId, Const.GET_COUNT, mPullUpResponseHandler);
 				}else if(mType==TYPE_MINE){
-					ServerAccess.getPostHistory(mApp.getLogin().getOpenId(), baseId, Const.GET_COUNT, mPullUpResponseHandler);
+					ServerAccess.getMoreConfessHistoryList(mApp.getLogin().getOpenId(), baseId, Const.GET_COUNT, mPullUpResponseHandler);
 				}
 			}
 		});

@@ -106,7 +106,7 @@ public class PicThumAdapter extends BaseAdapter{
 			} else if (forWho == FOR_SEND_CONFESS) {
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
 						mContext.getResources(),
-						R.drawable.add_pic_03));
+						R.drawable.addpic_14));
 			}
 			if (position == 1) {
 				holder.image.setVisibility(View.GONE);

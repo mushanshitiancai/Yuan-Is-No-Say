@@ -59,7 +59,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/gender_female"
                 android:padding="5dp"
-                android:button="@drawable/selector_profile_gender"/>
+                android:button="@drawable/selector_profile_gender"
+                />
             <RadioButton
                 android:id="@+id/radioButton_male"
                 android:layout_width="wrap_content"
@@ -67,7 +68,8 @@
                 android:text="@string/gender_male"
                 android:padding="5dp"
                 android:layout_marginLeft="15dp"
-                android:button="@drawable/selector_profile_gender"/>
+                android:button="@drawable/selector_profile_gender"
+                android:checked="true"/>
         </RadioGroup>
 
         <RelativeLayout
