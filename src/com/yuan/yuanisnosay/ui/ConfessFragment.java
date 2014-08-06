@@ -158,7 +158,7 @@ public class ConfessFragment extends Fragment {
 					}
 					ServerAccess.getNewConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), Const.GET_COUNT, distance, mPullDownResponseHandler);
 				}else{
-					ServerAccess.getNewConfessListHeat(Const.GET_COUNT, mPullDownResponseHandler);
+					ServerAccess.getNewConfessListHot(Const.GET_COUNT, mPullDownResponseHandler);
 				}
 			}
 
@@ -175,7 +175,7 @@ public class ConfessFragment extends Fragment {
 					}
 					ServerAccess.getMoreConfessListNearby(mApp.getRegionName(), mApp.getLongitude(), mApp.getLatitude(), baseId,Const.GET_COUNT, distance, mPullUpResponseHandler);
 				}else{
-					ServerAccess.getMoreConfessListHeat(baseId, Const.GET_COUNT, mPullUpResponseHandler);
+					ServerAccess.getMoreConfessListHot(baseId, Const.GET_COUNT, mPullUpResponseHandler);
 				}
 			}
 		});
