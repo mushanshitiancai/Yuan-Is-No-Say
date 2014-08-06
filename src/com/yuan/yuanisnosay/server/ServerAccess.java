@@ -196,6 +196,26 @@ public class ServerAccess {
 
     public static void getNewCommentCount(String openid, ServerResponseHandler hander) {
         RequestParams params = new RequestParams();
-        params.put("user_openid", openid);
+        params.put("openid", openid);
+
+        doPost("get_unread_comment_cnt", params, handler);
     }
+
+    public static void getNewCommentList(String openid, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("openid", openid);
+
+        doPost("get_unread_comment_list", params, handler);
+    }
+
+    public static void getPostHistory(String openid, long baseID, int len, ServerResponseHandler handler) {
+        RequestParams params = new RequestParams();
+
+        params.put("user_openid", openid);
+        params.put("base_id", baseID);
+        params.put("length", len);
+
+        doPost("express_history", params, handler);
+    } 
 }
