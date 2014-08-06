@@ -2,17 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity" 
-    android:background="@drawable/personal_profile_bg_02">
+    tools:context="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity" >
 
     <RelativeLayout
         android:id="@+id/menu_container"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#F3F3F3" >
+        style="@style/header" >
 
         <ImageView
-            android:id="@+id/img_back"
+            android:id="@+id/imageView_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -24,69 +21,80 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="个人资料"
-            android:textColor="#8C8C8C"
-            android:textSize="22sp" />
+            android:text="@string/personal_profile"
+            android:textColor="@color/style_profile_gray"
+            android:textSize="@dimen/header_text_size" />
     </RelativeLayout>
 
-    <GridView
-        android:id="@+id/img_show_thumbnail"
-        android:layout_width="300dp"
-        android:layout_height="90dp"
-        android:layout_below="@id/menu_container"
-        android:layout_marginLeft="5dp"
-        android:horizontalSpacing="3dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp" >
-    </GridView>
-
     <RelativeLayout
-        android:id="@+id/nickname_container"
-        android:layout_width="294dp"
-        android:layout_height="42dp"
-        android:layout_below="@id/img_show_thumbnail"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
-        android:layout_marginLeft="20dp" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menu_container"
+        android:background="@drawable/personal_profile_bg_02" >
 
-        <Button
-            android:id="@+id/txt_nickname_tag"
-            android:layout_width="65dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="#63BBF1"
-            android:enabled="false"
-            android:text="昵称"
-            android:textColor="#FFFFFF" />
+        <GridView
+            android:id="@+id/img_show_thumbnail"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:horizontalSpacing="3dp"
+            android:numColumns="1"
+            android:scrollbars="none"
+            android:verticalSpacing="5dp" >
+        </GridView>
 
-        <Button
-            android:id="@+id/button_enter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-            android:background="#63BBF1"
-            android:text="确定"
-            android:textColor="#FFFFFF" 
-            android:drawableLeft="@drawable/back_03"/>
-        
-        <EditText
-            android:id="@+id/edit_nickname"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/txt_nickname_tag"
-            android:layout_toLeftOf="@id/button_enter"
-            android:textColor="#63BBF1"
-            android:ems="10"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:maxLength="24" >
-            <requestFocus />
-        </EditText>
-        
-        
+        <RelativeLayout
+            android:id="@+id/nickname_container"
+            android:layout_width="294dp"
+            android:layout_height="42dp"
+            android:layout_below="@id/img_show_thumbnail"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="45dp" >
+
+            <Button
+                android:id="@+id/button_nickname_tag"
+                android:layout_width="65dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/style_profile_nickname_blue"
+                android:enabled="false"
+                android:text="@string/nickname"
+                android:textColor="@color/style_profile_text_white" />
+
+            <Button
+                android:id="@+id/button_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@color/style_profile_nickname_blue"
+                android:drawableLeft="@drawable/finish_06"
+                android:drawablePadding="1dp"
+                android:padding="10dp"
+                android:text="@string/enter"
+                android:textColor="@color/style_profile_text_white" />
+
+            <EditText
+                android:id="@+id/edit_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/button_enter"
+                android:layout_toRightOf="@id/button_nickname_tag"
+                android:background="@drawable/shape_edit_nickname"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:maxLength="24"
+                android:paddingLeft="2dp"
+                android:singleLine="true"
+                android:textColor="@color/style_profile_nickname_blue"
+                android:textSize="19sp" >
+
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

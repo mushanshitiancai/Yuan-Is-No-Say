@@ -30,6 +30,7 @@ public class YuanApplication extends Application{
 	private TencentLocationHelper mLocationHelper;
 	private double mLongitude;
 	private double mLatitude;
+	private String mRegionName;
 	
 	@Override
 	public void onCreate() {
@@ -80,6 +81,10 @@ public class YuanApplication extends Application{
 		return mLatitude;
 	}
 
+	public String getRegionName() {
+		return mRegionName;
+	}
+
 	public Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -88,6 +93,7 @@ public class YuanApplication extends Application{
 				TencentLocationModule mLocationModule = (TencentLocationModule)msg.obj;
 				mLongitude = mLocationModule.getLongitude();
 				mLatitude = mLocationModule.getLatitude();
+				mRegionName = mLocationModule.getRegionName();
 				mLocationManager.removeUpdates(mLocationHelper);
 				break;
 			}

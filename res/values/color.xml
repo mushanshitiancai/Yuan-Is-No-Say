@@ -20,4 +20,13 @@
     <color name="style_confess_item_1_info_button_bg">#ffffff</color>
     <color name="style_confess_item_1_info_button_text">#777777</color>
     
+    <color name="style_user_black">#444444</color>
+    <color name="style_user_blue">#63bbf1</color>
+    
+    <color name="style_profile_gray">#8c8c8c</color>
+    <color name="style_profile_nickname_blue">#63bbf1</color>
+    <color name="style_profile_text_white">#ffffff</color>
+    
+    <color name="style_wantto_confess_blue">#40a6d4</color>
+    <color name="style_wantto_confess_gray">#f2f2f2</color>
 </resources>

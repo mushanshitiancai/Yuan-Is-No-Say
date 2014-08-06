@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -52,10 +54,10 @@ public class WantToConfessActivity extends Activity {
 	protected TencentLocationManager mLocationManager;
 	private TencentLocationHelper mLocationHelper;
 
-	private TextView txtBack;
+	private ImageView imgBack;
 	private EditText editConfessContentInput;
 	private TextView txtLocationShow;
-	private Button btnSend;
+	private TextView txtSend;
 
 	private GridView gridThumbnailShower;
 	private PicThumAdapter mthumbnailAdapter;
@@ -80,7 +82,7 @@ public class WantToConfessActivity extends Activity {
 					int count = msg.getData().getInt(
 							LOCATING_MSG_DOT_COUNT_CODE);
 					StringBuffer sb = new StringBuffer();
-					sb.append("正在定位");
+					sb.append("  正在定位");
 					for (int i = 0; i < count + 1; i++) {
 						sb.append(".");
 					}
@@ -90,7 +92,7 @@ public class WantToConfessActivity extends Activity {
 			case M_LOCATION:
 				mLocationModule = (TencentLocationModule)msg.obj;
 				mLocationManager.removeUpdates(mLocationHelper);
-				txtLocationShow.setText(mLocationModule.getCity()+" "+mLocationModule.getRegionName());
+				txtLocationShow.setText("  "+mLocationModule.getCity()+" "+mLocationModule.getRegionName());
 				break;
 				
 			}
@@ -130,7 +132,7 @@ public class WantToConfessActivity extends Activity {
 	
 	private void initView() {
 		editConfessContentInput = (EditText) findViewById(R.id.text_edit);
-		txtLocationShow = (TextView) findViewById(R.id.text_location);
+		txtLocationShow = (TextView) findViewById(R.id.textView_location);
 
 		gridThumbnailShower = (GridView) findViewById(R.id.img_show_thumbnail);
 		gridThumbnailShower.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -154,8 +156,8 @@ public class WantToConfessActivity extends Activity {
 			}
 		});
 
-		btnSend = (Button) findViewById(R.id.button_send);
-		btnSend.setOnClickListener(new OnClickListener() {
+		txtSend = (TextView) findViewById(R.id.textView_send);
+		txtSend.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				if (!mLocationHelper.getLocated()) {
@@ -165,7 +167,7 @@ public class WantToConfessActivity extends Activity {
 				final String openId = mApp.getLogin().getOpenId();
 				final String text = editConfessContentInput.getText()
 						.toString();
-				final String addr = mLocationModule.getAddr();
+				final String addr = mLocationModule.getRegionName();
 				final double latitude = mLocationModule.getLatitude();
 				final double longtitude = mLocationModule.getLongitude();
 				
@@ -198,9 +200,9 @@ public class WantToConfessActivity extends Activity {
 					int count) {
 				// TODO Auto-generated method stub
 				if (s.toString().trim().length() != 0) {
-					btnSend.setEnabled(true);
+					txtSend.setEnabled(true);
 				} else {
-					btnSend.setEnabled(false);
+					txtSend.setEnabled(false);
 				}
 			}
 
@@ -212,8 +214,8 @@ public class WantToConfessActivity extends Activity {
 
 		});
 
-		txtBack = (TextView) findViewById(R.id.text_back);
-		txtBack.setOnClickListener(new OnClickListener() {
+		imgBack = (ImageView) findViewById(R.id.imageView_back);
+		imgBack.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -255,6 +257,7 @@ public class WantToConfessActivity extends Activity {
 		public void onFailure(Throwable error) {
 			Util.dismissDialog();
 			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+			Log.e(TAG, error.toString());
 		}
 		
 	}

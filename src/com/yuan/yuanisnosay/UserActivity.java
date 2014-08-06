@@ -13,8 +13,8 @@ import com.yuan.yuanisnosay.ui.ConfessFragment;
 
 public class UserActivity extends FragmentActivity {
 
-	private Button btnBack;
-	private Button btnMessage;
+	private ImageView btnBack;
+//	private Button btnMessage;
 	private Button btnWantToConfess;
 	private ImageView ivIcon;
 	private TextView tvName;
@@ -28,11 +28,11 @@ public class UserActivity extends FragmentActivity {
 		
 		//绑定按钮
 		ButtonLisener buttonLisener=new ButtonLisener();
-		btnBack = (Button)findViewById(R.id.button_user_back);
-		btnMessage = (Button)findViewById(R.id.button_user_message);
+		btnBack = (ImageView)findViewById(R.id.imageView_user_back);
+//		btnMessage = (Button)findViewById(R.id.button_user_message);
 		btnWantToConfess = (Button)findViewById(R.id.button_user_wangToConfess);
 		btnBack.setOnClickListener(buttonLisener);
-		btnMessage.setOnClickListener(buttonLisener);
+//		btnMessage.setOnClickListener(buttonLisener);
 		btnWantToConfess.setOnClickListener(buttonLisener);
 		
 		ivIcon = (ImageView)findViewById(R.id.imageView_user_icon);
@@ -52,12 +52,12 @@ public class UserActivity extends FragmentActivity {
 		@Override
 		public void onClick(View button) {
 			switch(button.getId()){
-			case R.id.button_user_back:
+			case R.id.imageView_user_back:
 				finish();
 				break;
-			case R.id.button_user_message:
+//			case R.id.button_user_message:
 				
-				break;
+//				break;
 			case R.id.button_user_wangToConfess:
 				
 				break;

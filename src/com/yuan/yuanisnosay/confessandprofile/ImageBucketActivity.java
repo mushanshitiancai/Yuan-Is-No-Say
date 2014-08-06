@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.yuan.yuanisnosay.R;
+import com.yuan.yuanisnosay.ui.Util;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,14 +15,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 
 public class ImageBucketActivity extends Activity{
 	
 	// ArrayList<Entity> dataList;//用来装载数据源的列表
-	List<ImageBucket> dataList;
-	GridView gridView;
-	ImageBucketAdapter adapter;// 自定义的适配�?
-	AlbumHelper helper;
+	private List<ImageBucket> dataList;
+	private ImageView imgBack;
+	private GridView gridView;
+	private ImageBucketAdapter adapter;// 自定义的适配器
+	private AlbumHelper helper;
 	public static final String EXTRA_IMAGE_LIST = "imagelist";
 	public static Bitmap bimap;
 	
@@ -37,39 +40,49 @@ public class ImageBucketActivity extends Activity{
 	}
 	
 	/**
-	 * 初始化数�?
+	 * 初始化数据
 	 */
 	private void initData() {
-		dataList = helper.getImagesBucketList(false);	
+//		new Thread(){
+//			@Override
+//			public void run(){
+		Util.showProgressDialog(this, "相册", "正在加载图片...");
+				dataList = helper.getImagesBucketList(false);
+				Util.dismissDialog();
+//			}
+//		}.start();
+		
 		bimap = BitmapFactory.decodeResource(
 				getResources(),
 				R.drawable.icon_addpic_unfocused);
+//		
 	}
 
 	/**
 	 * 初始化view视图
 	 */
 	private void initView() {
+		imgBack = (ImageView) findViewById(R.id.imageView_back);
 		gridView = (GridView) findViewById(R.id.gridview);
 		adapter = new ImageBucketAdapter(ImageBucketActivity.this, dataList);
 		gridView.setAdapter(adapter);
 
+		imgBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
+		
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+
 				/**
-				 * 根据position参数，可以获得跟GridView的子View相绑定的实体类，然后根据它的isSelected状�?�?
-				 * 来判断是否显示�?中效果�? 至于选中效果的规则，下面适配器的代码中会有说�?
-				 */
-				// if(dataList.get(position).isSelected()){
-				// dataList.get(position).setSelected(false);
-				// }else{
-				// dataList.get(position).setSelected(true);
-				// }
-				/**
-				 * 通知适配器，绑定的数据发生了改变，应当刷新视�?
+				 * 通知适配器，绑定的数据发生了改变，应当刷新视图
 				 */
 				// adapter.notifyDataSetChanged();
 				Intent intent = new Intent(ImageBucketActivity.this,

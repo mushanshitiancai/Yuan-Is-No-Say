@@ -42,7 +42,8 @@ public class ListTestActivity extends ActionBarActivity {
 	List<Button> btnList;
 	int btnIdArr[] = { R.id.button_login, R.id.button_logout,
 			R.id.button_getInfo, R.id.button_register,R.id.button_upPic,
-			R.id.btn_wantto_confess, R.id.button_network,R.id.button_comment,R.id.button_getConfess};
+			R.id.btn_wantto_confess, R.id.button_network,R.id.button_comment,
+			R.id.button_getConfess,R.id.button_profile};
 
 	private Handler mHandler;
 	private ServerAccess.ServerResponseHandler mServerHandler=new ServerResponseHandler() {
@@ -138,6 +139,10 @@ public class ListTestActivity extends ActionBarActivity {
 			case R.id.button_getConfess:
 				ServerAccess.getNewConfessListHeat(10, mServerHandler);
 				ServerAccess.getNewConfessListNearby("xxx", 10, 10, 10, 1000, mServerHandler);
+				break;
+			case R.id.button_profile:
+				Intent intent1 = new Intent(ListTestActivity.this,PersonalProfileActivity.class);
+				startActivity(intent1);
 				break;
 			}
 		}

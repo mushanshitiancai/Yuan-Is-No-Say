@@ -1,7 +1,5 @@
 package com.yuan.yuanisnosay.confessandprofile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,19 +15,18 @@ import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -37,12 +34,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class PersonalProfileActivity extends Activity {
 
@@ -70,7 +66,7 @@ public class PersonalProfileActivity extends Activity {
 
 	private void initView() {
 		mHolder = new ViewHolder();
-		mHolder.imgBack = (ImageView) findViewById(R.id.img_back);
+		mHolder.imgBack = (ImageView) findViewById(R.id.imageView_back);
 		mHolder.txtSend = (TextView) findViewById(R.id.button_enter);
 		mHolder.gridThumbnailShower = (GridView) findViewById(R.id.img_show_thumbnail);
 		mHolder.gridThumbnailShower.setSelector(new ColorDrawable(

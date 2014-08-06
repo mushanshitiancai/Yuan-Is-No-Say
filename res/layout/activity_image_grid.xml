@@ -5,34 +5,32 @@
     android:background="#ffffff"
     android:orientation="vertical" >
 
-    <RelativeLayout android:id="@+id/layout_title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#ff495a" >
+    <RelativeLayout
+        android:id="@+id/menu_container"
+        style="@style/header" >
+
+        <ImageView
+            android:id="@+id/imageView_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13dp"
+            android:src="@drawable/back_03" />
 
         <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="相册"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:text="@string/album"
+            android:textColor="@color/style_profile_gray"
+            android:textSize="22sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:gravity="center"
-            android:text="取消"
-            android:textColor="@drawable/text_while"
-            android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"      		android:layout_below="@id/layout_title_bar"	
+        android:layout_height="fill_parent"      		android:layout_below="@id/menu_container"	
         android:orientation="vertical" >
 
         <GridView
