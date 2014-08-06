@@ -2,6 +2,7 @@ package com.yuan.yuanisnosay.server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.json.JSONException;
@@ -12,12 +13,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
-    public static final String KEY_STATUS="status";
 
-    public static final int getStatus(JSONObject json) throws JSONException{
+    public static final String KEY_STATUS = "status";
+
+    public static final int getStatus(JSONObject json) throws JSONException {
         return json.getInt(KEY_STATUS);
     }
-
     public interface ServerResponseHandler {
         public void onSuccess(JSONObject result);
         public void onFailure(Throwable error);
@@ -67,7 +68,7 @@ public class ServerAccess {
         String[] paramsArray = params.split("&");
         for (int i = 0; i < paramsArray.length; i++) {
             int idxOfEqu = paramsArray[i].indexOf("=");
-	    sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
+            sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
         }
 
         try {
@@ -181,6 +182,24 @@ public class ServerAccess {
         doPost("recv_user_info", "user_openid="+openid+"&user_nickname="+nickName+"&user_sex="+sex, "user_head", picPath, handler);
 //        doPost("recv_user_info", params, handler);
     }
+    public static void getNewcommentnum(String openID,ServerResponseHandler handler) throws IOException
+    {
+        
+        RequestParams params = new RequestParams();
+        params.put("user_openid", openID);
+        doPost("get_unread_comment_cnt",params, handler);
+        
+        
+    }
+    public static void  getNewcommentlist(String openID,ServerResponseHandler handler) throws IOException
+    {
+        
+        RequestParams params = new RequestParams();
+        params.put("user_openid", openID);
+        doPost("get_unread_comment_list",params, handler);
+        
+        
+    }
 
     public static void updateUserInfo(String openid, String nickName,
             String sex, InputStream streamDefaultPic,
@@ -210,11 +229,15 @@ public class ServerAccess {
         doPost("read_express_message", params, handler);
     }
 
-    public static void getNewConfessListNearby(String addr, double longitude, double latitude, int len, int distance, ServerResponseHandler handler) {
-        getMoreConfessListNearby(addr, longitude, latitude, ~(long)(1<<63), len, distance, handler);
+    public static void getNewConfessListNearby(String addr, double longitude,
+            double latitude, int len, int distance,
+            ServerResponseHandler handler) {
+        getMoreConfessListNearby(addr, longitude, latitude, ~(long) (1 << 63),
+                len, distance, handler);
     }
 
-    public static void getMoreConfessListHot(long baseID, int len, ServerResponseHandler handler) {
+    public static void getMoreConfessListHot(long baseID, int len,
+            ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("user_location", "123");
@@ -234,7 +257,7 @@ public class ServerAccess {
 
     public static void getNewConfessListHot(int len, ServerResponseHandler handler) {
         getMoreConfessListHot(MAX_ID, len, handler);
-    } 
+    }
 
     public static void postNewConfess(String openid, String confessMsg,
             String addr, double longitude, double latitude, String picPath,
@@ -275,7 +298,7 @@ public class ServerAccess {
         doPost("add_like", params, handler);
     }
 
-    public static void getCommentList(long postID ,ServerResponseHandler handler) {
+    public static void getCommentList(long postID, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("express_id", postID);
@@ -283,9 +306,14 @@ public class ServerAccess {
         doPost("read_comment", params, handler);
     }
 
-    public static void postNewComment(String openid, long postID, String text, ServerResponseHandler handler) {
+    public static void postNewComment(String openid, long postID, String text,
+            ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
+
+        params.put("openid", openid);
+        params.put("express_id", postID);
+        params.put("reply_msg", text);
         params.put("user_openid", openid);
         params.put("express_id", postID);
         params.put("reply_msg", text);
@@ -293,20 +321,14 @@ public class ServerAccess {
         doPost("post_comment", params, handler);
     }
 
-    public static void delMyPost(String openid, long postID, ServerResponseHandler handler) {
+    public static void delMyPost(String openid, long postID,
+            ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("user_openid", openid);
         params.put("express_id", postID);
 
         doPost("delete_express_message", params, handler);
-    }
-
-    public static void getNewCommentCount(String openid, ServerResponseHandler hander) {
-        RequestParams params = new RequestParams();
-        params.put("user_openid", openid);
-
-        doPost("get_unread_comment_cnt", params, handler);
     }
 
     public static void getNewCommentList(String openid, ServerResponseHandler handler) {

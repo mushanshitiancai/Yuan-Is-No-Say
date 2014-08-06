@@ -3,7 +3,8 @@
     android:id="@+id/relativeLayout_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/style_confess_item_1_content_bg" >
+    android:background="@color/style_confess_item_1_content_bg"
+    android:paddingBottom="16dp" >
 
     <TextView
         android:id="@+id/textView_confessItem_content"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="36dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:paddingBottom="6dp"
         android:text="我发现我同事的java代码中所有class的方法都是static,他说这样调用就很方便(因为不用new一个对象了,直接class.方法调用),请问他这样 [问题点数:2分,结帖人wtjd..."
         android:textColor="@color/style_confess_item_1_content_text"
@@ -25,7 +26,6 @@
         android:layout_marginTop="2dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:paddingBottom="5dp"
         android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

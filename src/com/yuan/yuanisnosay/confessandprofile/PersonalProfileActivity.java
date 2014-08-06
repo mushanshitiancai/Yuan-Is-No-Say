@@ -38,6 +38,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class PersonalProfileActivity extends Activity {
@@ -49,6 +51,7 @@ public class PersonalProfileActivity extends Activity {
 		private TextView txtSend;
 		private EditText editNickName;
 		private GridView gridThumbnailShower;
+		private RadioGroup rgGender;
 	}
 
 	private ViewHolder mHolder;
@@ -72,7 +75,8 @@ public class PersonalProfileActivity extends Activity {
 		mHolder.gridThumbnailShower.setSelector(new ColorDrawable(
 				Color.TRANSPARENT));
 		mHolder.editNickName = (EditText) findViewById(R.id.edit_nickname);
-
+		mHolder.rgGender = (RadioGroup)findViewById(R.id.radioGroup_choose_sex);
+		
 		mthumbnailAdapter = new PicThumAdapter(this, 0);
 		mthumbnailAdapter.update();
 		mHolder.gridThumbnailShower.setAdapter(mthumbnailAdapter);
@@ -110,7 +114,7 @@ public class PersonalProfileActivity extends Activity {
 								new SetProfileResponseHandler());
 					} else {
 						AssetManager aManager = getApplication().getAssets();
-						InputStream is = aManager.open("ic_launcher.png");
+						InputStream is = aManager.open("user2_03.png");
 						ServerAccess.updateUserInfo(openId, text, "1", is,
 								new SetProfileResponseHandler());
 					}
@@ -161,6 +165,15 @@ public class PersonalProfileActivity extends Activity {
 				showChangeSaveAlert();
 			}
 
+		});
+		
+		mHolder.rgGender.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+//				RadioButton rb = (RadioButton)
+			}
+			
 		});
 	}
 
