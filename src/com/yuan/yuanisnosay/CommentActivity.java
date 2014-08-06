@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
+import com.yuan.yuanisnosay.ui.adpater.ConfessAdapter;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,25 +35,42 @@ public class CommentActivity extends ActionBarActivity {
 	
 	public static final String PARENT_CONFESS = "confessItem";
 	public static final String POST_ID = "postID";
-	private TextView mParentConfess;
+	private static TextView mConfessContent;
+	private static ImageView mConfessPic;
+	private static Button mConfessFlower;
+	private static Button mConfessComment;
+	
 	private static ListView mCommentList;
-	private static EditText mCommentContent;
+	private static EditText mNewComment;
 	private static Button mCommentSend;
+	private static Button mCommentBack;
 	private int postID;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comment);
-		mParentConfess = (TextView) findViewById(R.id.textView_parentConfess);
+		mConfessContent = (TextView) findViewById(R.id.textView_confessItem_content);
+		mConfessPic = (ImageView) findViewById(R.id.imageView_picture);
+		mConfessFlower = (Button) findViewById(R.id.button_confessItem_flowers);
+		mConfessComment = (Button) findViewById(R.id.button_confessItem_comment);
 		mCommentList = (ListView) findViewById(R.id.listView_commentList);
-		mCommentContent = (EditText) findViewById(R.id.editText_commentContent);
+		mNewComment = (EditText) findViewById(R.id.editText_commentContent);
 		mCommentSend = (Button) findViewById(R.id.button_commentSend);
-		
+		mCommentBack = (Button) findViewById(R.id.button_user_back);
 		Intent intent = getIntent();
 		postID = intent.getIntExtra(POST_ID, 0);
 		
 		setParentConfess(1);
 		setCommentList(1);
+		mCommentBack.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+			
+		});
 		
 	}
 	
@@ -68,7 +87,15 @@ public class CommentActivity extends ActionBarActivity {
 						Log.d("confessContent", result.getJSONArray("express_list").toString());
 						JSONArray confessList = result.getJSONArray("express_list");
 						JSONObject confess = (JSONObject) confessList.get(0);
-						mParentConfess.setText(confess.getString("express_msg"));
+						mConfessContent.setText(confess.getString("express_msg"));
+						
+						if (0 == confess.getInt("express_picture")) {
+							mConfessPic.setVisibility(View.GONE);
+						} else {
+							mConfessPic.setVisibility(View.VISIBLE);
+							//String url = ServerAccess.HOST + "download_user_head?user_openid=" + confess.getString("user_openid");
+							
+						}
 						/*{"status":0,"express_list":
 							[{"express_reply_cnt":4,
 							"express_latitude":0,"user_openid":"1",
@@ -148,7 +175,7 @@ public class CommentActivity extends ActionBarActivity {
             @Override 
             public void onClick(View arg0) { 
                 // TODO Auto-generated method stub 
-            	final String newComment = mCommentContent.getText().toString();
+            	final String newComment = mNewComment.getText().toString();
             	if (0 == newComment.length()) {
             		Toast.makeText(getApplicationContext(), "评论不能为空。。。", 1000).show();
             	} else {
