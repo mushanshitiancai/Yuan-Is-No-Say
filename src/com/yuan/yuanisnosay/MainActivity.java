@@ -256,8 +256,10 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		curTab = tab;
 		if (tab == TAB_NEARBY) {
 			vpMain.setCurrentItem(0, true);
+			btnDistance.setVisibility(View.VISIBLE);
 		} else {
 			vpMain.setCurrentItem(1, true);
+			btnDistance.setVisibility(View.GONE);
 		}
 	}
 
