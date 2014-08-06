@@ -13,7 +13,7 @@ import com.loopj.android.http.RequestParams;
 
 public class ServerAccess {
     public static final String KEY_STATUS="status";
-    
+
     public static final int getStatus(JSONObject json) throws JSONException{
         return json.getInt(KEY_STATUS);
     }
@@ -24,11 +24,108 @@ public class ServerAccess {
     }
 
     public final static String HOST = "http://yswy.r4c00n.com/";
+    private static final String CHARSET = "utf-8";
+    private static final int TIME_OUT = 10 * 1000;
+    private static final String PREFIX = "--", LINE_END = "\r\n";
+    private static final String CONTENT_TYPE = "multipart/form-data";
+    private static final long MAX_ID = ~(long)(1<<63)
+
+    private static String packMutipartData(String boundary, String key, String value)
+    {
+        StringBuffer sb = new StringBuffer();
+        static String LINE_END = "\r\n";
+
+        sb.append(PREFIX);
+        sb.append(boundary);
+        sb.append(LINE_END);
+        sb.append("Content-Disposition: form-data; name=\""+key+"\""+LINE_END);
+        sb.append(LINE_END);
+        sb.append(value);
+        sb.append(LINE_END);
+        
+        return sb.toString();
+    }
+
+    public static void doPost(String uri, String params, String uploadName, String filePath, ServerResponseHandler handler) {
+        int responseCode = 0;
+        String result = null;
+        String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+        
+        URL url = new URL(HOST+uri);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        StringBuffer sb = new StringBuffer();
+
+        conn.setReadTimeout(TIME_OUT);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setUseCaches(false);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Charset", CHARSET);
+        conn.setRequestProperty("connection", "keep-alive");
+        conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
+
+        String[] paramsArray = params.split("&");
+        for (int i = 0; i < paramsArray.length; i++) {
+            int idxOfEqu = paramsArray[i].indexOf("=");
+	    sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
+        }
+
+        try {
+            File file = new File(filePath);
+            sb.append(PREFIX);
+            sb.append(BOUNDARY);
+            sb.append(LINE_END);
+            sb.append("Content-Disposition: form-data; name=\""+uploadName+"\"; filename=\""
+                + file.getName() + "\"" + LINE_END);
+            sb.append("Content-Type: application/octet-stream; charset="
+                + CHARSET + LINE_END);
+            sb.append(LINE_END);
+
+            dos.write(sb.toString().getBytes());
+
+            InputStream is = new FileInputStream(file);
+            byte[] bytes = new byte[1024];
+            int len = 0;
+        
+            while ((len = is.read(bytes)) != -1) {
+                dos.write(bytes, 0, len);
+            }
+            is.close();
+
+            dos.write((LINE_END+PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes());
+            dos.flush();
+
+            responseCode = conn.getResponseCode();
+            if (200 == responseCode) {
+                is = conn.getInputStream();
+                sb = new StringBuffer();
+                int ss;
+
+                while ((ss = input.read()) != -1) {
+                    sb1.append((char) ss);
+                }
+                if (null != handler) {
+                    try {
+                        handler.onSuccess(new JSONObject(new String(sb)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                if (null != error)
+                    handler.onFailure(new IOExecption("ERROR:HTTP connect fail!"));
+            }
+        } catch (Throwable error) {
+            if (null != handler)
+                handler.onFailure(error);
+        }
+    }
 
     private static void doPost(String uri, RequestParams params,
             final ServerResponseHandler handler) {
         AsyncHttpClient client = new AsyncHttpClient();
 
+        client.setTimeOut()
         client.post(HOST + uri, params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -52,7 +149,7 @@ public class ServerAccess {
             }
         });
     }
-
+    
     public static void registerNewUser(String accessToken, String openid,
             ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
@@ -81,7 +178,8 @@ public class ServerAccess {
         params.put("user_sex", sex);
         params.put("user_head", new File(picPath));
 
-        doPost("recv_user_info", params, handler);
+        doPost("recv_user_info", "user_openid="+openid+"&user_nickname="+nickName+"&user_sex="+sex, "user_head", picPath, handler);
+//        doPost("recv_user_info", params, handler);
     }
 
     public static void updateUserInfo(String openid, String nickName,
@@ -135,7 +233,7 @@ public class ServerAccess {
     }
 
     public static void getNewConfessListHot(int len, ServerResponseHandler handler) {
-        getMoreConfessListHot(~(long)(1<<63), len, handler);
+        getMoreConfessListHot(MAX_ID, len, handler);
     } 
 
     public static void postNewConfess(String openid, String confessMsg,
@@ -148,8 +246,13 @@ public class ServerAccess {
         params.put("express_location", addr);
         params.put("express_longitude", longitude);
         params.put("express_latitude", latitude);
-        if ("" != picPath)
-            params.put("express_picture", new File(picPath));
+        if ("" != picPath) {
+            doPost("post_express_message", "user_openid="+openid
+                +"&express_msg="+confessMsg+"&express_location="+addr
+                +"&express_longitude="+longitude+"&express_latitude="+latitude, "express_picture", picPath, handler);
+            return ;
+            //params.put("express_picture", new File(picPath));
+        }
 
         doPost("post_express_message", params, handler);
     }
@@ -214,7 +317,7 @@ public class ServerAccess {
         doPost("get_unread_comment_list", params, handler);
     }
 
-    public static void getPostHistory(String openid, long baseID, int len, ServerResponseHandler handler) {
+    public static void getMoreConfessHistory(String openid, long baseID, int len, ServerResponseHandler handler) {
         RequestParams params = new RequestParams();
 
         params.put("user_openid", openid);
@@ -222,5 +325,9 @@ public class ServerAccess {
         params.put("length", len);
 
         doPost("express_history", params, handler);
-    } 
+    }
+
+    public static void getNewConfessHistoryList(String openid, int len, ServerResponseHandler handler) {
+        getMoreConfessHistory(openid, MAX_ID, len, handler);
+    }
 }
