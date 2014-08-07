@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -27,11 +28,12 @@ import android.widget.Toast;
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.network.Network;
+import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.ConfessFragment.ConfessActivityInterface;
 import com.yuan.yuanisnosay.ui.DistancePopup;
 
-public class MainActivity extends FragmentActivity implements ConfessActivityInterface{
+public class MainActivity extends FragmentActivity implements ConfessActivityInterface, View.OnClickListener{
 	private static final String TAG = "yuan_MainActivity";
 	private static final int TAB_NEARBY = R.id.radio_nearby;
 	private static final int TAB_HOT = R.id.radio_hot;
@@ -288,7 +290,6 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		}
 	}
 	
-	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -343,21 +344,11 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 	public int getDistance() {
 		return mDistancePopup.getDistance();
 	}
-	
-	public void onClick(View view) {
-		if (view instanceof Button) {
-			if (view.getId() == R.id.button_confessItem_comment) {
-				if (((YuanApplication)getApplication()).getLogin().getOpenId() == null) {
-					Toast.makeText(getApplicationContext(), "请登录先。。。", 1000).show();
-				} else {
-					Intent intent = new Intent(MainActivity.this, CommentActivity.class);
-					//intent.putExtra();
-					//intent.putExtra(CommentActivity.POST_ID, ((YuanApplication)getApplication()).getLogin().getOpenId());
-					startActivity(intent);
-				}
-			} else if (view.getId() == R.id.button_confessItem_flowers) {
-				
-			}
-		}
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		
 	}
+		
 }

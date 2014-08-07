@@ -60,6 +60,11 @@ public class ConfessFragment extends Fragment {
 	private PullToRefreshListView mRefreshListView;
 	private ListView mListView;
 	private ConfessAdapter mAdapter;
+	//Apple
+	public void setmAdapter(ConfessAdapter mAdapter) {
+		this.mAdapter = mAdapter;
+	}
+
 	private LinkedList<ConfessItem> mConfessList;
 	private Handler mHandler;
 	private PullDownResponseHandler mPullDownResponseHandler;

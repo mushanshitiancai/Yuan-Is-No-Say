@@ -190,6 +190,51 @@ public class ConfessItem implements Serializable{
 //				+ commentCount + ", position=" + position + "]";
 //	}
 	
+	public void setType(int type) {
+		this.type = type;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+	public void setFlowersCount(int flowersCount) {
+		this.flowersCount = flowersCount;
+	}
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	public static void setSize(int size) {
+		ConfessItem.size = size;
+	}
+	public static void setTestList(LinkedList<ConfessItem> testList) {
+		ConfessItem.testList = testList;
+	}
+	public static void setTestIcon(String testIcon) {
+		ConfessItem.testIcon = testIcon;
+	}
+	public static void setLocation(String location) {
+		ConfessItem.location = location;
+	}
+	public static void setRandom(Random random) {
+		ConfessItem.random = random;
+	}
 	@Override
 	public String toString() {
 		return "ConfessItem [id=" + id + ", content="
