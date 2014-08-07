@@ -7,9 +7,11 @@ import java.io.InputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.yuan.yuanisnosay.CommentActivity;
 import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Status;
+import com.yuan.yuanisnosay.UserActivity;
 import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
@@ -198,7 +200,28 @@ public class PersonalProfileActivity extends Activity {
 						Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
 						Intent intent = getIntent();
 						PersonalProfileActivity.this.setResult(Const.REQUEST_CODE_CONFESS_PROFILE, intent);
+						Bundle data =intent.getExtras();
+						if( data != null){
+							int to = data.getInt("to");
+							Intent intentTo;
+							switch(to){
+							case Const.PROFILE_TO_WANTTO_CONFESS:
+								intentTo = new Intent(PersonalProfileActivity.this,WantToConfessActivity.class);
+								PersonalProfileActivity.this.startActivity(intentTo);
+								break;
+							case Const.PROFILE_TO_PERSONAL_USER:
+								intentTo = new Intent(PersonalProfileActivity.this,UserActivity.class);
+								PersonalProfileActivity.this.startActivity(intentTo);
+								break;
+							case Const.PROFILE_TO_COMMENT:
+								intentTo = new Intent(PersonalProfileActivity.this,CommentActivity.class);
+								PersonalProfileActivity.this.startActivity(intentTo);
+								break;
+							}
+						}
+						
 						PersonalProfileActivity.this.finish();
+						mApp.getLogin().setRegisterStatus(Status.Login.M_REGISTER_SUCCESS);
 						break;
 					}
 				} catch (JSONException e) {

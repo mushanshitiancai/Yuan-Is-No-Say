@@ -12,9 +12,11 @@ import org.json.JSONObject;
 
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
+import com.yuan.yuanisnosay.MainActivity;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
@@ -66,9 +68,12 @@ public class WantToConfessActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wantto_confess);
-
 		mApp = (YuanApplication) getApplication();
-
+		
+		if (!mApp.getLogin().isLogin()) {
+			mApp.getLogin().login(WantToConfessActivity.this);
+		}
+		
 		initLocate();
 		initView();
 	}
@@ -255,8 +260,8 @@ public class WantToConfessActivity extends Activity {
 
 		@Override
 		public void onFailure(Throwable error) {
-//			Util.dismissDialog();
-//			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+			Util.dismissDialog();
+			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
 			Log.e(TAG, error.toString());
 		}
 		

@@ -13,6 +13,9 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -30,46 +33,160 @@ public class ServerAccess {
 
 		public void onFailure(Throwable error);
 	}
-	
+/*
 	public interface ServerLongResponseHandler {
 		public void onSuccess(JSONObject result);
 
 		public void onFailure(Throwable error);
-		
-		public void onStart();
-		
-		public void onProgress(int percent);
-		
-	}
 
-	public final static String HOST = "http://yswy.r4c00n.com/";
-	private static final String CHARSET = "utf-8";
+		public void onStart();
+
+		public void onProgress(int percent);
+
+	}*/
+
+	private static final long MAX_ID = ~(long) (1 << 63);
 	private static final int TIME_OUT = 10 * 1000;
+	public final static String HOST = "http://yswy.r4c00n.com/";/*
+	private static final String CHARSET = "utf-8";
+	
 	private static final String PREFIX = "--", LINE_END = "\r\n";
 	private static final String CONTENT_TYPE = "multipart/form-data";
-	private static final long MAX_ID = ~(long) (1 << 63);
+	
 
-    private class PostAsyncTask extends AsyncTask<ServerResponseHandler, Integer, JSONObject> {
-	private static String packMutipartData(String boundary, String key,
-			String value) {
-		StringBuffer sb = new StringBuffer();
+	private static class PostAsyncTask extends
+			AsyncTask<ServerResponseHandler, Integer, JSONObject> {
+		private static String packMutipartData(String boundary, String key,
+				String value) {
+			StringBuffer sb = new StringBuffer();
 
-		sb.append(PREFIX);
-		sb.append(boundary);
-		sb.append(LINE_END);
-		sb.append("Content-Disposition: form-data; name=\"" + key + "\""
-				+ LINE_END);
-		sb.append(LINE_END);
-		sb.append(value);
-		sb.append(LINE_END);
+			sb.append(PREFIX);
+			sb.append(boundary);
+			sb.append(LINE_END);
+			sb.append("Content-Disposition: form-data; name=\"" + key + "\""
+					+ LINE_END);
+			sb.append(LINE_END);
+			sb.append(value);
+			sb.append(LINE_END);
 
-		return sb.toString();
-	}
+			return sb.toString();
+		}
+		private static String uploadFile(String uri, String params, String fileParam, String filePath) throws Throwable
+	    {
+	        int responseCode = 0;
+	        String result = null;
+	        String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+	        File file = new File(filePath);
+	        Log.e("hehe", "wen jian ok");
+	        URL url = new URL(HOST+uri);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        Log.e("hehe", "lianjie ok");
+	        
+	        conn.setReadTimeout(TIME_OUT);
+	        conn.setConnectTimeout(TIME_OUT);
+	        conn.setDoInput(true); // 允许输入流
+	        conn.setDoOutput(true); // 允许输出流
+	        conn.setUseCaches(false); // 不允许使用缓存
+	        conn.setRequestMethod("POST"); // 请求方式
+	        conn.setRequestProperty("Charset", CHARSET); // 设置编码
+	        conn.setRequestProperty("connection", "keep-alive");
+	        conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
 
-	private static JSONObject sendPacket(String uri, String params,
-			String uploadName, String filePath) throws Throwable {
-		int responseCode = 0;
-		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+//	        if (null != file) 
+	        {
+	            /**
+	             * 当文件不为空时执行上传
+	             
+	            DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+	            StringBuffer sb = new StringBuffer();
+	            /*
+	            sb.append(PREFIX);
+	            sb.append(BOUNDARY);
+	            sb.append(LINE_END);
+	            sb.append("Content-Disposition: form-data; name=\"access_token\""+LINE_END);
+	            sb.append("Content-Type: text/plain; charset=utf-8"+LINE_END);
+	            sb.append(LINE_END);
+	            sb.append(params);
+	            sb.append(LINE_END);
+	            sb.append(PREFIX);
+	            sb.append(BOUNDARY);
+	            sb.append(PREFIX+LINE_END);
+	            
+	            String[] paramsArray = params.split("&");
+	            for (int i = 0; i < paramsArray.length; i++) 
+	            {
+	                int idxOfEqu = paramsArray[i].indexOf("=");
+		            sb.append(packMutipartData(BOUNDARY, paramsArray[i].substring(0, idxOfEqu), paramsArray[i].substring(idxOfEqu+1)));
+		            System.out.println(paramsArray[i].substring(0, idxOfEqu)+paramsArray[i].substring(idxOfEqu+1));
+	            }
+	            
+	            sb.append(PREFIX);
+	            sb.append(BOUNDARY);
+	            sb.append(LINE_END);
+	            /**
+	             * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+	             * filename是文件的名字，包含后缀名
+	             
+	            sb.append("Content-Disposition: form-data; name=\""+fileParam+"\"; filename=\""
+	                + file.getName() + "\"" + LINE_END);
+	            sb.append("Content-Type: application/octet-stream; charset="
+	                + CHARSET + LINE_END);
+	            sb.append(LINE_END);
+
+	            System.out.println(sb);
+	            dos.write(sb.toString().getBytes());
+	            
+	            InputStream is = new FileInputStream(file);
+	            byte[] bytes = new byte[1024];
+	            int len = 0;
+	            
+	            while ((len = is.read(bytes)) != -1) 
+	            {
+	                dos.write(bytes, 0, len);
+	            }
+	            is.close();
+	            
+	            dos.write(LINE_END.getBytes());
+	            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
+	                .getBytes();
+	            dos.write(end_data);
+	            Log.e("hehe", "flush");
+	            dos.flush();
+	            /**
+	             * 获取响应码 200=成功 当响应成功，获取响应的流
+	             
+	            responseCode = conn.getResponseCode();
+
+            	Log.e("hehe", responseCode+"http");
+	            //System.out.println(responseCode);
+	            //System.out.println(TAG+":\n\tresponse code:" + res);
+	            if (200 == responseCode) 
+	            {
+	                //System.out.println(TAG+"\n\trequest success");
+	                InputStream input = conn.getInputStream();
+	                StringBuffer sb1 = new StringBuffer();
+	                int ss;
+	                
+	                while ((ss = input.read()) != -1) 
+	                {
+	                    sb1.append((char) ss);
+	                }
+	                result = sb1.toString();
+	                //System.out.println(TAG+":\n\tresult : " + result);
+	            }
+	        }
+//		else
+//		{
+//		    throw new IOException();
+//		}
+	        
+	        return result;
+	    }
+		private static JSONObject sendPacket(String uri, String params,
+				String uploadName, String filePath) throws Throwable {
+			return new JSONObject(uploadFile(uri, params, uploadName, filePath));
+			/*int responseCode = 0;
+			String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
 
 			URL url = new URL(HOST + uri);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -131,64 +248,68 @@ public class ServerAccess {
 				is.close();
 				return new JSONObject(new String(sb));
 			} else {
-					throw (new IOException("EROR:HTTP connect fail!"));
+				throw (new IOException("EROR:HTTP connect fail!"));
 			}
-                return new JSONObject("{\"status\":4}");
+		}
+
+		String uri, params, fileParams, filePath;
+		ServerResponseHandler handler;
+		Throwable error;
+
+		private PostAsyncTask(String uri, String params, String fileParams,
+				String filePath) {
+			super();
+			this.uri = uri;
+			this.params = params;
+			this.fileParams = fileParams;
+			this.filePath = filePath;
+		}
+
+		@Override
+		protected JSONObject doInBackground(ServerResponseHandler... handler) {
+			this.handler = handler[0];
+			try {
+				publishProgress(100);
+				return sendPacket(uri, params, fileParams, filePath);
+			} catch (Throwable error) {
+				this.error = error;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			if (null != handler) {
+				if (null == error) {
+					handler.onSuccess(result);
+				} else {
+					handler.onFailure(error);
+				}
+			}
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (null != handler) {
+				// handler.onStart();
+			}
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... vlaue) {
+			if (null != handler) {
+				// handler.onProgress(value);
+			}
+		}
+
 	}
 
-        String uri, params, fileParams, filePath;
-        ServerResponseHandler handler;
-        Throwable error;
-
-        public PostAsyncTask(String uri, String params, String fileParams, String filePath) {
-            super();
-            this.uri = uri;
-            this.params = params;
-            this.fileParams = fileParams;
-            this.filePath = filePath;
-        }
-
-        @Override
-        protected JSONObject doInBackground(ServerResponseHandler handler) {
-            this.handler = handler;
-            try {
-	        publishProgress(100);
-                return sendPacket(uri, params, fileParams, filePath);
-            } catch (Throwable error) {
-                this.error = error;
-            }
-        }
-        
-        @Override
-        protected void onPostExecute(JSONObject result) {
-	    if (null != handler) {
-	        if (null == error) {
-	            handler.onSuccess(result);
-	        } else {
-	            handler.onFailure(error);
-	        }
-	    }
-	}
-	
-	@Override
-	protected void onPreExecute() {
-	    if (null != handler) {
-//	        handler.onStart();
-	    }
-	}
-	
-	@Override
-	protected void onProgressUpdate(int vlaue) {
-	    if (null != handler) {
-//	        handler.onProgress(value);
-	    }
-	}
-    }
-
-    private static void doPost(String uri, String params, String fileParams, String filePath, ServerResponseHandler handler) {
-        PostAsyncTask send = new PostAsyncTask(uri, params, fileParams, filePath);
-        send.execute(handler);
-    }
+	private static void doPost(String uri, String params, String fileParams,
+			String filePath, ServerResponseHandler handler) {
+		PostAsyncTask send = new PostAsyncTask(uri, params, fileParams,
+				filePath);
+		send.execute(handler);
+	}*/
 
 	private static void doPost(String uri, RequestParams params,
 			final ServerResponseHandler handler) {
@@ -247,7 +368,7 @@ public class ServerAccess {
 		params.put("user_head", new File(picPath));
 
 		//doPost("recv_user_info", "user_openid=" + openid + "&user_nickname="
-		//		+ nickName + "&user_sex=" + sex, "user_head", picPath, handler);
+		// + nickName + "&user_sex=" + sex, "user_head", picPath, handler);
 		doPost("recv_user_info", params, handler);
 	}
 
@@ -340,12 +461,12 @@ public class ServerAccess {
 		params.put("express_longitude", longitude);
 		params.put("express_latitude", latitude);
 		if ("" != picPath) {
-			/*doPost("post_express_message", "user_openid=" + openid
-					+ "&express_msg=" + confessMsg + "&express_location="
-					+ addr + "&express_longitude=" + longitude
-					+ "&express_latitude=" + latitude, "express_picture",
-					picPath, handler);
-			return;*/
+		
+			 /*doPost("post_express_message", "user_openid=" + openid +
+			 "&express_msg=" + confessMsg + "&express_location=" + addr +
+			 "&express_longitude=" + longitude + "&express_latitude=" +
+			 latitude, "express_picture", picPath, handler); return;*/
+			 
 			params.put("express_picture", new File(picPath));
 		}
 

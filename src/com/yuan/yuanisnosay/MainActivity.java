@@ -31,7 +31,8 @@ import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.ConfessFragment.ConfessActivityInterface;
 import com.yuan.yuanisnosay.ui.DistancePopup;
 
-public class MainActivity extends FragmentActivity implements ConfessActivityInterface{
+public class MainActivity extends FragmentActivity implements
+		ConfessActivityInterface {
 	private static final String TAG = "yuan_MainActivity";
 	private static final int TAB_NEARBY = R.id.radio_nearby;
 	private static final int TAB_HOT = R.id.radio_hot;
@@ -63,14 +64,15 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 
 		// 设置附近热门TAB
 		radioGroupMainTab = (RadioGroup) findViewById(R.id.radioGroup_mainTab);
-		radioGroupMainTab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int id) {
-				radioButtonChange = true;
-				// 切换TAB时切换fragment
-				showFragment(id);
-			}
-		});
+		radioGroupMainTab
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int id) {
+						radioButtonChange = true;
+						// 切换TAB时切换fragment
+						showFragment(id);
+					}
+				});
 
 		View.OnClickListener radioListener = new View.OnClickListener() {
 			@Override
@@ -105,7 +107,8 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		fragmentList.add(mFragmentHot);
 		titleList.add("1");
 		titleList.add("2");
-		PagerAdapter pagerAdapter = new myPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
+		PagerAdapter pagerAdapter = new myPagerAdapter(
+				getSupportFragmentManager(), fragmentList, titleList);
 		vpMain.setAdapter(pagerAdapter);
 		vpMain.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
@@ -127,67 +130,56 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 
 		// vpMain.setCurrentItem(1);
 		btnUser = (Button) findViewById(R.id.button_mainActivity_user);
-		btnUser.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View button) {
-				Intent intent = new Intent(MainActivity.this, UserActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		btnWantToConfess = (Button)findViewById(R.id.button_mainActivity_confess);
-		btnWantToConfess.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				Network network = mApp.getNetwork();
-				if (!network.isOnline()) {
-					com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
-							MainActivity.this.getString(R.string.network_offline));
-					return;
-				}
-				if (!mApp.getLogin().isLogin()) {
-					mApp.getLogin().login(MainActivity.this);
-					return;
-				}
-				com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
-						mApp.getLogin().getRegisterStatus()+"");
-				if(mApp.getLogin().getRegisterStatus() != Status.Login.M_REGISTER_SUCCESS) {
-					Intent intent = new Intent(MainActivity.this,PersonalProfileActivity.class);
-					startActivity(intent);
-					return;
-				}
-				Intent intent = new Intent(MainActivity.this,WantToConfessActivity.class);
-				startActivity(intent);
-				com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
-						mApp.getLogin().getOpenId());
-			}
-		});
+		btnUser.setOnClickListener(new viewClickListener());
+
+		btnWantToConfess = (Button) findViewById(R.id.button_mainActivity_confess);
+		btnWantToConfess.setOnClickListener(new viewClickListener());
 
 		initDistanceButton();
 	}
 
-	private void initDistanceButton() {
-		int[] distanceArr={100,200,500};
-		btnDistance = findViewById(R.id.relativeLayout_distance);
-		tvDistance=(TextView)findViewById(R.id.textView_distance);
-		tvDistance.setText(distanceArr[0]+" m");
-		mDistancePopup=new DistancePopup(this, btnDistance, distanceArr, new DistancePopup.DistancePopupListener() {
-			@Override
-			public void onDistanceChange(int distance) {
-				tvDistance.setText(distance+" m");
-				refreshByDistance(distance);
+	private class viewClickListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			int id = v.getId();
+			switch (id) {
+			case R.id.button_mainActivity_confess:
+				IntentUtil.doIntent(MainActivity.this,
+						WantToConfessActivity.class,
+						Const.PROFILE_TO_WANTTO_CONFESS);
+				// com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
+				// mApp.getLogin().getOpenId());
+				break;
+			case R.id.button_mainActivity_user:
+				IntentUtil.doIntent(MainActivity.this, UserActivity.class,
+						Const.PROFILE_TO_PERSONAL_USER);
+				break;
 			}
-		});
+		}
+
 	}
-	
-	//TODO
-	private void refreshByDistance(int distance){
+
+	private void initDistanceButton() {
+		int[] distanceArr = { 100, 200, 500 };
+		btnDistance = findViewById(R.id.relativeLayout_distance);
+		tvDistance = (TextView) findViewById(R.id.textView_distance);
+		tvDistance.setText(distanceArr[0] + " m");
+		mDistancePopup = new DistancePopup(this, btnDistance, distanceArr,
+				new DistancePopup.DistancePopupListener() {
+					@Override
+					public void onDistanceChange(int distance) {
+						tvDistance.setText(distance + " m");
+						refreshByDistance(distance);
+					}
+				});
+	}
+
+	// TODO
+	private void refreshByDistance(int distance) {
 		mFragmentNearby.onRefershByDistance(distance);
 	}
 
-	
-	
 	/**
 	 * 主页Viewpager的适配器
 	 * 
@@ -199,7 +191,8 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		private List<Fragment> fragmentList;
 		private List<String> titleList;
 
-		public myPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList) {
+		public myPagerAdapter(FragmentManager fm, List<Fragment> fragmentList,
+				List<String> titleList) {
 			super(fm);
 			this.fragmentList = fragmentList;
 			this.titleList = titleList;
@@ -207,7 +200,8 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 
 		@Override
 		public Fragment getItem(int arg0) {
-			return (fragmentList == null || fragmentList.size() == 0) ? null : fragmentList.get(arg0);
+			return (fragmentList == null || fragmentList.size() == 0) ? null
+					: fragmentList.get(arg0);
 
 		}
 
@@ -287,24 +281,22 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 			mApp.getStorage().delete();
 		}
 	}
-	
-	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
-		
+
 		mDistancePopup.dismissDistancePopup();
 
 		return super.onTouchEvent(event);
 
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (mDistancePopup.dismissDistancePopup()) {
-			return ;
+			return;
 		}
 		super.onBackPressed();
 	}
@@ -343,20 +335,23 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 	public int getDistance() {
 		return mDistancePopup.getDistance();
 	}
-	
+
 	public void onClick(View view) {
 		if (view instanceof Button) {
 			if (view.getId() == R.id.button_confessItem_comment) {
-				if (((YuanApplication)getApplication()).getLogin().getOpenId() == null) {
-					Toast.makeText(getApplicationContext(), "请登录先。。。", 1000).show();
+				if (((YuanApplication) getApplication()).getLogin().getOpenId() == null) {
+					Toast.makeText(getApplicationContext(), "请登录先。。。", 1000)
+							.show();
 				} else {
-					Intent intent = new Intent(MainActivity.this, CommentActivity.class);
-					//intent.putExtra();
-					//intent.putExtra(CommentActivity.POST_ID, ((YuanApplication)getApplication()).getLogin().getOpenId());
+					Intent intent = new Intent(MainActivity.this,
+							CommentActivity.class);
+					// intent.putExtra();
+					// intent.putExtra(CommentActivity.POST_ID,
+					// ((YuanApplication)getApplication()).getLogin().getOpenId());
 					startActivity(intent);
 				}
 			} else if (view.getId() == R.id.button_confessItem_flowers) {
-				
+
 			}
 		}
 	}

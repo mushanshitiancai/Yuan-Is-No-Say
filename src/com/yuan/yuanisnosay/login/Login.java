@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.util.Log;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.Tencent;
+import com.yuan.yuanisnosay.MainActivity;
+import com.yuan.yuanisnosay.R;
+import com.yuan.yuanisnosay.network.Network;
 
 /**
  * 和登录有关的逻辑,单例
@@ -32,7 +35,7 @@ public class Login {
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
 
-	private int mRegisterStatus;//用户注册时返回的status，详情参考api
+	private int mRegisterStatus = -1;//用户注册时返回的status，详情参考api
 	//	private String mOpenId;
 //	private String mQQToken;
 	private String mNickname;
@@ -129,8 +132,12 @@ public class Login {
 		
 		mEditor.commit();
 	}
-	
-//	public boolean is
+
+//	public boolean isOurUser(){
+//		if(isLogin()){
+//			
+//		}
+//	}
 	
 //	public void setOpenId(String openId) {
 //		this.mOpenId = openId;
