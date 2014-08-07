@@ -109,7 +109,7 @@ public class PersonalProfileActivity extends Activity {
 			public void onClick(View v) {
 				final String text = mHolder.editNickName.getText().toString();
 				final String openId = mApp.getLogin().getOpenId();
-				final RadioButton rb = (RadioButton)findViewById(mHolder.rgGender.getCheckedRadioButtonId());
+//				final RadioButton rb = (RadioButton)findViewById(mHolder.rgGender.getCheckedRadioButtonId());
 //				final String gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
 //				Log.e("personalprofileActivity", openId);
 				Util.showToast(PersonalProfileActivity.this, gender);
@@ -220,8 +220,10 @@ public class PersonalProfileActivity extends Activity {
 							}
 						}
 						
-						PersonalProfileActivity.this.finish();
 						mApp.getLogin().setRegisterStatus(Status.Login.M_REGISTER_SUCCESS);
+						mApp.getLogin().setNickname(mHolder.editNickName.getText().toString());
+						PersonalProfileActivity.this.finish();
+						
 						break;
 					}
 				} catch (JSONException e) {

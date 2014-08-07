@@ -16,7 +16,7 @@
         android:paddingBottom="6dp"
         android:text="我发现我同事的java代码中所有class的方法都是static,他说这样调用就很方便(因为不用new一个对象了,直接class.方法调用),请问他这样 [问题点数:2分,结帖人wtjd..."
         android:textColor="@color/style_confess_item_1_content_text"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/imageView_picture"
