@@ -82,7 +82,7 @@
         </activity>
         <activity
             android:name=".CommentActivity"
-            android:windowSoftInputMode="adjustPan"
+           
             android:label="@string/title_activity_comment" >
         </activity>
         <activity android:name=".NewCommentActivity">

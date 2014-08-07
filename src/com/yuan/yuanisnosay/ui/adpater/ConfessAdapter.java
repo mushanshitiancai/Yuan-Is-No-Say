@@ -132,7 +132,7 @@ public class ConfessAdapter extends BaseAdapter {
 			viewHolder.btnFlower = (Button) convertView.findViewById(R.id.button_confessItem_flowers);
 			viewHolder.btnFlower.setTag(position);
 			viewHolder.btnComment = (Button) convertView.findViewById(R.id.button_confessItem_comment);
-			viewHolder.btnComment.setTag(position);
+			
 			viewHolder.btnFlower.setOnClickListener(mButonListener);
 			viewHolder.btnComment.setOnClickListener(mButonListener);
 
@@ -152,6 +152,7 @@ public class ConfessAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
+		viewHolder.btnComment.setTag(position);
 		viewHolder.content.setText(curConfess.getContent());
 		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess.getPublishDate()));
 		viewHolder.position.setText(curConfess.getPosition());
