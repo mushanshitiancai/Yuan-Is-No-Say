@@ -22,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
@@ -342,5 +343,21 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 	public int getDistance() {
 		return mDistancePopup.getDistance();
 	}
-
+	
+	public void onClick(View view) {
+		if (view instanceof Button) {
+			if (view.getId() == R.id.button_confessItem_comment) {
+				if (((YuanApplication)getApplication()).getLogin().getOpenId() == null) {
+					Toast.makeText(getApplicationContext(), "请登录先。。。", 1000).show();
+				} else {
+					Intent intent = new Intent(MainActivity.this, CommentActivity.class);
+					//intent.putExtra();
+					//intent.putExtra(CommentActivity.POST_ID, ((YuanApplication)getApplication()).getLogin().getOpenId());
+					startActivity(intent);
+				}
+			} else if (view.getId() == R.id.button_confessItem_flowers) {
+				
+			}
+		}
+	}
 }
