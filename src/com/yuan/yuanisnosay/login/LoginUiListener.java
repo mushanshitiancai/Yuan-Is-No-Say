@@ -58,10 +58,10 @@ public class LoginUiListener implements IUiListener{
 							int status = result.getInt("status");
 							switch(status){
 							case Status.Login.M_REGISTER_SUCCESS:
-								Util.showToast(mContext, "注册成功！");
+								Util.showToast(mContext, "登陆成功！");
 								break;
 							case Status.Login.M_FIRST_LOGIN:
-								Util.showToast(mContext, "首次登陆，注册到系统");
+								Util.showToast(mContext, "首次登陆，无设置个人资料");
 								Intent intent = new Intent(mContext,PersonalProfileActivity.class);
 								mContext.startActivity(intent);
 								break;

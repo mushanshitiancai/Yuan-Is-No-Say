@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
+import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.MainActivity;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Status;
@@ -73,6 +74,7 @@ public class WantToConfessActivity extends Activity {
 		if (!mApp.getLogin().isLogin()) {
 			mApp.getLogin().login(WantToConfessActivity.this);
 		}
+		
 		
 		initLocate();
 		initView();
@@ -261,7 +263,7 @@ public class WantToConfessActivity extends Activity {
 		@Override
 		public void onFailure(Throwable error) {
 			Util.dismissDialog();
-			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+			Util.showToast(WantToConfessActivity.this, WantToConfessActivity.this.getString(R.string.server_fail));
 			Log.e(TAG, error.toString());
 		}
 		

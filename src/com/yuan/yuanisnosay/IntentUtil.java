@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class IntentUtil {
+	
+	
 	public static void doIntent(Context fromAct,Class<?> toAct, int ProToActConst) {
 		
 		YuanApplication app = (YuanApplication) fromAct.getApplicationContext();
