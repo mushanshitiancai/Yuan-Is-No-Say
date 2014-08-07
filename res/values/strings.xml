@@ -20,4 +20,6 @@
     <string name="enter">确定</string>
     <string name="nickname">昵称</string>
     <string name="send_confess">发送表白</string>
+    <string name="gender_female">女生</string>
+    <string name="gender_male">男生</string>
 </resources>

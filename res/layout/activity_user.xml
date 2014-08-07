@@ -4,16 +4,16 @@
     android:layout_height="match_parent"
     tools:context="com.yuan.yuanisnosay.UserActivity" >
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/relativeLayout_header"
         style="@style/header" >
 
         <ImageView
             android:id="@+id/imageView_user_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
+            android:layout_marginLeft="6dp"
             android:src="@drawable/back_03" />
 
         <TextView
@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/user_my"
-            android:textSize="@dimen/header_text_size"
-            android:textColor="@color/style_user_black" />
+            android:textColor="@color/style_user_black"
+            android:textSize="@dimen/header_text_size" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -54,30 +54,38 @@
             android:text="木杉是天才" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/button_user_wangToConfess"
-        android:background="@color/style_user_blue"
+    <RelativeLayout
+        android:id="@+id/layout_user_wantToConfess"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/user_wantToConfess"
-        android:textSize="@dimen/header_text_size"
-        android:textColor="@color/style_gray"
-        android:gravity="center"
-        android:drawableLeft="@drawable/main_send"
-        android:drawablePadding="1dp"
-        android:paddingLeft="70dp"
-        android:paddingRight="100dp"
-        />
+        android:background="@color/style_user_blue" >
+
+        <TextView
+            android:id="@+id/textView_confess_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/user_wantToConfess"
+            android:textColor="@color/style_gray"
+            android:textSize="@dimen/header_text_size" />
         
+        <ImageView
+            android:id="@+id/imageView_bird"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_toLeftOf="@id/textView_confess_text"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/edit02png_14"/>
+
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/frameLayout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/button_user_wangToConfess"
+        android:layout_above="@id/layout_user_wantToConfess"
         android:layout_below="@id/relativeLayout_user_userInfo" >
     </FrameLayout>
 

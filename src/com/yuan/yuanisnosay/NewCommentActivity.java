@@ -34,7 +34,6 @@ public class NewCommentActivity extends Activity {
 	YuanApplication mApp;
 	private static final int PULL_SUCCESS = 0;
 	private static final int PULL_FAIL = 1;
-
 	
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
@@ -119,6 +118,7 @@ public class NewCommentActivity extends Activity {
 			});
 			
 	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();

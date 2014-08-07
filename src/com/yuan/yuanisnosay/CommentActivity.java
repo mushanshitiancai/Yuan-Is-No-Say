@@ -59,9 +59,6 @@ public class CommentActivity extends ActionBarActivity {
 		mNewComment = (EditText) findViewById(R.id.editText_commentContent);
 		mCommentSend = (Button) findViewById(R.id.button_commentSend);
 		mCommentBack = (ImageView) findViewById(R.id.img_back);
-//		Intent intent = getIntent();
-//		postID = intent.getIntExtra(POST_ID, 0);
-//		
 		setParentConfess(1);
 		setCommentList(1);
 		//Log.i("Test", "Test");

@@ -25,6 +25,7 @@ public class Bimp {
 		bmp = new ArrayList<Bitmap>();
 		drr = new ArrayList<String>();
 	}
+
 	public static Bitmap revitionImageSize(String path) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));
