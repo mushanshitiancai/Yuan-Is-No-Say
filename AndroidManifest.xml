@@ -35,7 +35,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            android:theme="@android:style/Theme.Light.NoTitleBar" 
+           	android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -48,7 +49,8 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -62,29 +64,38 @@
             android:name=".ListTestActivity"
             android:label="@string/title_activity_list_test" >
         </activity>
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity"/>
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageBucketActivity" />
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageGridActivity" />
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.PublishedActivity" />
-        <activity android:name="com.yuan.yuanisnosay.confessandprofile.PhotoActivity" />
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageBucketActivity" 
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.ImageGridActivity" 
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.PublishedActivity" 
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.yuan.yuanisnosay.confessandprofile.PhotoActivity" 
+            android:screenOrientation="portrait"/>
         <meta-data
             android:name="TencentMapSDK"
             android:value="Z5RBZ-QHSRS-WOROG-6E5UI-2OBE5-QFBVO" />
 
         <activity
             android:name="com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity"
-            android:label="@string/title_activity_personal_profile" >
+            android:label="@string/title_activity_personal_profile" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            android:theme="@android:style/Theme.Light.NoTitleBar" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".CommentActivity"
-            android:label="@string/title_activity_comment" >
+            android:label="@string/title_activity_comment" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".NewCommentActivity">
+        <activity android:name=".NewCommentActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

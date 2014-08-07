@@ -411,7 +411,7 @@ public class ServerAccess {
 		params.put("user_location", addr);
 		params.put("user_longitude", longitude);
 		params.put("user_latitude", latitude);
-		params.put("base_id", baseID);
+		params.put("base_id", baseID-1);
 		params.put("length", len);
 		params.put("neibor", 1);
 		params.put("distance", distance);
@@ -433,7 +433,7 @@ public class ServerAccess {
 		params.put("user_location", "123");
 		params.put("user_longitude", 0);
 		params.put("user_latitude", 0);
-		params.put("base_id", baseID);
+		params.put("base_id", baseID-1);
 		params.put("length", len);
 		params.put("neibor", 0);
 		params.put("distance", 0);
@@ -442,7 +442,7 @@ public class ServerAccess {
 	}
 
 	public static void getConfessById(long postID, ServerResponseHandler handler) {
-		getMoreConfessListHot(postID, 1, handler);
+		getMoreConfessListHot(postID+1, 1, handler);
 	}
 
 	public static void getNewConfessListHot(int len,

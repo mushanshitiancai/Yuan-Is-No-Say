@@ -85,8 +85,15 @@ public class UserActivity extends FragmentActivity {
 					} 
 					if (0 == result.getInt("status")) {
 						String nickname = result.getString("nick_name");
+						int sexvalue = result.getInt("sex");
+						String sex = "";
+						if (0 == sexvalue) {
+							sex = "女";
+						} else if (1 == sexvalue) {
+							sex = "男";
+						}
 						if (nickname != null) {
-							tvName.setText(nickname);
+							tvName.setText(nickname + " (" + sex + ")" );
 						} else {
 							tvName.setText("");
 						}

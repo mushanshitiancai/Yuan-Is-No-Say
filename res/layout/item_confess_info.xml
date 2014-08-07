@@ -49,7 +49,7 @@
                 android:paddingLeft="11dp"
                 android:text="@string/confessItem_flowers"
                 android:textColor="@color/style_confess_item_1_info_button_text"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/button_confessItem_comment"
@@ -61,6 +61,6 @@
                 android:paddingLeft="11dp"
                 android:text="@string/confessItem_comment"
                 android:textColor="@color/style_confess_item_1_info_button_text"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>

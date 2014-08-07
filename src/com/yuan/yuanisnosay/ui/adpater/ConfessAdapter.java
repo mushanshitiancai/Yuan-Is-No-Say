@@ -1,8 +1,10 @@
  package com.yuan.yuanisnosay.ui.adpater;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +54,8 @@ public class ConfessAdapter extends BaseAdapter {
 	LayoutInflater mInflater;
 	LinkedList<ConfessItem> mConfessList;
 	private int itemId;
-
+	private static Map<String, Boolean> flowerMap = new HashMap<String, Boolean>();
+	
 	ImageLoader mImageLoader;
 	DisplayImageOptions mOptions;
 	ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
@@ -60,7 +63,7 @@ public class ConfessAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		TextView content;
-		TextView publishDate;
+		TextView publishDate; 
 		TextView position;
 		TextView author;
 		Button btnFlower;
@@ -176,7 +179,9 @@ public class ConfessAdapter extends BaseAdapter {
 		}else{
 			viewHolder.ivPicture.setVisibility(View.GONE);
 		}
-
+		
+		//设置当前POST_CONFESS为false
+		flowerMap.put(CommentActivity.POST_CONFESS, false);
 		return convertView;
 	}
 
@@ -204,38 +209,45 @@ public class ConfessAdapter extends BaseAdapter {
 						mContext.startActivity(intent);
 						return;
 					}
-					
 					Intent intent = new Intent(mContext, CommentActivity.class);
 					intent.putExtra(CommentActivity.POST_CONFESS, confess);
 					mContext.startActivity(intent);
 					break;
 				case R.id.button_confessItem_flowers:
-					ServerAccess.flower(confess.getId(), new ServerResponseHandler() {
-						@Override
-						public void onSuccess(JSONObject result) {
-							// TODO Auto-generated method stub
-							try {
-								if (0 == result.getInt("status")) {
-									confess.setFlowersCount(result.getInt("count"));
-									ConfessAdapter.this.notifyDataSetChanged();
-									//Toast.makeText(mContext, "Flower:"+confess.getFlowersCount(), 1000).show();
-									//getView(itemId, mInflater.inflate(R.layout.item_confess, null), null);
+					
+					if (flowerMap.get(CommentActivity.POST_CONFESS) == true) {
+						Toast.makeText(mContext, "你已经送过花儿啦~~", 1000).show();
+						break;
+					} else {
+						flowerMap.put(CommentActivity.POST_CONFESS, true);
+						confess.setFlowersCount(confess.getFlowersCount()+1);
+						ConfessAdapter.this.notifyDataSetChanged();
+						ServerAccess.flower(confess.getId(), new ServerResponseHandler() {
+							@Override
+							public void onSuccess(JSONObject result) {
+								// TODO Auto-generated method stub
+								try {
+									if (0 == result.getInt("status")) {
+										confess.setFlowersCount(result.getInt("count"));
+										//ConfessAdapter.this.notifyDataSetChanged();
+										//Toast.makeText(mContext, "Flower:"+confess.getFlowersCount(), 1000).show();
+										//getView(itemId, mInflater.inflate(R.layout.item_confess, null), null);
+									}
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
 							}
-						}
-
-						@Override
-						public void onFailure(Throwable error) {
-							// TODO Auto-generated method stub
-							Toast.makeText(mContext, "送花失败。。。", 1000).show();
-							Log.e("Flower Failure", "Flower Failure");
-						}
-						
-					});
-				
+	
+							@Override
+							public void onFailure(Throwable error) {
+								// TODO Auto-generated method stub
+								Toast.makeText(mContext, "送花失败。。。", 1000).show();
+								Log.e("Flower Failure", "Flower Failure");
+							}
+							
+						});
+					}
 			}
 		}
 	}
