@@ -232,7 +232,7 @@ public class CommentActivity extends ActionBarActivity {
 						//TODO 绑定列表
 						for (int i = 0; i < replyList.length(); ++i) {
 							JSONObject reply = (JSONObject) replyList.get(i);
-							strs.add(reply.getString("user_nickname") + ":" + reply.getString("reply_msg"));
+							strs.add(reply.getString("user_nickname") + ": " + reply.getString("reply_msg"));
 							
 						}
 						
