@@ -45,7 +45,7 @@ public class ServerAccess {
 
 	}*/
 
-	private static final long MAX_ID = ~(long) (1 << 63);
+	private static final long MAX_ID = 0;//~(long) (1 << 63);
 	private static final int TIME_OUT = 10 * 1000;
 	public final static String HOST = "http://yswy.r4c00n.com/";/*
 	private static final String CHARSET = "utf-8";
@@ -422,7 +422,7 @@ public class ServerAccess {
 	public static void getNewConfessListNearby(String addr, double longitude,
 			double latitude, int len, int distance,
 			ServerResponseHandler handler) {
-		getMoreConfessListNearby(addr, longitude, latitude, ~(long) (1 << 63),
+		getMoreConfessListNearby(addr, longitude, latitude, MAX_ID,
 				len, distance, handler);
 	}
 
@@ -545,6 +545,6 @@ public class ServerAccess {
 
 	public static void getNewConfessHistoryList(String openid, int len,
 			ServerResponseHandler handler) {
-		getMoreConfessHistoryList(openid, MAX_ID, len, handler);
+		getMoreConfessHistoryList(openid, ~(long) (1 << 63), len, handler);
 	}
 }

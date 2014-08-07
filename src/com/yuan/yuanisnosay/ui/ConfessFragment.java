@@ -112,6 +112,9 @@ public class ConfessFragment extends Fragment {
 					mAdapter.notifyDataSetChanged();
 					mRefreshListView.onPullDownRefreshComplete();
 					setLastUpdateTime();
+					if(mType==TYPE_HOT){
+						mRefreshListView.setHasMoreData(true);
+					}
 					break;
 				case MESSAGE_PULL_UP_REFRESH_COMPLETE:
 					mAdapter.notifyDataSetChanged();
@@ -176,7 +179,9 @@ public class ConfessFragment extends Fragment {
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.e(TAG, "onPullUpToRefresh");
-				int baseId = mConfessList.getLast().getId();
+				if(mConfessList.size()==0) return;
+//				int baseId = mConfessList.getLast().getId();
+				int baseId = mConfessList.size();
 				if(mType==TYPE_NEARBY){
 					int distance = 0;
 					Activity activity=getActivity();
@@ -211,26 +216,32 @@ public class ConfessFragment extends Fragment {
 				List<ConfessItem> resultConfessList = ConfessItem.getConfessList(result);
 				Log.e(TAG, resultConfessList.toString());
 
-				boolean isExistedConfessTooOld = false;
-				if (mConfessList.size() == 0) {
+				if(mType==TYPE_HOT){
+					mConfessList.clear();
 					mConfessList.addAll(resultConfessList);
-				} else {
-					isExistedConfessTooOld = !isItemsContains(resultConfessList);
-					if (isExistedConfessTooOld) {
-						mConfessList.clear();
+				}else{
+					boolean isExistedConfessTooOld = false;
+					if (mConfessList.size() == 0) {
 						mConfessList.addAll(resultConfessList);
 					} else {
-						LinkedList<ConfessItem> tempList = new LinkedList<ConfessItem>();
-						for (int i = 0; i < resultConfessList.size(); i++) {
-							if (isItemExisted(resultConfessList.get(i)) == false) {
-								tempList.addFirst(resultConfessList.get(i));
+						isExistedConfessTooOld = !isItemsContains(resultConfessList);
+						if (isExistedConfessTooOld) {
+							mConfessList.clear();
+							mConfessList.addAll(resultConfessList);
+						} else {
+							LinkedList<ConfessItem> tempList = new LinkedList<ConfessItem>();
+							for (int i = 0; i < resultConfessList.size(); i++) {
+								if (isItemExisted(resultConfessList.get(i)) == false) {
+									tempList.addFirst(resultConfessList.get(i));
+								}
 							}
-						}
-						for (ConfessItem item : tempList) {
-							mConfessList.addFirst(item);
+							for (ConfessItem item : tempList) {
+								mConfessList.addFirst(item);
+							}
 						}
 					}
 				}
+				
 				mHandler.sendEmptyMessage(MESSAGE_PULL_DOWN_REFRESH_COMPLETE);
 			} catch (JSONException e) {
 				Log.e(TAG, "Json 解析出错"+e.getLocalizedMessage());
@@ -263,7 +274,10 @@ public class ConfessFragment extends Fragment {
 					return;
 				List<ConfessItem> resultConfessList = ConfessItem.getConfessList(result);
 				Log.e(TAG, resultConfessList.toString());
-
+				if(resultConfessList.size()>=1){
+					resultConfessList.remove(0);
+				}
+				
 				if (resultConfessList.size() < Const.GET_COUNT) {
 					Log.e(TAG, "已经到底啦");
 					hasMoreData = 0;

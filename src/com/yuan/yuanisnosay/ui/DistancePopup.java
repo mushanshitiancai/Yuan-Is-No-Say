@@ -73,7 +73,7 @@ public class DistancePopup {
 		}
 
 		mDistancePopup = new PopupWindow(popupView, width, height);
-		mDistancePopup.setFocusable(false);
+		mDistancePopup.setFocusable(true);
 		mDistancePopup.setAnimationStyle(R.style.PopupAnimation);
 		
 		int[] location = new int[2];
