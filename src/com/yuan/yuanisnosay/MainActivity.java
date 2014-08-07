@@ -33,7 +33,7 @@ import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.ConfessFragment.ConfessActivityInterface;
 import com.yuan.yuanisnosay.ui.DistancePopup;
 
-public class MainActivity extends FragmentActivity implements ConfessActivityInterface, View.OnClickListener{
+public class MainActivity extends FragmentActivity implements ConfessActivityInterface{
 	private static final String TAG = "yuan_MainActivity";
 	private static final int TAB_NEARBY = R.id.radio_nearby;
 	private static final int TAB_HOT = R.id.radio_hot;
@@ -345,10 +345,5 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		return mDistancePopup.getDistance();
 	}
 
-	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 		
 }
