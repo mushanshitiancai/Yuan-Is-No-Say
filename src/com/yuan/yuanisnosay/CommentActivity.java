@@ -1,6 +1,8 @@
 package com.yuan.yuanisnosay;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,13 +59,10 @@ public class CommentActivity extends ActionBarActivity {
 		mNewComment = (EditText) findViewById(R.id.editText_commentContent);
 		mCommentSend = (Button) findViewById(R.id.button_commentSend);
 		mCommentBack = (ImageView) findViewById(R.id.img_back);
-		Intent intent = getIntent();
-		postID = intent.getIntExtra(POST_ID, 0);
-		
 		setParentConfess(1);
 		setCommentList(1);
+		//Log.i("Test", "Test");
 		mCommentBack.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -86,7 +85,7 @@ public class CommentActivity extends ActionBarActivity {
 						//TODO 解析JSON，设置表白内容
 						Log.d("confessContent", result.getJSONArray("express_list").toString());
 						JSONArray confessList = result.getJSONArray("express_list");
-						JSONObject confess = (JSONObject) confessList.get(0);
+						JSONObject confess = (JSONObject) confessList.get(1);
 						mConfessContent.setText(confess.getString("express_msg"));
 						
 						if (0 == confess.getInt("express_picture")) {
@@ -95,8 +94,13 @@ public class CommentActivity extends ActionBarActivity {
 							mConfessPic.setVisibility(View.VISIBLE);
 							//String url = ServerAccess.HOST + "download_user_head?user_openid=" + confess.getString("user_openid");
 							
-						}
-						/*{"status":0,"express_list":
+							ConfessItem confessItem = new ConfessItem(confess);
+							LinkedList<ConfessItem> confessLL = new LinkedList<ConfessItem>();
+							confessLL.add(confessItem);
+							ConfessAdapter ca = new ConfessAdapter(getApplicationContext(), ConfessAdapter.TYPE_NORMAL, confessLL);
+							ca.getView(1, null, null);
+							
+							/*{"status":0,"express_list":
 							[{"express_reply_cnt":4,
 							"express_latitude":0,"user_openid":"1",
 							"express_location":"","express_bad_cnt":0,
@@ -104,6 +108,8 @@ public class CommentActivity extends ActionBarActivity {
 							"express_time":0,"unread_reply_cnt":4,"express_id":1,
 							"express_picture":0,"express_msg":"fdgsdfh",
 							"express_like_cnt":0}]}*/
+						}
+						
 					} else {
 						Toast.makeText(getApplicationContext(), "木有表白消息。。。", 1000).show();
 					}
@@ -116,7 +122,7 @@ public class CommentActivity extends ActionBarActivity {
 			@Override
 			public void onFailure(Throwable error) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "网络连接失败，请检查网络连接。。。", 1000).show();
+				Toast.makeText(getApplicationContext(), "拉取表白失败。。。", 1000).show();
 			}
 			
 		});
@@ -126,18 +132,26 @@ public class CommentActivity extends ActionBarActivity {
 	
 	private void setCommentList(final int postID) {
 		final ArrayList<String> strs = new ArrayList<String>();
-		strs.add("first");
+		//strs.add("first");
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 				android.R.layout.simple_dropdown_item_1line, strs);
-		mCommentList.setAdapter(adapter);
+		
 		ServerAccess.getCommentList(postID, new ServerResponseHandler() {
 
 			@Override
 			public void onSuccess(JSONObject result) {
 				// TODO Auto-generated method stub
 				try {
+					JSONArray replyList = result.getJSONArray("reply_list");
 					if (0 == result.getInt("status")) {
 						//TODO 绑定列表
+						for (int i = 0; i < replyList.length(); ++i) {
+							JSONObject reply = (JSONObject) replyList.get(i);
+							strs.add(reply.getString("user_nickname") + ":" + reply.getString("reply_msg"));
+							
+						}
+						
+						mCommentList.setAdapter(adapter);
 						/*{"status":0,
 							"reply_list":[
 								{"read_status":0,"reply_bad_cnt":0,
@@ -189,7 +203,7 @@ public class CommentActivity extends ActionBarActivity {
 							try {
 								int status = result.getInt("status");
 								if (0 == status) {
-									strs.add(newComment);
+									strs.add(((YuanApplication)getApplication()).getLogin().getNickname());
 									adapter.notifyDataSetChanged();
 								} else if (4 == status) {
 									Toast.makeText(getApplicationContext(), "其它错误：" + result.getString("hint"), 1000).show();
