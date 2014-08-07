@@ -73,6 +73,7 @@ public class ConfessFragment extends Fragment {
 	public interface ConfessActivityInterface{
 		public int getDistance();
 	}
+	
 
 	public ConfessFragment(int type) {
 		mType = type;

@@ -1,8 +1,17 @@
 package com.yuan.yuanisnosay;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,9 +19,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
+import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 
 public class UserActivity extends FragmentActivity {
 
@@ -21,6 +37,9 @@ public class UserActivity extends FragmentActivity {
 	private RelativeLayout layoutWantToConfess;
 	private ImageView ivIcon;
 	private TextView tvName;
+	private ImageLoader mImageLoader;
+	private DisplayImageOptions mOptions;
+	
 	
 	private ConfessFragment mMineConfessFragment;
 	
@@ -40,9 +59,57 @@ public class UserActivity extends FragmentActivity {
 		
 		ivIcon = (ImageView)findViewById(R.id.imageView_user_icon);
 		tvName = (TextView)findViewById(R.id.textView_user_name);
+//		String nickName = ((YuanApplication)getApplication()).getLogin().getNickname();
+		String openid = ((YuanApplication)getApplication()).getLogin().getOpenId();
+		
+		//TODO 显示用户头像
+		mImageLoader = ImageLoader.getInstance();
+		String url = ServerAccess.HOST + "download_user_head?user_openid=" + openid;
+		
+		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_stub)
+				.showImageForEmptyUri(R.drawable.ic_empty).showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
+				.cacheOnDisk(true).considerExifParams(true)
+				// .displayer(new RoundedBitmapDisplayer(20))
+				.build();
+		mImageLoader.displayImage(url, ivIcon, mOptions, new AnimateFirstDisplayListener());
+		
+		ServerAccess.getUserInfo(openid, new ServerResponseHandler() {
+
+			@Override
+			public void onSuccess(JSONObject result) {
+				// TODO Auto-generated method stub
+				try {
+					if (result ==  null) {
+						Toast.makeText(getApplicationContext(), "服务器木有数据。。。", 1000).show();
+						return;
+					} 
+					if (0 == result.getInt("status")) {
+						String nickname = result.getString("nick_name");
+						if (nickname != null) {
+							tvName.setText(nickname);
+						} else {
+							tvName.setText("");
+						}
+					} else {
+						Toast.makeText(getApplicationContext(), "获取个人信息失败。。。", 1000).show();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable error) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 		mMineConfessFragment = new ConfessFragment(ConfessFragment.TYPE_MINE);
-		getSupportFragmentManager().beginTransaction().add(R.id.frameLayout_container, mMineConfessFragment).commit();
+		getSupportFragmentManager().beginTransaction().
+			add(R.id.frameLayout_container, mMineConfessFragment).commit();
 		
 	}
 	
@@ -88,5 +155,22 @@ public class UserActivity extends FragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+		static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+			}
+		}
 	}
 }
