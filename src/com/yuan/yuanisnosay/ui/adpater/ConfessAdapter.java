@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +32,14 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yuan.yuanisnosay.CommentActivity;
+import com.yuan.yuanisnosay.Const;
 import com.yuan.yuanisnosay.MainActivity;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.DateUtil;
+import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
+import com.yuan.yuanisnosay.network.Network;
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 
@@ -181,8 +186,26 @@ public class ConfessAdapter extends BaseAdapter {
 			final ConfessItem confess = mConfessList.get((Integer)button.getTag());
 			switch (button.getId()) {
 				case R.id.button_confessItem_comment:
+					YuanApplication app = (YuanApplication) mContext.getApplicationContext();
+					Network network = app.getNetwork();
+					if (!network.isOnline()) {
+						com.yuan.yuanisnosay.ui.Util.showToast(mContext,
+								mContext.getString(R.string.network_offline));
+						return;
+					}
+					if (app.getLogin().getRegisterStatus() == Status.Login.M_FIRST_LOGIN) {
+						Intent intent = new Intent(mContext, PersonalProfileActivity.class);
+						Bundle data = new Bundle();
+//						data.putInt("to", Const.PROFILE_TO_COMMENT);
+//						data.putInt(CommentActivity.POST_CONFESS, confess.getId());
+						data.putSerializable(CommentActivity.POST_CONFESS, confess);
+						intent.putExtras(data);
+						mContext.startActivity(intent);
+						return;
+					}
+					
 					Intent intent = new Intent(mContext, CommentActivity.class);
-					intent.putExtra(CommentActivity.POST_ID, confess.getId());
+					intent.putExtra(CommentActivity.POST_CONFESS, confess);
 					mContext.startActivity(intent);
 					break;
 				case R.id.button_confessItem_flowers:

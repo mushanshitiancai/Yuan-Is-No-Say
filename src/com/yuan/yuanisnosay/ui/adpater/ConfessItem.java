@@ -107,7 +107,7 @@ public class ConfessItem implements Serializable{
 			this.author = "";
 		}
 		
-		this.publishDate = new Date(json.getLong("express_time")*1000);
+		this.setPublishDate(new Date(json.getLong("express_time")*1000));
 		String openId=json.getString("user_openid");
 		this.icon = ServerAccess.HOST+"download_user_head?user_openid="+openId;
 		Log.e(TAG, "icon:"+this.icon);
@@ -130,7 +130,7 @@ public class ConfessItem implements Serializable{
 		this.id = id;
 		this.content = content;
 		this.author = author;
-		this.publishDate = publishDate;
+		this.setPublishDate(publishDate);
 		this.icon = icon;
 		this.picture = picture;
 		this.flowersCount = flowersCount;

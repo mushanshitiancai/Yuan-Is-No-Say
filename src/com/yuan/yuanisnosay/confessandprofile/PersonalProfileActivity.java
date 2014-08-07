@@ -16,6 +16,7 @@ import com.yuan.yuanisnosay.YuanApplication;
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 import com.yuan.yuanisnosay.ui.Util;
+import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -127,8 +128,11 @@ public class PersonalProfileActivity extends Activity {
 					}
 				} catch (FileNotFoundException e) {
 					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
+					Util.dismissDialog();
 					e.printStackTrace();
 				} catch (IOException e) {
+					Util.showToast(PersonalProfileActivity.this, "上传图片失败了！");
+					Util.dismissDialog();
 					e.printStackTrace();
 				}
 				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
@@ -198,6 +202,11 @@ public class PersonalProfileActivity extends Activity {
 					case Status.SetInfo.INFO_SEND_SUCCESS:
 						Util.dismissDialog();
 						Util.showToast(PersonalProfileActivity.this, "资料设置成功！");
+						Bimp.bmp.clear();
+						Bimp.drr.clear();
+						Bimp.max = 0;
+						finish();
+						
 						Intent intent = getIntent();
 						PersonalProfileActivity.this.setResult(Const.REQUEST_CODE_CONFESS_PROFILE, intent);
 						Bundle data =intent.getExtras();
@@ -208,14 +217,22 @@ public class PersonalProfileActivity extends Activity {
 							case Const.PROFILE_TO_WANTTO_CONFESS:
 								intentTo = new Intent(PersonalProfileActivity.this,WantToConfessActivity.class);
 								PersonalProfileActivity.this.startActivity(intentTo);
+								
 								break;
 							case Const.PROFILE_TO_PERSONAL_USER:
 								intentTo = new Intent(PersonalProfileActivity.this,UserActivity.class);
 								PersonalProfileActivity.this.startActivity(intentTo);
+								
 								break;
 							case Const.PROFILE_TO_COMMENT:
+								ConfessItem postComment = (ConfessItem)data.getSerializable(CommentActivity.POST_CONFESS);
 								intentTo = new Intent(PersonalProfileActivity.this,CommentActivity.class);
+//								Bundle data = new Bundle();
+								
+//								data.putSerializable(CommentActivity.POST_CONFESS, postComment);
+								intentTo.putExtra(CommentActivity.POST_CONFESS, postComment);
 								PersonalProfileActivity.this.startActivity(intentTo);
+								
 								break;
 							}
 						}
@@ -233,7 +250,8 @@ public class PersonalProfileActivity extends Activity {
 		@Override
 		public void onFailure(Throwable error) {
 			Util.dismissDialog();
-			Util.showToast(PersonalProfileActivity.this, "网络不给力啊，检查网络连接再来设置吧");
+			Util.showToast(PersonalProfileActivity.this, PersonalProfileActivity.
+					this.getString(R.string.server_fail));
 		}
 
 	}

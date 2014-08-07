@@ -32,6 +32,7 @@ import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.ConfessFragment.ConfessActivityInterface;
 import com.yuan.yuanisnosay.ui.DistancePopup;
+import com.yuan.yuanisnosay.ui.Util;
 
 
 public class MainActivity extends FragmentActivity implements ConfessActivityInterface{
@@ -147,6 +148,8 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 			int id = v.getId();
 			switch (id) {
 			case R.id.button_mainActivity_confess:
+				
+				
 				IntentUtil.doIntent(MainActivity.this,
 						WantToConfessActivity.class,
 						Const.PROFILE_TO_WANTTO_CONFESS);
@@ -294,13 +297,20 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 
 	}
 
+	private long exitTime = 0;
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (mDistancePopup.dismissDistancePopup()) {
 			return;
 		}
-		super.onBackPressed();
+		if ((System.currentTimeMillis() - exitTime) > 2000) {
+			Util.showToast(this, "再次按返回键退出");
+	        exitTime = System.currentTimeMillis();
+		}else{
+//			this.finish();
+			super.onBackPressed();
+		}
 	}
 
 	@Override
