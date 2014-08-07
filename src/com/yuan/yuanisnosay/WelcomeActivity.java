@@ -23,7 +23,7 @@ public class WelcomeActivity extends Activity{
         setContentView(R.layout.welcome);  
         ImageView logoImage = (ImageView) this.findViewById(R.id.welcome);  
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.1f, 1.0f);  
-        alphaAnimation.setDuration(3000);  
+        alphaAnimation.setDuration(2000);  
         logoImage.startAnimation(alphaAnimation);  
         alphaAnimation.setAnimationListener(new AnimationListener() {  
   

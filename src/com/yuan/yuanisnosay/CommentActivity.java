@@ -158,64 +158,6 @@ public class CommentActivity extends ActionBarActivity {
 		
 	}
 	
-	//TODO
-//	public void setParentConfess(int postID) {
-//		ServerAccess.getConfessById(postID, new ServerResponseHandler() {
-//
-//			@Override
-//			public void onSuccess(JSONObject result) {
-//				// TODO Auto-generated method stub
-//				try {
-//					if (result.getInt("status") == 0) {
-//						//TODO 解析JSON，设置表白内容
-//						Log.d("confessContent", result.getJSONArray("express_list").toString());
-//						JSONArray confessList = result.getJSONArray("express_list");
-//						JSONObject confess = (JSONObject) confessList.get(1);
-//						mConfessContent.setText(confess.getString("express_msg"));
-//						
-//						if (0 == confess.getInt("express_picture")) {
-//							mConfessPic.setVisibility(View.GONE);
-//						} else {
-//							mConfessPic.setVisibility(View.VISIBLE);
-//							//String url = ServerAccess.HOST + "download_user_head?user_openid=" + confess.getString("user_openid");
-//							
-//							ConfessItem confessItem = new ConfessItem(confess);
-//							LinkedList<ConfessItem> confessLL = new LinkedList<ConfessItem>();
-//							confessLL.add(confessItem);
-//							//设置adapter
-//							ConfessAdapter adapter = new ConfessAdapter(getApplicationContext(), ConfessAdapter.TYPE_NORMAL, confessLL);
-//							ConfessFragment fragment = new ConfessFragment(ConfessFragment.TYPE_MINE);
-//							fragment.setmAdapter(adapter);
-//							/*{"status":0,"express_list":
-//							[{"express_reply_cnt":4,
-//							"express_latitude":0,"user_openid":"1",
-//							"express_location":"","express_bad_cnt":0,
-//							"express_longitude":0,"user_nickname":"",
-//							"express_time":0,"unread_reply_cnt":4,"express_id":1,
-//							"express_picture":0,"express_msg":"fdgsdfh",
-//							"express_like_cnt":0}]}*/
-//						}
-//						
-//					} else {
-//						Toast.makeText(getApplicationContext(), "木有表白消息。。。", 1000).show();
-//					}
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable error) {
-//				// TODO Auto-generated method stub
-//				Toast.makeText(getApplicationContext(), "拉取表白失败。。。", 1000).show();
-//			}
-//			
-//		});
-//		
-//		return ;		
-//	}
-	
 	private void setCommentList(final int postID) {
 		final ArrayList<String> strs = new ArrayList<String>();
 		//strs.add("first");
@@ -236,24 +178,7 @@ public class CommentActivity extends ActionBarActivity {
 							strs.add(reply.getString("user_nickname") + ": " + reply.getString("reply_msg"));
 							
 						}
-						
 						viewHolder.commentList.setAdapter(adapter);
-						/*{"status":0,
-							"reply_list":[
-								{"read_status":0,"reply_bad_cnt":0,
-								"reply_location":"","user_openid":"1",
-								"reply_id":1,"reply_like_cnt":0,"reply_timedate":0,
-								"express_id":1,"reply_msg":"sgsfgsdf"},
-								{"read_status":0,"reply_bad_cnt":0,
-								"reply_location":"","user_openid":"1",
-								"reply_id":2,"reply_like_cnt":0,
-								"reply_timedate":0,"express_id":1,
-								"reply_msg":"dfgdsgd"},
-								{"read_status":0,"reply_bad_cnt":0,
-								"reply_location":"","user_openid":"1",
-								"reply_id":3,"reply_like_cnt":0,"reply_timedate":0,
-								"express_id":1,"reply_msg":"hfgjdfhgds"}]}*/
-						
 					} else {
 						Toast.makeText(getApplicationContext(), "拉取不到列表。。。", 1000).show();
 					}

@@ -153,7 +153,6 @@ public class ConfessAdapter extends BaseAdapter {
 					.findViewById(R.id.textView_confessItem_position);
 			viewHolder.btnFlower = (Button) convertView
 					.findViewById(R.id.button_confessItem_flowers);
-			viewHolder.btnFlower.setTag(position);
 			viewHolder.btnComment = (Button) convertView
 					.findViewById(R.id.button_confessItem_comment);
 
@@ -178,7 +177,7 @@ public class ConfessAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-
+		viewHolder.btnFlower.setTag(position);
 		viewHolder.btnComment.setTag(position);
 		viewHolder.content.setText(curConfess.getContent());
 		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess
@@ -247,8 +246,6 @@ public class ConfessAdapter extends BaseAdapter {
 					return;
 				} else {
 					floweredConfesses.add(confess.getId());
-					confess.setFlowersCount(confess.getFlowersCount() + 1);
-					ConfessAdapter.this.notifyDataSetChanged();
 					ServerAccess.flower(confess.getId(),
 							new ServerResponseHandler() {
 								@Override
@@ -258,6 +255,7 @@ public class ConfessAdapter extends BaseAdapter {
 										if (0 == result.getInt("status")) {
 											confess.setFlowersCount(result
 													.getInt("count"));
+											ConfessAdapter.this.notifyDataSetChanged();
 										}
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
