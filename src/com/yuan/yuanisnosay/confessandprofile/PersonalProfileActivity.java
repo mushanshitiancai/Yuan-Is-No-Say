@@ -108,7 +108,7 @@ public class PersonalProfileActivity extends Activity {
 				final String text = mHolder.editNickName.getText().toString();
 				final String openId = mApp.getLogin().getOpenId();
 				final RadioButton rb = (RadioButton)findViewById(mHolder.rgGender.getCheckedRadioButtonId());
-				final String gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
+//				final String gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
 //				Log.e("personalprofileActivity", openId);
 				Util.showToast(PersonalProfileActivity.this, gender);
 
@@ -120,7 +120,7 @@ public class PersonalProfileActivity extends Activity {
 //					} else {
 //						AssetManager aManager = getApplication().getAssets();
 //						InputStream is = aManager.open("user2_03.png");
-//						ServerAccess.updateUserInfo(openId, text, "1", is,
+//						ServerAccess.updateUserInfo(openId, text, gender, is,
 //								new SetProfileResponseHandler());
 //					}
 //				} catch (FileNotFoundException e) {
@@ -177,6 +177,7 @@ public class PersonalProfileActivity extends Activity {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 //				gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
+				gender = checkedId == R.id.radioButton_male ? "1":"0";
 			}
 			
 		});

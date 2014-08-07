@@ -54,8 +54,19 @@ public class ServerAccess {
 		return sb.toString();
 	}
 
-	public static void doPost(String uri, String params, String uploadName,
-			String filePath, ServerResponseHandler handler) {
+	public static void doPost(final String uri, final String params,
+			final String uploadName, final String filePath,
+			final ServerResponseHandler handler) {
+		new Thread() {
+			@Override
+			public void run() {
+				sendPacket(uri, params, uploadName, filePath, handler);
+			}
+		}.start();
+	}
+
+	private static void sendPacket(String uri, String params,
+			String uploadName, String filePath, ServerResponseHandler handler) {
 		int responseCode = 0;
 		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
 		try {
@@ -191,9 +202,9 @@ public class ServerAccess {
 		params.put("user_sex", sex);
 		params.put("user_head", new File(picPath));
 
-		doPost("recv_user_info", "user_openid=" + openid + "&user_nickname="
-				+ nickName + "&user_sex=" + sex, "user_head", picPath, handler);
-		// doPost("recv_user_info", params, handler);
+		//doPost("recv_user_info", "user_openid=" + openid + "&user_nickname="
+		//		+ nickName + "&user_sex=" + sex, "user_head", picPath, handler);
+		doPost("recv_user_info", params, handler);
 	}
 
 	public static void getNewcommentnum(String openID,
@@ -285,13 +296,13 @@ public class ServerAccess {
 		params.put("express_longitude", longitude);
 		params.put("express_latitude", latitude);
 		if ("" != picPath) {
-			doPost("post_express_message", "user_openid=" + openid
+			/*doPost("post_express_message", "user_openid=" + openid
 					+ "&express_msg=" + confessMsg + "&express_location="
 					+ addr + "&express_longitude=" + longitude
 					+ "&express_latitude=" + latitude, "express_picture",
 					picPath, handler);
-			return;
-			// params.put("express_picture", new File(picPath));
+			return;*/
+			params.put("express_picture", new File(picPath));
 		}
 
 		doPost("post_express_message", params, handler);

@@ -17,15 +17,6 @@
             android:src="@drawable/back_03" />
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/send_confess"
-            android:textColor="@color/style_profile_gray"
-            android:textSize="22sp" />
-
-        <TextView
             android:id="@+id/textView_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

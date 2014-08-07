@@ -255,8 +255,8 @@ public class WantToConfessActivity extends Activity {
 
 		@Override
 		public void onFailure(Throwable error) {
-			Util.dismissDialog();
-			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
+//			Util.dismissDialog();
+//			Util.showToast(WantToConfessActivity.this, "网络不给力啊，检查网络连接再来表白吧");
 			Log.e(TAG, error.toString());
 		}
 		
