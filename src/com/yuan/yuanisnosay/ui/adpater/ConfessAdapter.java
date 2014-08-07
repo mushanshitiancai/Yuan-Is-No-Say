@@ -179,7 +179,9 @@ public class ConfessAdapter extends BaseAdapter {
 		}else{
 			viewHolder.ivPicture.setVisibility(View.GONE);
 		}
-
+		
+		//设置当前POST_CONFESS为false
+		flowerMap.put(CommentActivity.POST_CONFESS, false);
 		return convertView;
 	}
 
@@ -213,11 +215,11 @@ public class ConfessAdapter extends BaseAdapter {
 					break;
 				case R.id.button_confessItem_flowers:
 					
-					if (flowerMap.get(CommentActivity.POST_ID) == true) {
+					if (flowerMap.get(CommentActivity.POST_CONFESS) == true) {
 						Toast.makeText(mContext, "你已经送过花儿啦~~", 1000).show();
 						break;
 					} else {
-						flowerMap.put(CommentActivity.POST_ID, true);
+						flowerMap.put(CommentActivity.POST_CONFESS, true);
 						confess.setFlowersCount(confess.getFlowersCount()+1);
 						ConfessAdapter.this.notifyDataSetChanged();
 						ServerAccess.flower(confess.getId(), new ServerResponseHandler() {
