@@ -4,63 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/menu_container"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:background="#F3F3F3" >
-
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:src="@drawable/back_03" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="评论列表"
-            android:textColor="#8C8C8C"
-            android:textSize="22sp" />
-    </RelativeLayout>
-
-    <include android:id="@+id/include_item_confess"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/menu_container"
-        layout="@layout/item_confess" />
-
-    <ListView
-        android:id="@+id/listView_commentList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/include_item_confess"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_weight="1.69" >
-    </ListView>
-
     <LinearLayout
+        android:id="@+id/linearLayout_input"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="@drawable/shape_edit_confess_content" >
+        android:background="@drawable/shape_edit_confess_content"
+        android:orientation="horizontal" >
 
         <EditText
-		    android:id="@+id/editText_commentContent"
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent"
-		    android:layout_weight="3"
-		    android:hint="请输入文字"
-		     />
-        
+            android:id="@+id/editText_commentContent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:hint="请输入文字" />
+
         <Button
             android:id="@+id/button_commentSend"
             android:layout_width="wrap_content"
@@ -68,7 +26,62 @@
             android:layout_weight="1"
             android:background="@color/style_blue"
             android:text="发送" />
-        
     </LinearLayout>
+    
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/linearLayout_input" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/menu_container"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#F3F3F3" >
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="13dp"
+                    android:src="@drawable/back_03" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="评论列表"
+                    android:textColor="#8C8C8C"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+            <include
+                android:id="@+id/include_item_confess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/menu_container"
+                layout="@layout/item_confess" />
+
+            <ListView
+                android:id="@+id/listView_commentList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                 >
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
+
+    
 
 </RelativeLayout>
