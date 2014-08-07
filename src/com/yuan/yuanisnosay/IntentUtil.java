@@ -1,7 +1,6 @@
 package com.yuan.yuanisnosay;
 
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
-import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.network.Network;
 
 import android.content.Context;

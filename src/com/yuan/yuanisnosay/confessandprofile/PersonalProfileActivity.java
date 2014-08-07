@@ -110,9 +110,6 @@ public class PersonalProfileActivity extends Activity {
 			public void onClick(View v) {
 				final String text = mHolder.editNickName.getText().toString();
 				final String openId = mApp.getLogin().getOpenId();
-//				final RadioButton rb = (RadioButton)findViewById(mHolder.rgGender.getCheckedRadioButtonId());
-//				final String gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
-//				Log.e("personalprofileActivity", openId);
 				Util.showToast(PersonalProfileActivity.this, gender);
 
 				try {
@@ -146,13 +143,11 @@ public class PersonalProfileActivity extends Activity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 				int strLen = s.toString().trim().length();
 				if (strLen == 0) {
 					mHolder.txtSend.setEnabled(false);
@@ -163,7 +158,6 @@ public class PersonalProfileActivity extends Activity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 				
 			}
 
@@ -182,7 +176,6 @@ public class PersonalProfileActivity extends Activity {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-//				gender = rb.getText().toString().trim().equals(R.string.gender_male)?"1":"0";
 				gender = checkedId == R.id.radioButton_male ? "1":"0";
 			}
 			
@@ -227,9 +220,7 @@ public class PersonalProfileActivity extends Activity {
 							case Const.PROFILE_TO_COMMENT:
 								ConfessItem postComment = (ConfessItem)data.getSerializable(CommentActivity.POST_CONFESS);
 								intentTo = new Intent(PersonalProfileActivity.this,CommentActivity.class);
-//								Bundle data = new Bundle();
 								
-//								data.putSerializable(CommentActivity.POST_CONFESS, postComment);
 								intentTo.putExtra(CommentActivity.POST_CONFESS, postComment);
 								PersonalProfileActivity.this.startActivity(intentTo);
 								
