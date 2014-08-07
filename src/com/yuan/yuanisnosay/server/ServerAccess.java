@@ -30,6 +30,17 @@ public class ServerAccess {
 
 		public void onFailure(Throwable error);
 	}
+	
+	public interface ServerLongResponseHandler {
+		public void onSuccess(JSONObject result);
+
+		public void onFailure(Throwable error);
+		
+		public void onStart();
+		
+		public void onProgress(int percent);
+		
+	}
 
 	public final static String HOST = "http://yswy.r4c00n.com/";
 	private static final String CHARSET = "utf-8";
@@ -38,6 +49,7 @@ public class ServerAccess {
 	private static final String CONTENT_TYPE = "multipart/form-data";
 	private static final long MAX_ID = ~(long) (1 << 63);
 
+    private class PostAsyncTask extends AsyncTask<ServerResponseHandler, Integer, JSONObject> {
 	private static String packMutipartData(String boundary, String key,
 			String value) {
 		StringBuffer sb = new StringBuffer();
@@ -54,22 +66,11 @@ public class ServerAccess {
 		return sb.toString();
 	}
 
-	public static void doPost(final String uri, final String params,
-			final String uploadName, final String filePath,
-			final ServerResponseHandler handler) {
-		new Thread() {
-			@Override
-			public void run() {
-				sendPacket(uri, params, uploadName, filePath, handler);
-			}
-		}.start();
-	}
-
-	private static void sendPacket(String uri, String params,
-			String uploadName, String filePath, ServerResponseHandler handler) {
+	private static JSONObject sendPacket(String uri, String params,
+			String uploadName, String filePath) throws Throwable {
 		int responseCode = 0;
 		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
-		try {
+
 			URL url = new URL(HOST + uri);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			StringBuffer sb = new StringBuffer();
@@ -128,23 +129,66 @@ public class ServerAccess {
 					sb.append((char) ss);
 				}
 				is.close();
-				if (null != handler) {
-					try {
-						handler.onSuccess(new JSONObject(new String(sb)));
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
+				return new JSONObject(new String(sb));
 			} else {
-				if (null != handler)
-					handler.onFailure(new IOException(
-							"ERROR:HTTP connect fail!"));
+					throw (new IOException("EROR:HTTP connect fail!"));
 			}
-		} catch (Throwable error) {
-			if (null != handler)
-				handler.onFailure(error);
-		}
+                return new JSONObject("{\"status\":4}");
 	}
+
+        String uri, params, fileParams, filePath;
+        ServerResponseHandler handler;
+        Throwable error;
+
+        public PostAsyncTask(String uri, String params, String fileParams, String filePath) {
+            super();
+            this.uri = uri;
+            this.params = params;
+            this.fileParams = fileParams;
+            this.filePath = filePath;
+        }
+
+        @Override
+        protected JSONObject doInBackground(ServerResponseHandler handler) {
+            this.handler = handler;
+            try {
+	        publishProgress(100);
+                return sendPacket(uri, params, fileParams, filePath);
+            } catch (Throwable error) {
+                this.error = error;
+            }
+        }
+        
+        @Override
+        protected void onPostExecute(JSONObject result) {
+	    if (null != handler) {
+	        if (null == error) {
+	            handler.onSuccess(result);
+	        } else {
+	            handler.onFailure(error);
+	        }
+	    }
+	}
+	
+	@Override
+	protected void onPreExecute() {
+	    if (null != handler) {
+//	        handler.onStart();
+	    }
+	}
+	
+	@Override
+	protected void onProgressUpdate(int vlaue) {
+	    if (null != handler) {
+//	        handler.onProgress(value);
+	    }
+	}
+    }
+
+    private static void doPost(String uri, String params, String fileParams, String filePath, ServerResponseHandler handler) {
+        PostAsyncTask send = new PostAsyncTask(uri, params, fileParams, filePath);
+        send.execute(handler);
+    }
 
 	private static void doPost(String uri, RequestParams params,
 			final ServerResponseHandler handler) {

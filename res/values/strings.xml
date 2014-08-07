@@ -22,4 +22,6 @@
     <string name="send_confess">发送表白</string>
     <string name="gender_female">女生</string>
     <string name="gender_male">男生</string>
+    <string name="network_offline">网络连接不可用，请检查网络连接</string>
+    
 </resources>

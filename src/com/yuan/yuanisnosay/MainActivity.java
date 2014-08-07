@@ -145,7 +145,7 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 				Network network = mApp.getNetwork();
 				if (!network.isOnline()) {
 					com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
-							"网络连接不可用啊....");
+							MainActivity.this.getString(R.string.network_offline));
 					return;
 				}
 				if (!mApp.getLogin().isLogin()) {
@@ -153,8 +153,8 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 					return;
 				}
 				com.yuan.yuanisnosay.ui.Util.showToast(MainActivity.this,
-						mApp.getLogin().getmRegisterStatus()+"");
-				if(mApp.getLogin().getmRegisterStatus() != Status.Login.M_REGISTER_SUCCESS) {
+						mApp.getLogin().getRegisterStatus()+"");
+				if(mApp.getLogin().getRegisterStatus() != Status.Login.M_REGISTER_SUCCESS) {
 					Intent intent = new Intent(MainActivity.this,PersonalProfileActivity.class);
 					startActivity(intent);
 					return;
