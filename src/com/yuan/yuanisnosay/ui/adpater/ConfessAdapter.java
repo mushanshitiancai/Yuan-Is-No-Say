@@ -9,6 +9,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -54,7 +55,7 @@ public class ConfessAdapter extends BaseAdapter {
 	LayoutInflater mInflater;
 	LinkedList<ConfessItem> mConfessList;
 	private int itemId;
-	private static Map<String, Boolean> flowerMap = new HashMap<String, Boolean>();
+	private static Map<Integer, Boolean> flowerMap = new HashMap<Integer, Boolean>();
 	
 	ImageLoader mImageLoader;
 	DisplayImageOptions mOptions;
@@ -105,6 +106,7 @@ public class ConfessAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ConfessItem curConfess = mConfessList.get(position);
@@ -159,7 +161,19 @@ public class ConfessAdapter extends BaseAdapter {
 		viewHolder.content.setText(curConfess.getContent());
 		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess.getPublishDate()));
 		viewHolder.position.setText(curConfess.getPosition());
-
+		
+		//设置每条表白背景
+		if (position % 5 == 0) 
+			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg1);
+		else if (position % 5 == 1) 
+			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg2);
+		else if (position % 5 == 2) 
+			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg3);
+		else if (position % 5 == 3) 
+			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg4);
+		else if (position % 5 == 4) 
+			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg5);
+		
 		viewHolder.btnFlower.setText(mContext.getString(R.string.confessItem_flowers) + " "
 				+ curConfess.getFlowersCount());
 		viewHolder.btnComment.setText(mContext.getString(R.string.confessItem_comment) + " "
@@ -179,9 +193,11 @@ public class ConfessAdapter extends BaseAdapter {
 		}else{
 			viewHolder.ivPicture.setVisibility(View.GONE);
 		}
-		
 		//设置当前POST_CONFESS为false
-		flowerMap.put(CommentActivity.POST_CONFESS, false);
+		if (flowerMap.get(curConfess.getId()) == false) {
+			flowerMap.put(curConfess.getId(), true);
+		}
+		
 		return convertView;
 	}
 
@@ -214,12 +230,11 @@ public class ConfessAdapter extends BaseAdapter {
 					mContext.startActivity(intent);
 					break;
 				case R.id.button_confessItem_flowers:
-					
-					if (flowerMap.get(CommentActivity.POST_CONFESS) == true) {
+					if (flowerMap.get((Integer)confess.getId()) == true) {
 						Toast.makeText(mContext, "你已经送过花儿啦~~", 1000).show();
-						break;
+						return;
 					} else {
-						flowerMap.put(CommentActivity.POST_CONFESS, true);
+						flowerMap.put((Integer)confess.getId(), true);
 						confess.setFlowersCount(confess.getFlowersCount()+1);
 						ConfessAdapter.this.notifyDataSetChanged();
 						ServerAccess.flower(confess.getId(), new ServerResponseHandler() {

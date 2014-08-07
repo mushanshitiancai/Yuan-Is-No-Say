@@ -14,7 +14,11 @@
     <color name="style_gray_border">#bbbbbb</color>
     <color name="style_text_black">#5b5b5b</color>
     
-    <color name="style_confess_item_1_content_bg">#EEEEEE</color>
+    <color name="style_confess_item_1_content_bg1">#70B5FF</color>
+    <color name="style_confess_item_1_content_bg2">#FFF64A</color>
+    <color name="style_confess_item_1_content_bg3">#A8FF75</color>
+    <color name="style_confess_item_1_content_bg4">#FF7070</color>
+    <color name="style_confess_item_1_content_bg5">#F5FF70</color>
     <color name="style_confess_item_1_content_text">#000202</color>
     <color name="style_confess_item_1_info_bg">#f4e7e3</color>
     <color name="style_confess_item_1_info_text">#e67f22</color>

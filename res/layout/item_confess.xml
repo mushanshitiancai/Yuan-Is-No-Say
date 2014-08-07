@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
         android:layout_below="@id/relativeLayout_info"
-        android:background="@color/style_confess_item_1_content_bg"
+        android:background="@color/style_confess_item_1_content_bg1"
         android:orientation="vertical" >
     </LinearLayout>
 
