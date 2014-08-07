@@ -13,6 +13,8 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yuan.yuanisnosay.ListTestActivity;
+import com.yuan.yuanisnosay.MainActivity;
+import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.Status;
 import com.yuan.yuanisnosay.confessandprofile.PersonalProfileActivity;
 import com.yuan.yuanisnosay.YuanApplication;
@@ -67,7 +69,7 @@ public class LoginUiListener implements IUiListener{
 								Util.showToast(mContext, "验证无效！");
 								break;
 							}
-							app.getLogin().setmRegisterStatus(status);
+							app.getLogin().setRegisterStatus(status);
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -76,7 +78,7 @@ public class LoginUiListener implements IUiListener{
 					
 					@Override
 					public void onFailure(Throwable error) {
-						Util.showToast(mContext, "网络连接有问题，请检查");
+						Util.showToast(mContext, mContext.getResources().getString(R.string.network_offline));
 					}
 				});
                 break;

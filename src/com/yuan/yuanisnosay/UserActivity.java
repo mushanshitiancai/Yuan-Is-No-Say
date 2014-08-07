@@ -1,5 +1,6 @@
 package com.yuan.yuanisnosay;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yuan.yuanisnosay.confessandprofile.WantToConfessActivity;
 import com.yuan.yuanisnosay.ui.ConfessFragment;
 
 public class UserActivity extends FragmentActivity {
@@ -60,7 +62,10 @@ public class UserActivity extends FragmentActivity {
 				
 //				break;
 			case R.id.layout_user_wantToConfess:
-				
+				Intent intent = new Intent(UserActivity.this,WantToConfessActivity.class);
+				startActivity(intent);
+				com.yuan.yuanisnosay.ui.Util.showToast(UserActivity.this,
+						((YuanApplication)UserActivity.this.getApplication()).getLogin().getOpenId());
 				break;
 			}
 		}

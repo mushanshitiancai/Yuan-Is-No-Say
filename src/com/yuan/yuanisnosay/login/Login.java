@@ -130,6 +130,8 @@ public class Login {
 		mEditor.commit();
 	}
 	
+//	public boolean is
+	
 //	public void setOpenId(String openId) {
 //		this.mOpenId = openId;
 //	}
@@ -149,10 +151,10 @@ public class Login {
 	public void setIconPath(String iconPath) {
 		this.mIconPath = iconPath;
 	}
-	public int getmRegisterStatus() {
+	public int getRegisterStatus() {
 		return mRegisterStatus;
 	}
-	public void setmRegisterStatus(int mRegisterStatus) {
+	public void setRegisterStatus(int mRegisterStatus) {
 		this.mRegisterStatus = mRegisterStatus;
 	}
 }

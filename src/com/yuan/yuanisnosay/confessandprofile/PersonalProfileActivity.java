@@ -112,25 +112,25 @@ public class PersonalProfileActivity extends Activity {
 //				Log.e("personalprofileActivity", openId);
 				Util.showToast(PersonalProfileActivity.this, gender);
 
-//				try {
-//					if (Bimp.drr.size() != 0) {
-//						ServerAccess.updateUserInfo(openId, text, gender,
-//								Bimp.drr.get(0),
-//								new SetProfileResponseHandler());
-//					} else {
-//						AssetManager aManager = getApplication().getAssets();
-//						InputStream is = aManager.open("user2_03.png");
-//						ServerAccess.updateUserInfo(openId, text, gender, is,
-//								new SetProfileResponseHandler());
-//					}
-//				} catch (FileNotFoundException e) {
-//					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
-//						"正在上传资料...");
+				try {
+					if (Bimp.drr.size() != 0) {
+						ServerAccess.updateUserInfo(openId, text, gender,
+								Bimp.drr.get(0),
+								new SetProfileResponseHandler());
+					} else {
+						AssetManager aManager = getApplication().getAssets();
+						InputStream is = aManager.open("user2_03.png");
+						ServerAccess.updateUserInfo(openId, text, gender, is,
+								new SetProfileResponseHandler());
+					}
+				} catch (FileNotFoundException e) {
+					Util.showToast(PersonalProfileActivity.this, "找不到所选择的图片文件");
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Util.showProgressDialog(PersonalProfileActivity.this, "请稍后",
+						"正在上传资料...");
 				// finish();
 			}
 		});
