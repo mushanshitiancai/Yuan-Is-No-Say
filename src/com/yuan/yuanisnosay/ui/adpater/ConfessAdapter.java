@@ -4,8 +4,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,8 +30,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.yuan.yuanisnosay.CommentActivity;
+import com.yuan.yuanisnosay.MainActivity;
 import com.yuan.yuanisnosay.R;
 import com.yuan.yuanisnosay.DateUtil;
+import com.yuan.yuanisnosay.YuanApplication;
+import com.yuan.yuanisnosay.server.ServerAccess;
+import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
 
 public class ConfessAdapter extends BaseAdapter {
 	public static final int TYPE_NORMAL = 0; // 主界面表白类型
@@ -34,11 +46,12 @@ public class ConfessAdapter extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mInflater;
 	LinkedList<ConfessItem> mConfessList;
+	private int itemId;
 
 	ImageLoader mImageLoader;
 	DisplayImageOptions mOptions;
 	ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-	View.OnClickListener mButonListener =new ButtonListener();
+	View.OnClickListener mButonListener = new ButtonListener();
 
 	static class ViewHolder {
 		TextView content;
@@ -88,6 +101,7 @@ public class ConfessAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ConfessItem curConfess = mConfessList.get(position);
 		ViewHolder viewHolder;
+//		itemId = position;
 		if (convertView == null) {
 			// if(mType == TYPE_NORMAL){
 			// convertView=mInflater.inflate(R.layout.item_confess, null);
@@ -110,9 +124,10 @@ public class ConfessAdapter extends BaseAdapter {
 			viewHolder.content = (TextView) convertView.findViewById(R.id.textView_confessItem_content);
 			viewHolder.publishDate = (TextView) convertView.findViewById(R.id.textView_confessItem_publishTime);
 			viewHolder.position = (TextView) convertView.findViewById(R.id.textView_confessItem_position);
-
 			viewHolder.btnFlower = (Button) convertView.findViewById(R.id.button_confessItem_flowers);
+			viewHolder.btnFlower.setTag(position);
 			viewHolder.btnComment = (Button) convertView.findViewById(R.id.button_confessItem_comment);
+			viewHolder.btnComment.setTag(position);
 			viewHolder.btnFlower.setOnClickListener(mButonListener);
 			viewHolder.btnComment.setOnClickListener(mButonListener);
 
@@ -160,9 +175,44 @@ public class ConfessAdapter extends BaseAdapter {
 	}
 
 	private class ButtonListener implements View.OnClickListener {
+		//获取当前表白，取List的第一个元素。
 		@Override
 		public void onClick(View button) {
-			
+			final ConfessItem confess = mConfessList.get((Integer)button.getTag());
+			switch (button.getId()) {
+				case R.id.button_confessItem_comment:
+					Intent intent = new Intent(mContext, CommentActivity.class);
+					intent.putExtra(CommentActivity.POST_ID, confess.getId());
+					mContext.startActivity(intent);
+					break;
+				case R.id.button_confessItem_flowers:
+					ServerAccess.flower(confess.getId(), new ServerResponseHandler() {
+						@Override
+						public void onSuccess(JSONObject result) {
+							// TODO Auto-generated method stub
+							try {
+								if (0 == result.getInt("status")) {
+									confess.setFlowersCount(result.getInt("count"));
+									ConfessAdapter.this.notifyDataSetChanged();
+									//Toast.makeText(mContext, "Flower:"+confess.getFlowersCount(), 1000).show();
+									//getView(itemId, mInflater.inflate(R.layout.item_confess, null), null);
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+
+						@Override
+						public void onFailure(Throwable error) {
+							// TODO Auto-generated method stub
+							Toast.makeText(mContext, "送花失败。。。", 1000).show();
+							Log.e("Flower Failure", "Flower Failure");
+						}
+						
+					});
+				
+			}
 		}
 	}
 

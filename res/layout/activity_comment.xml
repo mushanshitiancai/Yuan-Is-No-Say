@@ -1,68 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:orientation="vertical" >
-    
-	<RelativeLayout
-	    android:id="@+id/menu_container"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent">  
+
+	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="48dp"
-	    android:background="#F3F3F3" >
-
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:src="@drawable/back_03" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="评论列表"
-            android:textColor="#8C8C8C"
-            android:textSize="22sp" />
-    </RelativeLayout>
-	<include
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	layout="@layout/item_confess" />
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:orientation="vertical" >
+	    
+		<RelativeLayout
+		    android:id="@+id/menu_container"
+		    android:layout_width="match_parent"
+		    android:layout_height="48dp"
+		    android:background="#F3F3F3" >
 	
-    <ListView
-        android:id="@+id/listView_commentList"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_weight="1.69" >
-    </ListView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1" 
-        android:orientation="horizontal">
-        <EditText 
-            android:id="@+id/editText_commentContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="请输入文字"
-            android:layout_weight="1"/>
-        <Button
-           android:id="@+id/button_commentSend"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_weight="3"
-           android:text="发送" />
-    </LinearLayout>
-
-</LinearLayout>
+	        <ImageView
+	            android:id="@+id/img_back"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="13dp"
+	            android:src="@drawable/back_03" />
+	
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerInParent="true"
+	            android:text="评论列表"
+	            android:textColor="#8C8C8C"
+	            android:textSize="22sp" />
+	    </RelativeLayout>
+		<include
+	    	android:layout_width="match_parent"
+	    	android:layout_height="100dp"
+	    	layout="@layout/item_confess" />
+		
+	    <ListView
+	        android:id="@+id/listView_commentList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginBottom="20dp"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginRight="16dp"
+	        android:layout_weight="1.69" >
+	    </ListView>
+	
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_weight="1" 
+	        android:orientation="horizontal">
+	        <EditText 
+	            android:id="@+id/editText_commentContent"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:hint="请输入文字"
+	            android:layout_weight="1"/>
+	        <Button
+	           android:id="@+id/button_commentSend"
+	           android:layout_width="match_parent"
+	           android:layout_height="match_parent"
+	           android:layout_weight="3"
+	           android:text="发送" />
+	    </LinearLayout>
+	
+	</LinearLayout>
+</RelativeLayout>

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.yuan.yuanisnosay.server.ServerAccess;
 import com.yuan.yuanisnosay.server.ServerAccess.ServerResponseHandler;
+import com.yuan.yuanisnosay.ui.ConfessFragment;
 import com.yuan.yuanisnosay.ui.adpater.ConfessAdapter;
 import com.yuan.yuanisnosay.ui.adpater.ConfessItem;
 
@@ -59,12 +60,15 @@ public class CommentActivity extends ActionBarActivity {
 		mNewComment = (EditText) findViewById(R.id.editText_commentContent);
 		mCommentSend = (Button) findViewById(R.id.button_commentSend);
 		mCommentBack = (ImageView) findViewById(R.id.img_back);
-		setParentConfess(1);
-		setCommentList(1);
+		
+		Intent intent = getIntent();
+		postID = intent.getIntExtra(POST_ID, 1);
+		setParentConfess(postID);
+		setCommentList(postID);
 		//Log.i("Test", "Test");
 		mCommentBack.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View view) {
 				// TODO Auto-generated method stub
 				finish();
 			}
@@ -97,9 +101,10 @@ public class CommentActivity extends ActionBarActivity {
 							ConfessItem confessItem = new ConfessItem(confess);
 							LinkedList<ConfessItem> confessLL = new LinkedList<ConfessItem>();
 							confessLL.add(confessItem);
-							ConfessAdapter ca = new ConfessAdapter(getApplicationContext(), ConfessAdapter.TYPE_NORMAL, confessLL);
-							ca.getView(1, null, null);
-							
+							//设置adapter
+							ConfessAdapter adapter = new ConfessAdapter(getApplicationContext(), ConfessAdapter.TYPE_NORMAL, confessLL);
+							ConfessFragment fragment = new ConfessFragment(ConfessFragment.TYPE_MINE);
+							fragment.setmAdapter(adapter);
 							/*{"status":0,"express_list":
 							[{"express_reply_cnt":4,
 							"express_latitude":0,"user_openid":"1",
@@ -187,7 +192,7 @@ public class CommentActivity extends ActionBarActivity {
 		
 		mCommentSend.setOnClickListener(new OnClickListener() { 
             @Override 
-            public void onClick(View arg0) { 
+            public void onClick(View view) { 
                 // TODO Auto-generated method stub 
             	final String newComment = mNewComment.getText().toString();
             	if (0 == newComment.length()) {
@@ -203,8 +208,9 @@ public class CommentActivity extends ActionBarActivity {
 							try {
 								int status = result.getInt("status");
 								if (0 == status) {
-									strs.add(((YuanApplication)getApplication()).getLogin().getNickname());
+									strs.add(((YuanApplication)getApplication()).getLogin().getNickname() +  ":" + newComment);
 									adapter.notifyDataSetChanged();
+									mNewComment.setText("");
 								} else if (4 == status) {
 									Toast.makeText(getApplicationContext(), "其它错误：" + result.getString("hint"), 1000).show();
 								}
