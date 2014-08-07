@@ -214,6 +214,10 @@ public class ConfessFragment extends Fragment {
 				if (ServerAccess.getStatus(result) != 0)
 					return;
 				List<ConfessItem> resultConfessList = ConfessItem.getConfessList(result);
+//				if(resultConfessList.size() == 0){
+//					return;
+//				}
+				
 				Log.e(TAG, resultConfessList.toString());
 
 				if(mType==TYPE_HOT){

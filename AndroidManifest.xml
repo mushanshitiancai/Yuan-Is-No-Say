@@ -93,7 +93,6 @@
             android:name=".CommentActivity"
             android:label="@string/title_activity_comment" 
             android:screenOrientation="portrait">
-           
         </activity>
         <activity android:name=".NewCommentActivity"
             android:screenOrientation="portrait">

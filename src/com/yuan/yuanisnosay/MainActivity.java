@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 	private TextView tvDistance;
 
 	private ConfessFragment mFragmentNearby, mFragmentHot;
+	private boolean doPost=false;
 
 	// viewpager
 	ViewPager vpMain;
@@ -148,7 +149,7 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 			int id = v.getId();
 			switch (id) {
 			case R.id.button_mainActivity_confess:
-				
+				doPost=true;
 				
 				IntentUtil.doIntent(MainActivity.this,
 						WantToConfessActivity.class,
@@ -228,7 +229,13 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		super.onStart();
 
 		showFragment(curTab);
+		
+		if(doPost){
+			refreshFragment(curTab);
+		}
 	}
+	
+	
 
 	private void setCurTab(int index) {
 		if (index == 0 && curTab != R.id.radio_nearby) {
