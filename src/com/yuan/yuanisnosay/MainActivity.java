@@ -17,6 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -65,7 +68,7 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mApp = (YuanApplication) getApplication();
-
+		
 		// 设置附近热门TAB
 		radioGroupMainTab = (RadioGroup) findViewById(R.id.radioGroup_mainTab);
 		radioGroupMainTab
@@ -87,8 +90,6 @@ public class MainActivity extends FragmentActivity implements ConfessActivityInt
 				} else {
 					refreshFragment(curTab);
 				}
-				// if (curTab == view.getId())
-				// refreshFragment(curTab);
 			}
 		};
 		radioNearby = (RadioButton) findViewById(R.id.radio_nearby);

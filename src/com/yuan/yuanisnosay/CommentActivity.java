@@ -95,6 +95,7 @@ public class CommentActivity extends ActionBarActivity {
 				.build();
 		
 		viewHolder.confessContent = (TextView) findViewById(R.id.textView_confessItem_content);
+		
 		viewHolder.ivPicture = (ImageView) findViewById(R.id.imageView_picture);
 		viewHolder.btnFlower = (Button) findViewById(R.id.button_confessItem_flowers);
 		viewHolder.btnComment = (Button) findViewById(R.id.button_confessItem_comment);

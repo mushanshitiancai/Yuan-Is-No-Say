@@ -1,10 +1,11 @@
- package com.yuan.yuanisnosay.ui.adpater;
+package com.yuan.yuanisnosay.ui.adpater;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,8 +56,8 @@ public class ConfessAdapter extends BaseAdapter {
 	LayoutInflater mInflater;
 	LinkedList<ConfessItem> mConfessList;
 	private int itemId;
-	private static Map<Integer, Boolean> flowerMap = new HashMap<Integer, Boolean>();
-	
+	private static Vector<Integer> floweredConfesses = new Vector<Integer>();
+
 	ImageLoader mImageLoader;
 	DisplayImageOptions mOptions;
 	ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
@@ -64,7 +65,7 @@ public class ConfessAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		TextView content;
-		TextView publishDate; 
+		TextView publishDate;
 		TextView position;
 		TextView author;
 		Button btnFlower;
@@ -76,7 +77,8 @@ public class ConfessAdapter extends BaseAdapter {
 		View layoutInfo;
 	}
 
-	public ConfessAdapter(Context context, int type, LinkedList<ConfessItem> confessList) {
+	public ConfessAdapter(Context context, int type,
+			LinkedList<ConfessItem> confessList) {
 		mType = type;
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
@@ -84,8 +86,10 @@ public class ConfessAdapter extends BaseAdapter {
 
 		mImageLoader = ImageLoader.getInstance();
 		mImageLoader.init(ImageLoaderConfiguration.createDefault(context));
-		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_stub)
-				.showImageForEmptyUri(R.drawable.ic_empty).showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
+		mOptions = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.ic_stub)
+				.showImageForEmptyUri(R.drawable.ic_empty)
+				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
 				.cacheOnDisk(true).considerExifParams(true)
 				// .displayer(new RoundedBitmapDisplayer(20))
 				.build();
@@ -111,42 +115,60 @@ public class ConfessAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ConfessItem curConfess = mConfessList.get(position);
 		ViewHolder viewHolder;
-//		itemId = position;
 		if (convertView == null) {
-			// if(mType == TYPE_NORMAL){
-			// convertView=mInflater.inflate(R.layout.item_confess, null);
-			// }else{
-			// convertView=mInflater.inflate(R.layout.item_my_confess, null);
-			// }
-
-			//
 			viewHolder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.item_confess, null);
-			viewHolder.ivPicture=(ImageView) convertView.findViewById(R.id.imageView_picture);
-//			if (curConfess.getPicture() == null || curConfess.getPicture().equals("")) {
-//				convertView = mInflater.inflate(R.layout.item_confess, null);
-//			} else {
-//				convertView = mInflater.inflate(R.layout.item_confess_with_picture, null);
-//				viewHolder.ivPicture=(ImageView) convertView.findViewById(R.id.imageView_picture);
-//			}
+			viewHolder.ivPicture = (ImageView) convertView
+					.findViewById(R.id.imageView_picture);
 
-			
-			viewHolder.content = (TextView) convertView.findViewById(R.id.textView_confessItem_content);
-			viewHolder.publishDate = (TextView) convertView.findViewById(R.id.textView_confessItem_publishTime);
-			viewHolder.position = (TextView) convertView.findViewById(R.id.textView_confessItem_position);
-			viewHolder.btnFlower = (Button) convertView.findViewById(R.id.button_confessItem_flowers);
+			viewHolder.content = (TextView) convertView
+					.findViewById(R.id.textView_confessItem_content);
+			int choColor = position % 5;
+			switch (choColor) {
+			case 0:
+				convertView.setBackgroundColor(mContext.getResources()
+						.getColor(R.color.style_confess_item_1_content_bg1));
+				break;
+			case 1:
+				convertView.setBackgroundColor(mContext.getResources()
+						.getColor(R.color.style_confess_item_1_content_bg2));
+				break;
+			case 2:
+				convertView.setBackgroundColor(mContext.getResources()
+						.getColor(R.color.style_confess_item_1_content_bg3));
+				break;
+			case 3:
+				convertView.setBackgroundColor(mContext.getResources()
+						.getColor(R.color.style_confess_item_1_content_bg4));
+				break;
+			case 4:
+				convertView.setBackgroundColor(mContext.getResources()
+						.getColor(R.color.style_confess_item_1_content_bg5));
+				break;
+			}
+
+			viewHolder.publishDate = (TextView) convertView
+					.findViewById(R.id.textView_confessItem_publishTime);
+			viewHolder.position = (TextView) convertView
+					.findViewById(R.id.textView_confessItem_position);
+			viewHolder.btnFlower = (Button) convertView
+					.findViewById(R.id.button_confessItem_flowers);
 			viewHolder.btnFlower.setTag(position);
-			viewHolder.btnComment = (Button) convertView.findViewById(R.id.button_confessItem_comment);
-			
+			viewHolder.btnComment = (Button) convertView
+					.findViewById(R.id.button_confessItem_comment);
+
 			viewHolder.btnFlower.setOnClickListener(mButonListener);
 			viewHolder.btnComment.setOnClickListener(mButonListener);
 
-			viewHolder.layoutContent = convertView.findViewById(R.id.relativeLayout_content);
-			// viewHolder.layoutPicture=convertView.findViewById(R.id.relativeLayout_picture);
-			viewHolder.layoutInfo = convertView.findViewById(R.id.relativeLayout_info);
+			viewHolder.layoutContent = convertView
+					.findViewById(R.id.relativeLayout_content);
+			viewHolder.layoutInfo = convertView
+					.findViewById(R.id.relativeLayout_info);
 
-			viewHolder.author = (TextView) convertView.findViewById(R.id.textView_confessItem_author);
-			viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.imageView_confessItem_icon);
+			viewHolder.author = (TextView) convertView
+					.findViewById(R.id.textView_confessItem_author);
+			viewHolder.ivIcon = (ImageView) convertView
+					.findViewById(R.id.imageView_confessItem_icon);
 			if (mType == TYPE_MINE) {
 				viewHolder.author.setVisibility(View.GONE);
 				viewHolder.ivIcon.setVisibility(View.GONE);
@@ -159,120 +181,115 @@ public class ConfessAdapter extends BaseAdapter {
 
 		viewHolder.btnComment.setTag(position);
 		viewHolder.content.setText(curConfess.getContent());
-		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess.getPublishDate()));
+		viewHolder.publishDate.setText(DateUtil.formatDateTime(curConfess
+				.getPublishDate()));
 		viewHolder.position.setText(curConfess.getPosition());
-		
-		//设置每条表白背景
-		if (position % 5 == 0) 
-			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg1);
-		else if (position % 5 == 1) 
-			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg2);
-		else if (position % 5 == 2) 
-			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg3);
-		else if (position % 5 == 3) 
-			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg4);
-		else if (position % 5 == 4) 
-			viewHolder.content.setBackgroundColor(R.color.style_confess_item_1_content_bg5);
-		
-		viewHolder.btnFlower.setText(mContext.getString(R.string.confessItem_flowers) + " "
-				+ curConfess.getFlowersCount());
-		viewHolder.btnComment.setText(mContext.getString(R.string.confessItem_comment) + " "
-				+ curConfess.getCommentCount());
 
-		// viewHolder.layoutPicture.setVisibility(View.GONE);
-		// viewHolder.layoutInfo.setVisibility(View.GONE);
+		viewHolder.btnFlower.setText(mContext
+				.getString(R.string.confessItem_flowers)
+				+ " "
+				+ curConfess.getFlowersCount());
+		viewHolder.btnComment.setText(mContext
+				.getString(R.string.confessItem_comment)
+				+ " "
+				+ curConfess.getCommentCount());
 
 		if (mType == TYPE_NORMAL) {
 			viewHolder.author.setText(curConfess.getAuthor());
-			mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon, mOptions, animateFirstListener);
+			mImageLoader.displayImage(curConfess.getIcon(), viewHolder.ivIcon,
+					mOptions, animateFirstListener);
 		}
-		
-		if(curConfess.getPicture() != null && !curConfess.getPicture().equals("")){
+
+		if (curConfess.getPicture() != null
+				&& !curConfess.getPicture().equals("")) {
 			viewHolder.ivPicture.setVisibility(View.VISIBLE);
-			mImageLoader.displayImage(curConfess.getPicture(), viewHolder.ivPicture, mOptions, animateFirstListener);
-		}else{
+			mImageLoader.displayImage(curConfess.getPicture(),
+					viewHolder.ivPicture, mOptions, animateFirstListener);
+		} else {
 			viewHolder.ivPicture.setVisibility(View.GONE);
 		}
-		//设置当前POST_CONFESS为false
-		if (flowerMap.get(curConfess.getId()) == false) {
-			flowerMap.put(curConfess.getId(), true);
-		}
-		
 		return convertView;
 	}
 
 	private class ButtonListener implements View.OnClickListener {
-		//获取当前表白，取List的第一个元素。
+		// 获取当前表白，取List的第一个元素。
 		@Override
 		public void onClick(View button) {
-			final ConfessItem confess = mConfessList.get((Integer)button.getTag());
+			final ConfessItem confess = mConfessList.get((Integer) button
+					.getTag());
 			switch (button.getId()) {
-				case R.id.button_confessItem_comment:
-					YuanApplication app = (YuanApplication) mContext.getApplicationContext();
-					Network network = app.getNetwork();
-					if (!network.isOnline()) {
-						com.yuan.yuanisnosay.ui.Util.showToast(mContext,
-								mContext.getString(R.string.network_offline));
-						return;
-					}
-					if (app.getLogin().getRegisterStatus() == Status.Login.M_FIRST_LOGIN) {
-						Intent intent = new Intent(mContext, PersonalProfileActivity.class);
-						Bundle data = new Bundle();
-//						data.putInt("to", Const.PROFILE_TO_COMMENT);
-//						data.putInt(CommentActivity.POST_CONFESS, confess.getId());
-						data.putSerializable(CommentActivity.POST_CONFESS, confess);
-						intent.putExtras(data);
-						mContext.startActivity(intent);
-						return;
-					}
-					Intent intent = new Intent(mContext, CommentActivity.class);
-					intent.putExtra(CommentActivity.POST_CONFESS, confess);
+			case R.id.button_confessItem_comment:
+				YuanApplication app = (YuanApplication) mContext
+						.getApplicationContext();
+				Network network = app.getNetwork();
+				if (!network.isOnline()) {
+					com.yuan.yuanisnosay.ui.Util.showToast(mContext,
+							mContext.getString(R.string.network_offline));
+					return;
+				}
+				if (app.getLogin().getRegisterStatus() == Status.Login.M_FIRST_LOGIN) {
+					Intent intent = new Intent(mContext,
+							PersonalProfileActivity.class);
+					Bundle data = new Bundle();
+					data.putSerializable(CommentActivity.POST_CONFESS, confess);
+					intent.putExtras(data);
 					mContext.startActivity(intent);
-					break;
-				case R.id.button_confessItem_flowers:
-					if (flowerMap.get((Integer)confess.getId()) == true) {
-						Toast.makeText(mContext, "你已经送过花儿啦~~", 1000).show();
-						return;
-					} else {
-						flowerMap.put((Integer)confess.getId(), true);
-						confess.setFlowersCount(confess.getFlowersCount()+1);
-						ConfessAdapter.this.notifyDataSetChanged();
-						ServerAccess.flower(confess.getId(), new ServerResponseHandler() {
-							@Override
-							public void onSuccess(JSONObject result) {
-								// TODO Auto-generated method stub
-								try {
-									if (0 == result.getInt("status")) {
-										confess.setFlowersCount(result.getInt("count"));
-										//ConfessAdapter.this.notifyDataSetChanged();
-										//Toast.makeText(mContext, "Flower:"+confess.getFlowersCount(), 1000).show();
-										//getView(itemId, mInflater.inflate(R.layout.item_confess, null), null);
+					return;
+				}
+				Intent intent = new Intent(mContext, CommentActivity.class);
+				intent.putExtra(CommentActivity.POST_CONFESS, confess);
+				mContext.startActivity(intent);
+				break;
+
+			case R.id.button_confessItem_flowers:
+				if (floweredConfesses.contains(confess.getId())) {
+					Toast.makeText(mContext, "你已经送过花儿啦~~", 1000).show();
+					return;
+				} else {
+					floweredConfesses.add(confess.getId());
+					confess.setFlowersCount(confess.getFlowersCount() + 1);
+					ConfessAdapter.this.notifyDataSetChanged();
+					ServerAccess.flower(confess.getId(),
+							new ServerResponseHandler() {
+								@Override
+								public void onSuccess(JSONObject result) {
+									// TODO Auto-generated method stub
+									try {
+										if (0 == result.getInt("status")) {
+											confess.setFlowersCount(result
+													.getInt("count"));
+										}
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
 									}
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
 								}
-							}
-	
-							@Override
-							public void onFailure(Throwable error) {
-								// TODO Auto-generated method stub
-								Toast.makeText(mContext, "送花失败。。。", 1000).show();
-								Log.e("Flower Failure", "Flower Failure");
-							}
-							
-						});
-					}
+
+								@Override
+								public void onFailure(Throwable error) {
+									// TODO Auto-generated method stub
+									Toast.makeText(mContext, "送花失败。。。", 1000)
+											.show();
+									Log.e("Flower Failure", "Flower Failure");
+								}
+
+							});
+					return;
+				}
+
 			}
 		}
 	}
 
-	private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+	private static class AnimateFirstDisplayListener extends
+			SimpleImageLoadingListener {
 
-		static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+		static final List<String> displayedImages = Collections
+				.synchronizedList(new LinkedList<String>());
 
 		@Override
-		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+		public void onLoadingComplete(String imageUri, View view,
+				Bitmap loadedImage) {
 			if (loadedImage != null) {
 				ImageView imageView = (ImageView) view;
 				boolean firstDisplay = !displayedImages.contains(imageUri);
